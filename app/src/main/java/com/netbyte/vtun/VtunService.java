@@ -34,8 +34,7 @@ public class VtunService extends VpnService {
     static String dns;
     static String protocol = "udp";
     static String token = "";
-    Thread sendrecvThreadUdp;
-    Thread sendThreadTcp, recvThreadTcp;
+    Thread sendrecvThreadUdp, sendThreadTcp, recvThreadTcp;
     Socket tcpSocket;
     ParcelFileDescriptor localTunnel;
     private PendingIntent pendingIntent;
@@ -83,16 +82,16 @@ public class VtunService extends VpnService {
                 String chanId = createNotificationChannel("vtun", "vtun");
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanId);
                 builder.setContentIntent(pendingIntent)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        //.setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("vtun")
-                        .setContentText("<Server>" + serverIP + ":" + serverPort)
+                        .setContentText("Server connected:" + serverIP + ":" + serverPort)
                         .setWhen(System.currentTimeMillis());
                 Notification notification = builder.build();
                 startForeground(1, notification);
                 connect();
             }
         } catch (Exception e) {
-            Log.e("onStartCommmand", e.toString());
+            Log.e("onStartCommand", e.toString());
         }
         return START_STICKY;
     }
@@ -134,12 +133,14 @@ public class VtunService extends VpnService {
 
                     while (!isInterrupted()) {
                         try {
+                            boolean idle = true;
                             byte[] buf = new byte[MAX_PACKET_SIZE];
                             int ln = in.read(buf);
                             if (ln > 0) {
                                 byte[] data = Arrays.copyOfRange(buf, 0, ln);
                                 ByteBuffer bf = ByteBuffer.wrap(vCipher.encrypt(data));
                                 udp.write(bf);
+                                idle = false;
                             }
 
                             ByteBuffer bf = ByteBuffer.allocate(MAX_PACKET_SIZE);
@@ -150,6 +151,10 @@ public class VtunService extends VpnService {
                                 buf = new byte[ln];
                                 bf.get(buf);
                                 out.write(vCipher.decrypt(buf));
+                                idle = false;
+                            }
+                            if (idle) {
+                                Thread.sleep(100);
                             }
 
                         } catch (Exception e) {
@@ -178,8 +183,8 @@ public class VtunService extends VpnService {
                             byte[] buf = new byte[MAX_PACKET_SIZE];
                             int ln = in.read(buf);
                             if (ln > 0) {
-                                byte[] endata = vCipher.encrypt(Arrays.copyOfRange(buf, 0, ln));
-                                TcpPacket.write(endata, out);
+                                byte[] data = vCipher.encrypt(Arrays.copyOfRange(buf, 0, ln));
+                                TcpPacket.write(data, out);
                             }
 
                         } catch (Exception e) {
