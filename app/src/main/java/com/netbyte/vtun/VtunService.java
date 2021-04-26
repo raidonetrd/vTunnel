@@ -82,9 +82,9 @@ public class VtunService extends VpnService {
                 String chanId = createNotificationChannel("vtun", "vtun");
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanId);
                 builder.setContentIntent(pendingIntent)
-                        //.setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("vtun")
-                        .setContentText("Server connected:" + serverIP + ":" + serverPort)
+                        .setContentText("Server connected")
                         .setWhen(System.currentTimeMillis());
                 Notification notification = builder.build();
                 startForeground(1, notification);
@@ -154,9 +154,8 @@ public class VtunService extends VpnService {
                                 idle = false;
                             }
                             if (idle) {
-                                Thread.sleep(100);
+                                Thread.sleep(10);
                             }
-
                         } catch (Exception e) {
                             Log.e("send/rec", e.toString());
                         }
