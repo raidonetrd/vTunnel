@@ -127,20 +127,17 @@ public class VtunService extends VpnService {
                             .setConfigureIntent(null);
                     localTunnel = builder.establish();
 
-
                     FileInputStream in = new FileInputStream(localTunnel.getFileDescriptor());
                     FileOutputStream out = new FileOutputStream(localTunnel.getFileDescriptor());
 
                     while (!isInterrupted()) {
                         try {
-                            boolean idle = true;
                             byte[] buf = new byte[MAX_PACKET_SIZE];
                             int ln = in.read(buf);
                             if (ln > 0) {
                                 byte[] data = Arrays.copyOfRange(buf, 0, ln);
                                 ByteBuffer bf = ByteBuffer.wrap(vCipher.encrypt(data));
                                 udp.write(bf);
-                                idle = false;
                             }
 
                             ByteBuffer bf = ByteBuffer.allocate(MAX_PACKET_SIZE);
@@ -151,10 +148,6 @@ public class VtunService extends VpnService {
                                 buf = new byte[ln];
                                 bf.get(buf);
                                 out.write(vCipher.decrypt(buf));
-                                idle = false;
-                            }
-                            if (idle) {
-                                Thread.sleep(10);
                             }
                         } catch (Exception e) {
                             Log.e("send/rec", e.toString());
