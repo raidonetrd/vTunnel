@@ -16,26 +16,30 @@ import android.util.Log;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.SocketAddress;
+import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.Arrays;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+
+
 public class VtunService extends VpnService {
     final static String ACTION_DISCONNECT = "disconnect";
-    final static int MAX_PACKET_SIZE = 65536;
+    final static int MAX_PACKET_SIZE = 1500;
     static String serverIP, localIP;
     static int localPrefixLength = 24;
     static int serverPort;
     static String dns;
     static String protocol = "udp";
     static String token = "";
-    Thread sendrecvThreadUdp, sendThreadTcp, recvThreadTcp;
-    Socket tcpSocket;
+    Thread udpThread;
+    Thread wsThread;
     ParcelFileDescriptor localTunnel;
     private PendingIntent pendingIntent;
     private VCipher vCipher;
@@ -107,12 +111,11 @@ public class VtunService extends VpnService {
     }
 
     private void initUdpThread() {
-        sendrecvThreadUdp = new Thread() {
+        udpThread = new Thread() {
             @Override
             public void run() {
                 try {
                     final DatagramChannel udp = DatagramChannel.open();
-
                     SocketAddress serverAdd = new InetSocketAddress(serverIP, serverPort);
                     udp.connect(serverAdd);
                     udp.configureBlocking(false);
@@ -150,90 +153,111 @@ public class VtunService extends VpnService {
                                 out.write(vCipher.decrypt(buf));
                             }
                         } catch (Exception e) {
-                            Log.e("send/rec", e.toString());
+                            Log.e("udpThread", e.toString());
                         }
                     }
 
                 } catch (Exception e) {
-                    Log.e("send/recv", e.toString());
+                    Log.e("udpThread", e.toString());
                 }
             }
         };
     }
 
-    private void initTcpThread() {
-        sendThreadTcp = new Thread() {
+    private void initWsThread() {
+        wsThread = new Thread() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void run() {
                 try {
-                    FileInputStream in = new FileInputStream(localTunnel.getFileDescriptor());
-                    OutputStream out = tcpSocket.getOutputStream();
-                    TcpPacket.write(token.getBytes(), out);
+                    VpnService.Builder builder = VtunService.this.new Builder();
+                    builder.setMtu(1500)
+                            .addAddress(localIP, localPrefixLength)
+                            .addRoute("0.0.0.0", 0)
+                            .addDnsServer(dns)
+                            .setSession("vtun")
+                            .setConfigureIntent(null);
+                    builder.addDisallowedApplication("com.netbyte.vtun");
+                    localTunnel = builder.establish();
 
+                    WSClient wsClient = new WSClient(new URI("wss://" + serverIP + ":" + serverPort + "/way-to-freedom"), localTunnel, vCipher);
+                    SSLContext sslContext = createEasySSLContext();
+                    SSLSocketFactory factory = sslContext.getSocketFactory();
+                    wsClient.setSocketFactory(factory);
+                    wsClient.connectBlocking();
+                    if (!wsClient.isOpen()) {
+                        Log.e("wsThread", "ws client is not open");
+                        //return;
+                    }
+                    FileInputStream in = new FileInputStream(localTunnel.getFileDescriptor());
                     while (!isInterrupted()) {
                         try {
                             byte[] buf = new byte[MAX_PACKET_SIZE];
                             int ln = in.read(buf);
                             if (ln > 0) {
-                                byte[] data = vCipher.encrypt(Arrays.copyOfRange(buf, 0, ln));
-                                TcpPacket.write(data, out);
+                                if (wsClient.isClosing()) {
+                                    Thread.sleep(200);
+                                }
+                                if (wsClient.isClosed()) {
+                                    wsClient.reconnectBlocking();
+                                    Thread.sleep(3000);
+                                    Log.i("wsThread", "ws client reconnect");
+                                }
+                                if (wsClient.isOpen()) {
+                                    byte[] data = Arrays.copyOfRange(buf, 0, ln);
+                                    wsClient.send(vCipher.encrypt(data));
+                                }
                             }
-
                         } catch (Exception e) {
-                            Log.e("sendThreadTcp", e.toString());
+                            Log.e("wsThread", e.toString());
                         }
                     }
 
                 } catch (Exception e) {
-                    Log.e("sendThreadTcp", e.toString());
-                }
-            }
-        };
-
-        recvThreadTcp = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    FileOutputStream out = new FileOutputStream(localTunnel.getFileDescriptor());
-                    InputStream in = tcpSocket.getInputStream();
-
-                    while (!isInterrupted()) {
-                        try {
-                            byte[] buf = new byte[MAX_PACKET_SIZE];
-                            int ln = TcpPacket.read(buf, in);
-                            if (ln > 0) {
-                                byte[] data = Arrays.copyOfRange(buf, 0, ln);
-                                out.write(vCipher.decrypt(data));
-                            }
-
-                        } catch (Exception e) {
-                            Log.e("recvThreadTcp", e.toString());
-                        }
-                    }
-
-                } catch (Exception e) {
-                    Log.e("recvThreadTcp", e.toString());
+                    Log.e("wsThread", e.toString());
                 }
             }
         };
     }
 
+    private SSLContext createEasySSLContext() throws IOException {
+        try {
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(null, new TrustManager[]{new TrivialTrustManager()}, null);
+            return context;
+        } catch (Exception e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    class TrivialTrustManager implements javax.net.ssl.X509TrustManager {
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            return new java.security.cert.X509Certificate[0];
+        }
+
+        @Override
+        public void checkClientTrusted(
+                java.security.cert.X509Certificate[] chain, String authType)
+                throws java.security.cert.CertificateException {
+        }
+
+        @Override
+        public void checkServerTrusted(
+                java.security.cert.X509Certificate[] chain, String authType)
+                throws java.security.cert.CertificateException {
+        }
+    }
+
     private void closeAll() {
         try {
-            if (sendThreadTcp != null) {
-                sendThreadTcp.interrupt();
-                sendThreadTcp = null;
+            if (udpThread != null) {
+                udpThread.interrupt();
+                udpThread = null;
             }
-            if (recvThreadTcp != null) {
-                recvThreadTcp.interrupt();
-                recvThreadTcp = null;
+            if (wsThread != null) {
+                wsThread.interrupt();
+                wsThread = null;
             }
-
-            if (sendrecvThreadUdp != null) {
-                sendrecvThreadUdp.interrupt();
-                sendrecvThreadUdp = null;
-            }
-
             if (localTunnel != null) {
                 localTunnel.close();
                 localTunnel = null;
@@ -248,7 +272,6 @@ public class VtunService extends VpnService {
         try {
             closeAll();
             stopForeground(true);
-
         } catch (Exception e) {
             Log.e("disconnect", e.toString());
         }
@@ -256,45 +279,18 @@ public class VtunService extends VpnService {
 
     private void connect() {
         Log.i("connect", "connecting...");
-        Log.i("vpn", serverIP + " " + serverPort + " " + localIP + " " + dns);
+        Log.i("vtun", serverIP + " " + serverPort + " " + localIP + " " + dns);
         try {
             closeAll();
-
             if (protocol.equals("udp")) {
                 initUdpThread();
-                sendrecvThreadUdp.start();
-
-            } else {
-                initTcpThread();
-
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            tcpSocket = new Socket(serverIP, serverPort);
-                            tcpSocket.setKeepAlive(true);
-                            VtunService.this.protect(tcpSocket);
-
-                            VpnService.Builder builder = VtunService.this.new Builder();
-                            builder.setMtu(1500)
-                                    .addAddress(localIP, localPrefixLength)
-                                    .addRoute("0.0.0.0", 0)
-                                    .addDnsServer(dns)
-                                    .setSession("vtun")
-                                    .setConfigureIntent(null);
-                            localTunnel = builder.establish();
-
-                            sendThreadTcp.start();
-                            recvThreadTcp.start();
-
-                        } catch (Exception e) {
-                            Log.e("connect", e.toString());
-                        }
-                    }
-                }.start();
+                udpThread.start();
+            } else if (protocol.equals("ws")) {
+                initWsThread();
+                wsThread.start();
             }
         } catch (Exception e) {
-            Log.e("vpn", e.toString());
+            Log.e("vtun", e.toString());
         }
     }
 }
