@@ -48,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
         editDNS.setText(preferences.getString("dns", "8.8.8.8"));
         tokenEdit.setText(preferences.getString("token", "6w9z$C&F)J@NcRfWjXn3r4u7x!A%D*G-"));
         String preProtocol = preferences.getString("protocol", "udp");
-        if(preProtocol.equals("tcp")){
+        if (preProtocol.equals("ws")) {
             protocolButton.setChecked(false);
-        }else{
+        } else {
             protocolButton.setChecked(true);
         }
 
@@ -70,15 +70,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 viewInfo.setText("Connect");
                 Intent intent = VpnService.prepare(MainActivity.this);
-                if(intent != null){
+                if (intent != null) {
                     startActivityForResult(intent, 0);
-                }else{
+                } else {
                     onActivityResult(0, RESULT_OK, null);
                 }
             }
         });
 
-        protocolButton.setOnClickListener(new View.OnClickListener(){
+        protocolButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -96,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
             String localIp = editLocal.getText().toString();
             String dns = editDNS.getText().toString();
             String token = tokenEdit.getText().toString();
-            String protocol = "tcp";
-            if(this.protocolButton.isChecked()){
+            String protocol = "ws";
+            if (this.protocolButton.isChecked()) {
                 protocol = "udp";
             }
 

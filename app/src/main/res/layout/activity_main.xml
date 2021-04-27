@@ -113,7 +113,7 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:text="ToggleButton"
-                android:textOff="TCP"
+                android:textOff="WS"
                 android:textOn="UDP" />
         </LinearLayout>
 
