@@ -122,7 +122,8 @@ public class VTunService extends VpnService {
                             .addRoute("0.0.0.0", 0)
                             .addDnsServer(dns)
                             .setSession("VTun")
-                            .setConfigureIntent(null);
+                            .setConfigureIntent(null)
+                            .setBlocking(true);
                     for (String packageName : Whitelist.packageList) {
                         builder.addDisallowedApplication(packageName);
                     }
@@ -181,7 +182,8 @@ public class VTunService extends VpnService {
                             .addRoute("0.0.0.0", 0)
                             .addDnsServer(dns)
                             .setSession("VTun")
-                            .setConfigureIntent(null);
+                            .setConfigureIntent(null)
+                            .setBlocking(true);
                     for (String packageName : Whitelist.packageList) {
                         builder.addDisallowedApplication(packageName);
                     }
