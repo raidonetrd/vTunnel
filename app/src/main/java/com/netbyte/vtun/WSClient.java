@@ -22,12 +22,14 @@ public class WSClient extends WebSocketClient {
         super(serverUri);
         this.tun = tun;
         this.vCipher = vCipher;
-        this.out = new FileOutputStream(tun.getFileDescriptor());
+        if (this.tun != null) {
+            this.out = new FileOutputStream(tun.getFileDescriptor());
+        }
     }
 
     @Override
     public void onOpen(ServerHandshake handshake) {
-        Log.i("WSClient", "open");
+        Log.i("WSClient", "ws client is open");
     }
 
     @Override
@@ -37,7 +39,7 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onMessage(ByteBuffer byteBuffer) {
-        if (byteBuffer.remaining() == 0) {
+        if (out == null || byteBuffer.remaining() == 0) {
             return;
         }
         byte[] buf = new byte[byteBuffer.remaining()];

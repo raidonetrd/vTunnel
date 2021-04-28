@@ -42,14 +42,10 @@ public class MainActivity extends AppCompatActivity {
         editServer.setText(preferences.getString("serverIP", "192.168.0.1"));
         editServerPort.setText(preferences.getString("serverPort", "443"));
         editLocal.setText(preferences.getString("localIP", "172.16.0.20/24"));
-        editDNS.setText(preferences.getString("dns", "8.8.4.4"));
+        editDNS.setText(preferences.getString("dns", "208.67.220.220"));
         tokenEdit.setText(preferences.getString("token", "6w9z$C&F)J@NcRfWjXn3r4u7x!A%D*G-"));
-        String preProtocol = preferences.getString("protocol", "udp");
-        if (preProtocol.equals("ws")) {
-            protocolButton.setChecked(false);
-        } else {
-            protocolButton.setChecked(true);
-        }
+        String preProtocol = preferences.getString("protocol", "ws");
+        protocolButton.setChecked(preProtocol.equals("ws"));
 
         btDisConn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,46 +71,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        protocolButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     @Override
     protected void onActivityResult(int request, int result, Intent data) {
-        if (result == RESULT_OK) {
-            Intent intent = new Intent(this, VTunService.class);
-
-            String serverIP = editServer.getText().toString();
-            String serverPort = editServerPort.getText().toString();
-            String localIp = editLocal.getText().toString();
-            String dns = editDNS.getText().toString();
-            String token = tokenEdit.getText().toString();
-            String protocol = "ws";
-            if (this.protocolButton.isChecked()) {
-                protocol = "udp";
-            }
-
-            intent.setAction("connect");
-            intent.putExtra("serverIP", serverIP);
-            intent.putExtra("serverPort", Integer.parseInt(serverPort));
-            intent.putExtra("localIP", localIp);
-            intent.putExtra("dns", dns);
-            intent.putExtra("token", token);
-            intent.putExtra("protocol", protocol);
-            startService(intent);
-
-            preEditor.putString("serverIP", serverIP);
-            preEditor.putString("serverPort", serverPort);
-            preEditor.putString("localIP", localIp);
-            preEditor.putString("dns", dns);
-            preEditor.putString("token", token);
-            preEditor.putString("protocol", protocol);
-            preEditor.commit();
+        if (result != RESULT_OK) {
+            return;
         }
+        Intent intent = new Intent(this, VTunService.class);
+        String serverIP = editServer.getText().toString();
+        String serverPort = editServerPort.getText().toString();
+        String localIp = editLocal.getText().toString();
+        String dns = editDNS.getText().toString();
+        String token = tokenEdit.getText().toString();
+        String protocol = this.protocolButton.isChecked() ? "ws" : "udp";
+        intent.setAction("connect");
+        intent.putExtra("serverIP", serverIP);
+        intent.putExtra("serverPort", Integer.parseInt(serverPort));
+        intent.putExtra("localIP", localIp);
+        intent.putExtra("dns", dns);
+        intent.putExtra("token", token);
+        intent.putExtra("protocol", protocol);
+
+        startService(intent);
+
+        preEditor.putString("serverIP", serverIP);
+        preEditor.putString("serverPort", serverPort);
+        preEditor.putString("localIP", localIp);
+        preEditor.putString("dns", dns);
+        preEditor.putString("token", token);
+        preEditor.putString("protocol", protocol);
+        preEditor.commit();
     }
 
 }
