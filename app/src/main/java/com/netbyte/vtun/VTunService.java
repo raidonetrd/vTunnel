@@ -123,7 +123,9 @@ public class VTunService extends VpnService {
                             .addDnsServer(dns)
                             .setSession("VTun")
                             .setConfigureIntent(null);
-                    builder.addDisallowedApplication("com.netbyte.vtun");
+                    for (String packageName : Whitelist.packageList) {
+                        builder.addDisallowedApplication(packageName);
+                    }
                     localTunnel = builder.establish();
 
                     final DatagramChannel udp = DatagramChannel.open();
@@ -180,7 +182,9 @@ public class VTunService extends VpnService {
                             .addDnsServer(dns)
                             .setSession("VTun")
                             .setConfigureIntent(null);
-                    builder.addDisallowedApplication("com.netbyte.vtun");
+                    for (String packageName : Whitelist.packageList) {
+                        builder.addDisallowedApplication(packageName);
+                    }
                     localTunnel = builder.establish();
 
                     wsClient = new WSClient(new URI("wss://" + serverIP + ":" + serverPort + "/way-to-freedom"), localTunnel, vCipher);

@@ -113,8 +113,8 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:text="ToggleButton"
-                android:textOff="WS"
-                android:textOn="UDP" />
+                android:textOff="UDP"
+                android:textOn="WS" />
         </LinearLayout>
 
         <LinearLayout
