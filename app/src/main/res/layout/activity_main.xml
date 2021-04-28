@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:text="192.168.0.1" />
+                android:text="172.16.0.1" />
 
             <EditText
                 android:id="@+id/serverPortEdit"
@@ -46,7 +46,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="number"
-                android:text="11111" />
+                android:text="443" />
 
         </LinearLayout>
 
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:text="10.0.0.3/24" />
+                android:text="172.16.0.2/24" />
 
         </LinearLayout>
 
@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:text="8.8.8.8" />
+                android:text="8.8.4.4" />
 
         </LinearLayout>
 
@@ -136,7 +136,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="abcd" />
+                android:text="123456" />
         </LinearLayout>
 
         <LinearLayout
@@ -152,7 +152,7 @@
                 android:text="Connect" />
 
             <Button
-                android:id="@+id/disconnButton"
+                android:id="@+id/disConnButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -169,7 +169,7 @@
             android:id="@+id/infoTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="INFO" />
+            android:text="" />
 
     </LinearLayout>
 
@@ -177,7 +177,7 @@
         android:layout_width="12dp"
         android:layout_height="8dp"
         android:orientation="horizontal"
+        tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="220dp"
-        tools:ignore="MissingConstraints"></LinearLayout>
+        tools:layout_editor_absoluteY="220dp"></LinearLayout>
 </android.support.constraint.ConstraintLayout>
