@@ -13,13 +13,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 public class MainActivity extends AppCompatActivity {
+    public static AtomicLong downByte = new AtomicLong(0);
+    public static AtomicLong upByte = new AtomicLong(0);
     private Button btConn, btDisConn;
     private ToggleButton protocolButton;
     private EditText editServer, editServerPort, editLocal, editDNS, tokenEdit;
     private TextView viewInfo;
     private SharedPreferences preferences;
     private SharedPreferences.Editor preEditor;
+    private volatile boolean statThreadRunning = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +55,10 @@ public class MainActivity extends AppCompatActivity {
         btDisConn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewInfo.setText("Disconnect");
+                statThreadRunning = false;
+                upByte.set(0);
+                downByte.set(0);
+                viewInfo.setText("Disconnected");
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, VTunService.class);
                 intent.setAction("disconnect");
@@ -61,15 +69,19 @@ public class MainActivity extends AppCompatActivity {
         btConn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewInfo.setText("Connect");
+                viewInfo.setText("Connected");
                 Intent intent = VpnService.prepare(MainActivity.this);
                 if (intent != null) {
                     startActivityForResult(intent, 0);
                 } else {
                     onActivityResult(0, RESULT_OK, null);
                 }
+                statThreadRunning = true;
+                Thread t = new Thread(new StatThread(viewInfo));
+                t.start();
             }
         });
+
 
     }
 
@@ -104,4 +116,25 @@ public class MainActivity extends AppCompatActivity {
         preEditor.commit();
     }
 
+
+    class StatThread implements Runnable {
+        TextView textView;
+
+        StatThread(TextView textView) {
+            this.textView = textView;
+        }
+
+        @Override
+        public void run() {
+            while (statThreadRunning) {
+                try {
+                    textView.setText(String.format("up %dKB down %dKB", MainActivity.upByte.get() / 1024, MainActivity.downByte.get() / 1024));
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
 }
