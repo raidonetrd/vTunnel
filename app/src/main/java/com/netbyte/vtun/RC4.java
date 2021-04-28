@@ -3,17 +3,17 @@ package com.netbyte.vtun;
 public class RC4 {
     private final byte[] S = new byte[256];
     private final byte[] T = new byte[256];
-    private final int keylen;
+    private final int keyLength;
 
     public RC4(final byte[] key) {
         if (key.length < 1 || key.length > 256) {
             throw new IllegalArgumentException(
                     "key must be between 1 and 256 bytes");
         } else {
-            keylen = key.length;
+            keyLength = key.length;
             for (int i = 0; i < 256; i++) {
                 S[i] = (byte) i;
-                T[i] = key[i % keylen];
+                T[i] = key[i % keyLength];
             }
             int j = 0;
             byte tmp;
@@ -27,7 +27,7 @@ public class RC4 {
     }
 
     public byte[] encrypt(final byte[] plaintext) {
-        final byte[] ciphertext = new byte[plaintext.length];
+        final byte[] cipherText = new byte[plaintext.length];
         int i = 0, j = 0, k, t;
         byte tmp;
         for (int counter = 0; counter < plaintext.length; counter++) {
@@ -38,9 +38,9 @@ public class RC4 {
             S[i] = tmp;
             t = (S[i] + S[j]) & 0xFF;
             k = S[t];
-            ciphertext[counter] = (byte) (plaintext[counter] ^ k);
+            cipherText[counter] = (byte) (plaintext[counter] ^ k);
         }
-        return ciphertext;
+        return cipherText;
     }
 
     public byte[] decrypt(final byte[] ciphertext) {

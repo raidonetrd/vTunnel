@@ -59,7 +59,7 @@ public class VTunService extends VpnService {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i("onStartCommand", "start: " + intent.getAction());
+        Log.i("VTun", "start: " + intent.getAction());
         try {
             if (intent != null && ACTION_DISCONNECT.equals(intent.getAction())) {
                 disconnect();
@@ -93,16 +93,17 @@ public class VTunService extends VpnService {
                 connect();
             }
         } catch (Exception e) {
-            Log.e("onStartCommand", e.toString());
+            Log.e("VTun", e.toString());
         }
         return START_STICKY;
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private String createNotificationChannel(String channelId, String channelName) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return "";
-        NotificationChannel chan = new NotificationChannel(channelId,
-                channelName, NotificationManager.IMPORTANCE_NONE);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            return "";
+        }
+        NotificationChannel chan = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE);
         NotificationManager service = getSystemService(NotificationManager.class);
         service.createNotificationChannel(chan);
         return channelId;
@@ -124,6 +125,7 @@ public class VTunService extends VpnService {
                             .setConfigureIntent(null);
                     builder.addDisallowedApplication("com.netbyte.vtun");
                     localTunnel = builder.establish();
+
                     final DatagramChannel udp = DatagramChannel.open();
                     SocketAddress serverAdd = new InetSocketAddress(serverIP, serverPort);
                     udp.connect(serverAdd);
@@ -132,7 +134,6 @@ public class VTunService extends VpnService {
 
                     FileInputStream in = new FileInputStream(localTunnel.getFileDescriptor());
                     FileOutputStream out = new FileOutputStream(localTunnel.getFileDescriptor());
-
                     while (!isInterrupted()) {
                         try {
                             byte[] buf = new byte[MAX_PACKET_SIZE];
@@ -181,6 +182,7 @@ public class VTunService extends VpnService {
                             .setConfigureIntent(null);
                     builder.addDisallowedApplication("com.netbyte.vtun");
                     localTunnel = builder.establish();
+
                     wsClient = new WSClient(new URI("wss://" + serverIP + ":" + serverPort + "/way-to-freedom"), localTunnel, vCipher);
                     SSLContext sslContext = createEasySSLContext();
                     SSLSocketFactory factory = sslContext.getSocketFactory();
