@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 public class MainActivity extends AppCompatActivity {
-    private Button btConn, btDisconn;
+    private Button btConn, btDisConn;
     private ToggleButton protocolButton;
     private EditText editServer, editServerPort, editLocal, editDNS, tokenEdit;
     private TextView viewInfo;
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btConn = findViewById(R.id.connButton);
-        btDisconn = findViewById(R.id.disconnButton);
+        btDisConn = findViewById(R.id.disconnButton);
         protocolButton = findViewById(R.id.protocolButton);
         editServer = findViewById(R.id.serverAddrEdit);
         editServerPort = findViewById(R.id.serverPortEdit);
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         editServer.setText(preferences.getString("serverIP", "192.168.0.1"));
         editServerPort.setText(preferences.getString("serverPort", "3001"));
         editLocal.setText(preferences.getString("localIP", "172.16.0.20/24"));
-        editDNS.setText(preferences.getString("dns", "8.8.8.8"));
+        editDNS.setText(preferences.getString("dns", "208.67.220.22"));
         tokenEdit.setText(preferences.getString("token", "6w9z$C&F)J@NcRfWjXn3r4u7x!A%D*G-"));
         String preProtocol = preferences.getString("protocol", "udp");
         if (preProtocol.equals("ws")) {
@@ -54,12 +54,12 @@ public class MainActivity extends AppCompatActivity {
             protocolButton.setChecked(true);
         }
 
-        btDisconn.setOnClickListener(new View.OnClickListener() {
+        btDisConn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewInfo.setText("Disconnect");
                 Intent intent = new Intent();
-                intent.setClass(MainActivity.this, VtunService.class);
+                intent.setClass(MainActivity.this, VTunService.class);
                 intent.setAction("disconnect");
                 startService(intent);
             }
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int request, int result, Intent data) {
         if (result == RESULT_OK) {
-            Intent intent = new Intent(this, VtunService.class);
+            Intent intent = new Intent(this, VTunService.class);
 
             String serverIP = editServer.getText().toString();
             String serverPort = editServerPort.getText().toString();

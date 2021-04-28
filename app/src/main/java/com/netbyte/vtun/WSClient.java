@@ -45,7 +45,7 @@ public class WSClient extends WebSocketClient {
         try {
             out.write(vCipher.decrypt(buf));
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("WSClient", e.getMessage());
         }
     }
 
