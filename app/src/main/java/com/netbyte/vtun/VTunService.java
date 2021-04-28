@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.VpnService;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.system.OsConstants;
 import android.util.Log;
 
 import java.io.FileInputStream;
@@ -109,6 +111,24 @@ public class VTunService extends VpnService {
         return channelId;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void initTun() throws PackageManager.NameNotFoundException {
+        VpnService.Builder builder = VTunService.this.new Builder();
+        builder.setMtu(1500)
+                .addAddress(localIP, localPrefixLength)
+                .addRoute("0.0.0.0", 0)
+                .addDnsServer(dns)
+                .setSession("VTun")
+                .setConfigureIntent(null)
+                .allowFamily(OsConstants.AF_INET)
+                .setBlocking(true);
+        for (String packageName : Whitelist.packageList) {
+            builder.addDisallowedApplication(packageName);
+        }
+        this.localTunnel = builder.establish();
+        Log.i("initTun","done");
+    }
+
     private void initUdpThread() {
         udpThread = new Thread() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -116,19 +136,7 @@ public class VTunService extends VpnService {
             public void run() {
                 try {
                     Log.i("udpThread", "start");
-                    VpnService.Builder builder = VTunService.this.new Builder();
-                    builder.setMtu(1500)
-                            .addAddress(localIP, localPrefixLength)
-                            .addRoute("0.0.0.0", 0)
-                            .addDnsServer(dns)
-                            .setSession("VTun")
-                            .setConfigureIntent(null)
-                            .setBlocking(true);
-                    for (String packageName : Whitelist.packageList) {
-                        builder.addDisallowedApplication(packageName);
-                    }
-                    localTunnel = builder.establish();
-
+                    initTun();
                     final DatagramChannel udp = DatagramChannel.open();
                     SocketAddress serverAdd = new InetSocketAddress(serverIP, serverPort);
                     udp.connect(serverAdd);
@@ -176,19 +184,7 @@ public class VTunService extends VpnService {
                 WSClient wsClient = null;
                 try {
                     Log.i("wsThread", "start");
-                    VpnService.Builder builder = VTunService.this.new Builder();
-                    builder.setMtu(1500)
-                            .addAddress(localIP, localPrefixLength)
-                            .addRoute("0.0.0.0", 0)
-                            .addDnsServer(dns)
-                            .setSession("VTun")
-                            .setConfigureIntent(null)
-                            .setBlocking(true);
-                    for (String packageName : Whitelist.packageList) {
-                        builder.addDisallowedApplication(packageName);
-                    }
-                    localTunnel = builder.establish();
-
+                    initTun();
                     wsClient = new WSClient(new URI("wss://" + serverIP + ":" + serverPort + "/way-to-freedom"), localTunnel, vCipher);
                     SSLContext sslContext = createEasySSLContext();
                     SSLSocketFactory factory = sslContext.getSocketFactory();
