@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.VpnService;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,28 +30,27 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
 
-public class VtunService extends VpnService {
+public class VTunService extends VpnService {
     final static String ACTION_DISCONNECT = "disconnect";
     final static int MAX_PACKET_SIZE = 1500;
-    static String serverIP, localIP;
-    static int localPrefixLength = 24;
-    static int serverPort;
-    static String dns;
-    static String protocol = "udp";
-    static String token = "";
-    Thread udpThread;
-    Thread wsThread;
-    ParcelFileDescriptor localTunnel;
+    private static String serverIP, localIP;
+    private static int localPrefixLength = 24;
+    private static int serverPort;
+    private static String dns;
+    private static String protocol = "udp";
+    private static String token = "";
+    private Thread udpThread, wsThread;
+    private ParcelFileDescriptor localTunnel;
     private PendingIntent pendingIntent;
     private VCipher vCipher;
+    private volatile boolean RUNNING = true;
 
-    public VtunService() {
+    public VTunService() {
     }
 
     @Override
     public void onCreate() {
-        pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class),
-                PendingIntent.FLAG_CANCEL_CURRENT);
+        pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     @Override
@@ -71,23 +71,23 @@ public class VtunService extends VpnService {
                 serverIP = ex.getString("serverIP");
                 serverPort = ex.getInt("serverPort");
                 protocol = ex.getString("protocol");
-                String[] localAddrs = ex.getString("localIP").split("/");
-                if (localAddrs.length >= 1) {
-                    localIP = localAddrs[0];
+                String[] localIPArray = ex.getString("localIP").split("/");
+                if (localIPArray.length >= 1) {
+                    localIP = localIPArray[0];
                 }
-                if (localAddrs.length >= 2) {
-                    localPrefixLength = Integer.parseInt(localAddrs[1]);
+                if (localIPArray.length >= 2) {
+                    localPrefixLength = Integer.parseInt(localIPArray[1]);
                 }
 
                 dns = ex.getString("dns");
                 token = ex.getString("token");
                 vCipher = new VCipher(token);
 
-                String chanId = createNotificationChannel("vtun", "vtun");
+                String chanId = createNotificationChannel("VTun", "VTun");
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanId);
                 builder.setContentIntent(pendingIntent)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("vtun")
+                        .setContentTitle("VTun")
                         .setContentText("Server connected")
                         .setWhen(System.currentTimeMillis());
                 Notification notification = builder.build();
@@ -112,28 +112,22 @@ public class VtunService extends VpnService {
 
     private void initUdpThread() {
         udpThread = new Thread() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void run() {
                 try {
+                    Log.i("udpThread", "start");
+                    buildTun();
                     final DatagramChannel udp = DatagramChannel.open();
                     SocketAddress serverAdd = new InetSocketAddress(serverIP, serverPort);
                     udp.connect(serverAdd);
                     udp.configureBlocking(false);
-                    VtunService.this.protect(udp.socket());
-
-                    VpnService.Builder builder = VtunService.this.new Builder();
-                    builder.setMtu(1500)
-                            .addAddress(localIP, localPrefixLength)
-                            .addRoute("0.0.0.0", 0)
-                            .addDnsServer(dns)
-                            .setSession("vtun")
-                            .setConfigureIntent(null);
-                    localTunnel = builder.establish();
+                    VTunService.this.protect(udp.socket());
 
                     FileInputStream in = new FileInputStream(localTunnel.getFileDescriptor());
                     FileOutputStream out = new FileOutputStream(localTunnel.getFileDescriptor());
 
-                    while (!isInterrupted()) {
+                    while (RUNNING) {
                         try {
                             byte[] buf = new byte[MAX_PACKET_SIZE];
                             int ln = in.read(buf);
@@ -156,7 +150,7 @@ public class VtunService extends VpnService {
                             Log.e("udpThread", e.toString());
                         }
                     }
-
+                    Log.i("udpThread", "stop");
                 } catch (Exception e) {
                     Log.e("udpThread", e.toString());
                 }
@@ -169,34 +163,23 @@ public class VtunService extends VpnService {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void run() {
+                WSClient wsClient = null;
                 try {
-                    VpnService.Builder builder = VtunService.this.new Builder();
-                    builder.setMtu(1500)
-                            .addAddress(localIP, localPrefixLength)
-                            .addRoute("0.0.0.0", 0)
-                            .addDnsServer(dns)
-                            .setSession("vtun")
-                            .setConfigureIntent(null);
-                    builder.addDisallowedApplication("com.netbyte.vtun");
-                    localTunnel = builder.establish();
-
-                    WSClient wsClient = new WSClient(new URI("wss://" + serverIP + ":" + serverPort + "/way-to-freedom"), localTunnel, vCipher);
+                    Log.i("wsThread", "start");
+                    buildTun();
+                    wsClient = new WSClient(new URI("wss://" + serverIP + ":" + serverPort + "/way-to-freedom"), localTunnel, vCipher);
                     SSLContext sslContext = createEasySSLContext();
                     SSLSocketFactory factory = sslContext.getSocketFactory();
                     wsClient.setSocketFactory(factory);
                     wsClient.connectBlocking();
-                    if (!wsClient.isOpen()) {
-                        Log.e("wsThread", "ws client is not open");
-                        //return;
-                    }
                     FileInputStream in = new FileInputStream(localTunnel.getFileDescriptor());
-                    while (!isInterrupted()) {
+                    while (RUNNING) {
                         try {
                             byte[] buf = new byte[MAX_PACKET_SIZE];
                             int ln = in.read(buf);
                             if (ln > 0) {
                                 if (wsClient.isClosing()) {
-                                    Thread.sleep(200);
+                                    Thread.sleep(1000);
                                 }
                                 if (wsClient.isClosed()) {
                                     wsClient.reconnectBlocking();
@@ -212,12 +195,29 @@ public class VtunService extends VpnService {
                             Log.e("wsThread", e.toString());
                         }
                     }
-
+                    Log.i("wsThread", "stop");
                 } catch (Exception e) {
                     Log.e("wsThread", e.toString());
+                } finally {
+                    if (wsClient != null) {
+                        wsClient.close();
+                    }
                 }
             }
         };
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void buildTun() throws PackageManager.NameNotFoundException {
+        VpnService.Builder builder = VTunService.this.new Builder();
+        builder.setMtu(1500)
+                .addAddress(localIP, localPrefixLength)
+                .addRoute("0.0.0.0", 0)
+                .addDnsServer(dns)
+                .setSession("VTun")
+                .setConfigureIntent(null);
+        builder.addDisallowedApplication("com.netbyte.vtun");
+        this.localTunnel = builder.establish();
     }
 
     private SSLContext createEasySSLContext() throws IOException {
@@ -230,32 +230,30 @@ public class VtunService extends VpnService {
         }
     }
 
-    class TrivialTrustManager implements javax.net.ssl.X509TrustManager {
+    private class TrivialTrustManager implements javax.net.ssl.X509TrustManager {
         public java.security.cert.X509Certificate[] getAcceptedIssuers() {
             return new java.security.cert.X509Certificate[0];
         }
 
         @Override
         public void checkClientTrusted(
-                java.security.cert.X509Certificate[] chain, String authType)
-                throws java.security.cert.CertificateException {
+                java.security.cert.X509Certificate[] chain, String authType) {
         }
 
         @Override
         public void checkServerTrusted(
-                java.security.cert.X509Certificate[] chain, String authType)
-                throws java.security.cert.CertificateException {
+                java.security.cert.X509Certificate[] chain, String authType) {
         }
     }
 
-    private void closeAll() {
+    private void close() {
         try {
             if (udpThread != null) {
-                udpThread.interrupt();
+                this.RUNNING = false;
                 udpThread = null;
             }
             if (wsThread != null) {
-                wsThread.interrupt();
+                this.RUNNING = false;
                 wsThread = null;
             }
             if (localTunnel != null) {
@@ -263,25 +261,26 @@ public class VtunService extends VpnService {
                 localTunnel = null;
             }
         } catch (Exception e) {
-            Log.e("closeAll", e.toString());
+            Log.e("VTun", e.toString());
         }
     }
 
     private void disconnect() {
-        Log.i("disconnect", "disconnecting...");
+        Log.i("VTun", "disconnecting...");
         try {
-            closeAll();
+            close();
             stopForeground(true);
         } catch (Exception e) {
-            Log.e("disconnect", e.toString());
+            Log.e("VTun", e.toString());
         }
     }
 
     private void connect() {
-        Log.i("connect", "connecting...");
-        Log.i("vtun", serverIP + " " + serverPort + " " + localIP + " " + dns);
+        Log.i("VTun", "connecting...");
+        Log.i("VTun", serverIP + " " + serverPort + " " + localIP + " " + dns);
         try {
-            closeAll();
+            close();
+            this.RUNNING = true;
             if (protocol.equals("udp")) {
                 initUdpThread();
                 udpThread.start();
@@ -290,7 +289,7 @@ public class VtunService extends VpnService {
                 wsThread.start();
             }
         } catch (Exception e) {
-            Log.e("vtun", e.toString());
+            Log.e("VTun", e.toString());
         }
     }
 }
