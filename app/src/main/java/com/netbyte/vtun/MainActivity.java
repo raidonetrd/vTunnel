@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btConn = findViewById(R.id.connButton);
-        btDisConn = findViewById(R.id.disconnButton);
+        btDisConn = findViewById(R.id.disConnButton);
         protocolButton = findViewById(R.id.protocolButton);
         editServer = findViewById(R.id.serverAddrEdit);
         editServerPort = findViewById(R.id.serverPortEdit);
@@ -75,13 +75,12 @@ public class MainActivity extends AppCompatActivity {
                     startActivityForResult(intent, 0);
                 } else {
                     onActivityResult(0, RESULT_OK, null);
+                    statThreadRunning = true;
+                    Thread t = new Thread(new StatThread(viewInfo));
+                    t.start();
                 }
-                statThreadRunning = true;
-                Thread t = new Thread(new StatThread(viewInfo));
-                t.start();
             }
         });
-
 
     }
 
@@ -128,13 +127,12 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             while (statThreadRunning) {
                 try {
-                    textView.setText(String.format("up %dKB down %dKB", MainActivity.upByte.get() / 1024, MainActivity.downByte.get() / 1024));
+                    textView.setText(String.format("Network: up %dKB down %dKB", MainActivity.upByte.get() / 1024, MainActivity.downByte.get() / 1024));
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-
         }
     }
 }
