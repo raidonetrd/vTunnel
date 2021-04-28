@@ -45,7 +45,9 @@ public class WSClient extends WebSocketClient {
         byte[] buf = new byte[byteBuffer.remaining()];
         byteBuffer.get(buf);
         try {
-            out.write(vCipher.decrypt(buf));
+            byte[] data = vCipher.decrypt(buf);
+            MainActivity.downByte.addAndGet(data.length);
+            out.write(data);
         } catch (IOException e) {
             Log.e("WSClient", e.getMessage());
         }

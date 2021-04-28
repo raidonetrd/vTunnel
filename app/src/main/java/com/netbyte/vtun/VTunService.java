@@ -126,7 +126,7 @@ public class VTunService extends VpnService {
             builder.addDisallowedApplication(packageName);
         }
         this.localTunnel = builder.establish();
-        Log.i("initTun","done");
+        Log.i("initTun", "done");
     }
 
     private void initUdpThread() {
@@ -153,6 +153,7 @@ public class VTunService extends VpnService {
                                 byte[] data = Arrays.copyOfRange(buf, 0, ln);
                                 ByteBuffer bf = ByteBuffer.wrap(vCipher.encrypt(data));
                                 udp.write(bf);
+                                MainActivity.upByte.addAndGet(ln);
                             }
 
                             ByteBuffer bf = ByteBuffer.allocate(MAX_PACKET_SIZE);
@@ -163,6 +164,7 @@ public class VTunService extends VpnService {
                                 buf = new byte[ln];
                                 bf.get(buf);
                                 out.write(vCipher.decrypt(buf));
+                                MainActivity.downByte.addAndGet(ln);
                             }
                         } catch (Exception e) {
                             Log.e("udpThread", e.toString());
@@ -185,7 +187,8 @@ public class VTunService extends VpnService {
                 try {
                     Log.i("wsThread", "start");
                     initTun();
-                    wsClient = new WSClient(new URI("wss://" + serverIP + ":" + serverPort + "/way-to-freedom"), localTunnel, vCipher);
+                    String uri = String.format("wss://%s:%d/way-to-freedom", serverIP, serverPort);
+                    wsClient = new WSClient(new URI(uri), localTunnel, vCipher);
                     SSLContext sslContext = createEasySSLContext();
                     SSLSocketFactory factory = sslContext.getSocketFactory();
                     wsClient.setSocketFactory(factory);
@@ -207,6 +210,7 @@ public class VTunService extends VpnService {
                                 if (wsClient.isOpen()) {
                                     byte[] data = Arrays.copyOfRange(buf, 0, ln);
                                     wsClient.send(vCipher.encrypt(data));
+                                    MainActivity.upByte.addAndGet(ln);
                                 }
                             }
                         } catch (Exception e) {
