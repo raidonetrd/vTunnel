@@ -18,9 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private ToggleButton protocolButton;
     private EditText editServer, editServerPort, editLocal, editDNS, tokenEdit;
     private TextView viewInfo;
-    private Thread sendThread;
-    SharedPreferences preferences;
-    SharedPreferences.Editor preEditor;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor preEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +36,13 @@ public class MainActivity extends AppCompatActivity {
         tokenEdit = findViewById(R.id.tokenText);
         editDNS = findViewById(R.id.dnsEdit);
 
-        sendThread = null;
-
         preferences = getPreferences(Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
 
         editServer.setText(preferences.getString("serverIP", "192.168.0.1"));
-        editServerPort.setText(preferences.getString("serverPort", "3001"));
+        editServerPort.setText(preferences.getString("serverPort", "443"));
         editLocal.setText(preferences.getString("localIP", "172.16.0.20/24"));
-        editDNS.setText(preferences.getString("dns", "208.67.220.22"));
+        editDNS.setText(preferences.getString("dns", "8.8.4.4"));
         tokenEdit.setText(preferences.getString("token", "6w9z$C&F)J@NcRfWjXn3r4u7x!A%D*G-"));
         String preProtocol = preferences.getString("protocol", "udp");
         if (preProtocol.equals("ws")) {

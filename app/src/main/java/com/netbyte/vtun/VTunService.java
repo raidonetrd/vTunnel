@@ -5,7 +5,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.VpnService;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,7 +42,6 @@ public class VTunService extends VpnService {
     private ParcelFileDescriptor localTunnel;
     private PendingIntent pendingIntent;
     private VCipher vCipher;
-    private volatile boolean RUNNING = true;
 
     public VTunService() {
     }
@@ -117,7 +115,15 @@ public class VTunService extends VpnService {
             public void run() {
                 try {
                     Log.i("udpThread", "start");
-                    buildTun();
+                    VpnService.Builder builder = VTunService.this.new Builder();
+                    builder.setMtu(1500)
+                            .addAddress(localIP, localPrefixLength)
+                            .addRoute("0.0.0.0", 0)
+                            .addDnsServer(dns)
+                            .setSession("VTun")
+                            .setConfigureIntent(null);
+                    builder.addDisallowedApplication("com.netbyte.vtun");
+                    localTunnel = builder.establish();
                     final DatagramChannel udp = DatagramChannel.open();
                     SocketAddress serverAdd = new InetSocketAddress(serverIP, serverPort);
                     udp.connect(serverAdd);
@@ -127,7 +133,7 @@ public class VTunService extends VpnService {
                     FileInputStream in = new FileInputStream(localTunnel.getFileDescriptor());
                     FileOutputStream out = new FileOutputStream(localTunnel.getFileDescriptor());
 
-                    while (RUNNING) {
+                    while (!isInterrupted()) {
                         try {
                             byte[] buf = new byte[MAX_PACKET_SIZE];
                             int ln = in.read(buf);
@@ -160,20 +166,28 @@ public class VTunService extends VpnService {
 
     private void initWsThread() {
         wsThread = new Thread() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void run() {
                 WSClient wsClient = null;
                 try {
                     Log.i("wsThread", "start");
-                    buildTun();
+                    VpnService.Builder builder = VTunService.this.new Builder();
+                    builder.setMtu(1500)
+                            .addAddress(localIP, localPrefixLength)
+                            .addRoute("0.0.0.0", 0)
+                            .addDnsServer(dns)
+                            .setSession("VTun")
+                            .setConfigureIntent(null);
+                    builder.addDisallowedApplication("com.netbyte.vtun");
+                    localTunnel = builder.establish();
                     wsClient = new WSClient(new URI("wss://" + serverIP + ":" + serverPort + "/way-to-freedom"), localTunnel, vCipher);
                     SSLContext sslContext = createEasySSLContext();
                     SSLSocketFactory factory = sslContext.getSocketFactory();
                     wsClient.setSocketFactory(factory);
                     wsClient.connectBlocking();
                     FileInputStream in = new FileInputStream(localTunnel.getFileDescriptor());
-                    while (RUNNING) {
+                    while (!isInterrupted()) {
                         try {
                             byte[] buf = new byte[MAX_PACKET_SIZE];
                             int ln = in.read(buf);
@@ -207,19 +221,6 @@ public class VTunService extends VpnService {
         };
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void buildTun() throws PackageManager.NameNotFoundException {
-        VpnService.Builder builder = VTunService.this.new Builder();
-        builder.setMtu(1500)
-                .addAddress(localIP, localPrefixLength)
-                .addRoute("0.0.0.0", 0)
-                .addDnsServer(dns)
-                .setSession("VTun")
-                .setConfigureIntent(null);
-        builder.addDisallowedApplication("com.netbyte.vtun");
-        this.localTunnel = builder.establish();
-    }
-
     private SSLContext createEasySSLContext() throws IOException {
         try {
             SSLContext context = SSLContext.getInstance("TLS");
@@ -249,11 +250,11 @@ public class VTunService extends VpnService {
     private void close() {
         try {
             if (udpThread != null) {
-                this.RUNNING = false;
+                udpThread.interrupt();
                 udpThread = null;
             }
             if (wsThread != null) {
-                this.RUNNING = false;
+                wsThread.interrupt();
                 wsThread = null;
             }
             if (localTunnel != null) {
@@ -280,7 +281,6 @@ public class VTunService extends VpnService {
         Log.i("VTun", serverIP + " " + serverPort + " " + localIP + " " + dns);
         try {
             close();
-            this.RUNNING = true;
             if (protocol.equals("udp")) {
                 initUdpThread();
                 udpThread.start();
