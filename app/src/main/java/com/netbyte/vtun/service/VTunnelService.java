@@ -15,6 +15,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.netbyte.vtun.MainActivity;
+import com.netbyte.vtun.R;
 import com.netbyte.vtun.thread.UdpThread;
 import com.netbyte.vtun.thread.WsThread;
 import com.netbyte.vtun.utils.VCipher;
@@ -73,7 +74,7 @@ public class VTunnelService extends VpnService {
                 String chanId = createNotificationChannel(AppConst.APP_NAME, AppConst.APP_NAME);
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanId);
                 builder.setContentIntent(pendingIntent)
-                        .setSmallIcon(0)
+                        .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle(AppConst.APP_NAME)
                         .setContentText("Running...")
                         .setWhen(System.currentTimeMillis());
