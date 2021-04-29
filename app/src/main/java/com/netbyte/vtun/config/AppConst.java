@@ -4,9 +4,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class AppConst {
 
-    public static final String APP_NAME = "VTunnel";
+    public static final String APP_NAME = "vTunnel";
     public static final String APP_PACKAGE_NAME = "com.netbyte.vtun";
-    public static final String DEFAULT_TAG = "VTunnel";
+    public static final String DEFAULT_TAG = "vTunnel";
     public static final int BUFFER_SIZE = 1500;
     public static final int MTU = 1500;
     public static final String DEFAULT_SERVER_IP = "192.168.0.1";
