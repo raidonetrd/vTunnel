@@ -75,7 +75,7 @@ public class VTunnelService extends VpnService {
                 builder.setContentIntent(pendingIntent)
                         .setSmallIcon(0)
                         .setContentTitle(AppConst.APP_NAME)
-                        .setContentText("App is running")
+                        .setContentText("Running...")
                         .setWhen(System.currentTimeMillis());
                 Notification notification = builder.build();
                 startForeground(1, notification);
