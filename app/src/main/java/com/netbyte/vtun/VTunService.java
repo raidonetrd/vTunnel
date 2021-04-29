@@ -142,7 +142,6 @@ public class VTunService extends VpnService {
                     udp.connect(serverAdd);
                     udp.configureBlocking(false);
                     VTunService.this.protect(udp.socket());
-
                     FileInputStream in = new FileInputStream(localTunnel.getFileDescriptor());
                     FileOutputStream out = new FileOutputStream(localTunnel.getFileDescriptor());
                     while (!isInterrupted()) {
@@ -188,12 +187,14 @@ public class VTunService extends VpnService {
                     Log.i("wsThread", "start");
                     initTun();
                     String uri = String.format("wss://%s:%d/way-to-freedom", serverIP, serverPort);
-                    wsClient = new WSClient(new URI(uri), localTunnel, vCipher);
+                    wsClient = new WSClient(new URI(uri), vCipher);
                     SSLContext sslContext = createEasySSLContext();
                     SSLSocketFactory factory = sslContext.getSocketFactory();
                     wsClient.setSocketFactory(factory);
                     wsClient.connectBlocking();
                     FileInputStream in = new FileInputStream(localTunnel.getFileDescriptor());
+                    FileOutputStream out = new FileOutputStream(localTunnel.getFileDescriptor());
+                    wsClient.setTunOutStream(out);
                     while (!isInterrupted()) {
                         try {
                             byte[] buf = new byte[MAX_PACKET_SIZE];

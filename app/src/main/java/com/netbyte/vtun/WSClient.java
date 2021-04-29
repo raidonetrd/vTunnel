@@ -1,7 +1,6 @@
 package com.netbyte.vtun;
 
 
-import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
 import org.java_websocket.client.WebSocketClient;
@@ -14,17 +13,17 @@ import java.nio.ByteBuffer;
 
 public class WSClient extends WebSocketClient {
 
-    private ParcelFileDescriptor tun;
-    private FileOutputStream out;
+    private FileOutputStream tunOutStream;
     private VCipher vCipher;
 
-    public WSClient(URI serverUri, ParcelFileDescriptor tun, VCipher vCipher) {
+    public WSClient(URI serverUri, VCipher vCipher) {
         super(serverUri);
-        this.tun = tun;
         this.vCipher = vCipher;
-        if (this.tun != null) {
-            this.out = new FileOutputStream(tun.getFileDescriptor());
-        }
+
+    }
+
+    public void setTunOutStream(FileOutputStream tunOutStream) {
+        this.tunOutStream = tunOutStream;
     }
 
     @Override
@@ -39,7 +38,7 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onMessage(ByteBuffer byteBuffer) {
-        if (out == null || byteBuffer.remaining() == 0) {
+        if (tunOutStream == null || byteBuffer.remaining() == 0) {
             return;
         }
         byte[] buf = new byte[byteBuffer.remaining()];
@@ -47,7 +46,7 @@ public class WSClient extends WebSocketClient {
         try {
             byte[] data = vCipher.decrypt(buf);
             MainActivity.downByte.addAndGet(data.length);
-            out.write(data);
+            tunOutStream.write(data);
         } catch (IOException e) {
             Log.e("WSClient", e.getMessage());
         }
