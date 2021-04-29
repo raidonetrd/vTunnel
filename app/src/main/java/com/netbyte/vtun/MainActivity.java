@@ -13,27 +13,27 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import java.util.concurrent.atomic.AtomicLong;
+import com.netbyte.vtun.config.AppConst;
+import com.netbyte.vtun.service.VTunnelService;
+import com.netbyte.vtun.thread.StatThread;
 
 public class MainActivity extends AppCompatActivity {
-    public static AtomicLong downByte = new AtomicLong(0);
-    public static AtomicLong upByte = new AtomicLong(0);
-    private Button btConn, btDisConn;
-    private ToggleButton protocolButton;
+    private Button btnConn, btnDisConn;
+    private ToggleButton protocolBtn;
     private EditText editServer, editServerPort, editLocal, editDNS, tokenEdit;
     private TextView viewInfo;
     private SharedPreferences preferences;
     private SharedPreferences.Editor preEditor;
-    private volatile boolean statThreadRunning = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btConn = findViewById(R.id.connButton);
-        btDisConn = findViewById(R.id.disConnButton);
-        protocolButton = findViewById(R.id.protocolButton);
+        btnConn = findViewById(R.id.connButton);
+        btnDisConn = findViewById(R.id.disConnButton);
+        protocolBtn = findViewById(R.id.protocolButton);
         editServer = findViewById(R.id.serverAddrEdit);
         editServerPort = findViewById(R.id.serverPortEdit);
         editLocal = findViewById(R.id.localAddrEdit);
@@ -44,29 +44,29 @@ public class MainActivity extends AppCompatActivity {
         preferences = getPreferences(Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
 
-        editServer.setText(preferences.getString("serverIP", "192.168.0.1"));
-        editServerPort.setText(preferences.getString("serverPort", "443"));
-        editLocal.setText(preferences.getString("localIP", "172.16.0.20/24"));
-        editDNS.setText(preferences.getString("dns", "208.67.220.220"));
-        tokenEdit.setText(preferences.getString("token", "6w9z$C&F)J@NcRfWjXn3r4u7x!A%D*G-"));
-        String preProtocol = preferences.getString("protocol", "ws");
-        protocolButton.setChecked(preProtocol.equals("ws"));
+        editServer.setText(preferences.getString("serverIP", AppConst.DEFAULT_SERVER_IP));
+        editServerPort.setText(preferences.getString("serverPort", AppConst.DEFAULT_SERVER_PORT));
+        editLocal.setText(preferences.getString("localIP", AppConst.DEFAULT_LOCAL_IP));
+        editDNS.setText(preferences.getString("dns", AppConst.DEFAULT_DNS));
+        tokenEdit.setText(preferences.getString("token", AppConst.DEFAULT_TOKEN));
+        String preProtocol = preferences.getString("protocol", AppConst.DEFAULT_PROTOCOL);
+        protocolBtn.setChecked(preProtocol.equals(AppConst.DEFAULT_PROTOCOL));
 
-        btDisConn.setOnClickListener(new View.OnClickListener() {
+        btnDisConn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                statThreadRunning = false;
-                upByte.set(0);
-                downByte.set(0);
+                AppConst.STAT_THREAD_RUNNABLE = false;
+                AppConst.UP_BYTE.set(0);
+                AppConst.DOWN_BYTE.set(0);
                 viewInfo.setText("Disconnected");
                 Intent intent = new Intent();
-                intent.setClass(MainActivity.this, VTunService.class);
-                intent.setAction("disconnect");
+                intent.setClass(MainActivity.this, VTunnelService.class);
+                intent.setAction(AppConst.BTN_ACTION_DISCONNECT);
                 startService(intent);
             }
         });
 
-        btConn.setOnClickListener(new View.OnClickListener() {
+        btnConn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewInfo.setText("Connected");
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivityForResult(intent, 0);
                 } else {
                     onActivityResult(0, RESULT_OK, null);
-                    statThreadRunning = true;
+                    AppConst.STAT_THREAD_RUNNABLE = true;
                     Thread t = new Thread(new StatThread(viewInfo));
                     t.start();
                 }
@@ -89,14 +89,14 @@ public class MainActivity extends AppCompatActivity {
         if (result != RESULT_OK) {
             return;
         }
-        Intent intent = new Intent(this, VTunService.class);
+        Intent intent = new Intent(this, VTunnelService.class);
         String serverIP = editServer.getText().toString();
         String serverPort = editServerPort.getText().toString();
         String localIp = editLocal.getText().toString();
         String dns = editDNS.getText().toString();
         String token = tokenEdit.getText().toString();
-        String protocol = this.protocolButton.isChecked() ? "ws" : "udp";
-        intent.setAction("connect");
+        String protocol = this.protocolBtn.isChecked() ? "ws" : "udp";
+        intent.setAction(AppConst.BTN_ACTION_CONNECT);
         intent.putExtra("serverIP", serverIP);
         intent.putExtra("serverPort", Integer.parseInt(serverPort));
         intent.putExtra("localIP", localIp);
@@ -115,24 +115,4 @@ public class MainActivity extends AppCompatActivity {
         preEditor.commit();
     }
 
-
-    class StatThread implements Runnable {
-        TextView textView;
-
-        StatThread(TextView textView) {
-            this.textView = textView;
-        }
-
-        @Override
-        public void run() {
-            while (statThreadRunning) {
-                try {
-                    textView.setText(String.format("Network: up %dKB down %dKB", MainActivity.upByte.get() / 1024, MainActivity.downByte.get() / 1024));
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 }

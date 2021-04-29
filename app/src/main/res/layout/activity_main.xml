@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:text="8.8.4.4" />
+                android:text="223.5.5.5" />
 
         </LinearLayout>
 
@@ -179,5 +179,6 @@
         android:orientation="horizontal"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="220dp"></LinearLayout>
+        tools:layout_editor_absoluteY="220dp">
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

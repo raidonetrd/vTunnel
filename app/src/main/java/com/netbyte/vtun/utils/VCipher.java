@@ -1,4 +1,4 @@
-package com.netbyte.vtun;
+package com.netbyte.vtun.utils;
 
 public class VCipher {
     private static String key = "8pUsXuZw4z6B9EhGdKgNjQnjmVsYv2x5";
