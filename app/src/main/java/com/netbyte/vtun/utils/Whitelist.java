@@ -1,4 +1,6 @@
-package com.netbyte.vtun;
+package com.netbyte.vtun.utils;
+
+import com.netbyte.vtun.config.AppConst;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +10,7 @@ public class Whitelist {
     public static List<String> packageList = new ArrayList<>();
 
     static {
-        packageList.add("com.netbyte.vtun");
+        packageList.add(AppConst.APP_PACKAGE_NAME);
         packageList.add("cn.xuexi.android");
         packageList.add("com.taobao.taobao");
         packageList.add("com.eg.android.AlipayGphone");

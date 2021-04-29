@@ -1,7 +1,11 @@
-package com.netbyte.vtun;
+package com.netbyte.vtun.ws;
 
 
 import android.util.Log;
+
+import com.netbyte.vtun.MainActivity;
+import com.netbyte.vtun.config.AppConst;
+import com.netbyte.vtun.utils.VCipher;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -28,7 +32,7 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshake) {
-        Log.i("WSClient", "ws client is open");
+        Log.i("WSClient", "ws is open");
     }
 
     @Override
@@ -45,7 +49,7 @@ public class WSClient extends WebSocketClient {
         byteBuffer.get(buf);
         try {
             byte[] data = vCipher.decrypt(buf);
-            MainActivity.downByte.addAndGet(data.length);
+            AppConst.DOWN_BYTE.addAndGet(data.length);
             tunOutStream.write(data);
         } catch (IOException e) {
             Log.e("WSClient", e.getMessage());
