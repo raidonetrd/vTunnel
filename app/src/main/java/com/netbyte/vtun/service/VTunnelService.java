@@ -120,6 +120,8 @@ public class VTunnelService extends VpnService {
                 AppConst.WS_THREAD_RUNNABLE = false;
                 wsThread = null;
             }
+            AppConst.UP_BYTE.set(0);
+            AppConst.DOWN_BYTE.set(0);
         } catch (Exception e) {
             Log.e(AppConst.DEFAULT_TAG, e.toString());
         }

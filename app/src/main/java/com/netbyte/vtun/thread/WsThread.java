@@ -47,7 +47,7 @@ public class WsThread extends VpnThread {
             FileInputStream in = new FileInputStream(tunnel.getFileDescriptor());
             FileOutputStream out = new FileOutputStream(tunnel.getFileDescriptor());
             wsClient.setTunOutStream(out);
-            while (!isInterrupted()) {
+            while (AppConst.WS_THREAD_RUNNABLE) {
                 try {
                     byte[] buf = new byte[AppConst.BUFFER_SIZE];
                     int ln = in.read(buf);
