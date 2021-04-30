@@ -54,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
         btnDisConn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppConst.STAT_THREAD_RUNNABLE = false;
-                AppConst.UP_BYTE.set(0);
-                AppConst.DOWN_BYTE.set(0);
                 viewInfo.setText("Disconnected");
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, VTunnelService.class);

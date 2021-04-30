@@ -23,7 +23,7 @@ import com.netbyte.vtun.config.AppConst;
 
 public class VTunnelService extends VpnService {
     private static String serverIP, localIP;
-    private static int localPrefixLength = AppConst.DEFAULT_LOCAL_PREFIX_LENGTH;
+    private static int localPrefixLength;
     private static int serverPort;
     private static String dns;
     private static String protocol;
@@ -75,6 +75,7 @@ public class VTunnelService extends VpnService {
         String[] localIPArray = ex.getString("localIP").split("/");
         if (localIPArray.length >= 1) {
             localIP = localIPArray[0];
+            localPrefixLength = AppConst.DEFAULT_LOCAL_PREFIX_LENGTH;
         }
         if (localIPArray.length >= 2) {
             localPrefixLength = Integer.parseInt(localIPArray[1]);
