@@ -50,11 +50,8 @@ public class VTunnelService extends VpnService {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent == null) {
-            return START_NOT_STICKY;
-        }
         try {
-            if (AppConst.BTN_ACTION_DISCONNECT.equals(intent.getAction())) {
+            if (intent != null && AppConst.BTN_ACTION_DISCONNECT.equals(intent.getAction())) {
                 disconnect();
                 return START_NOT_STICKY;
             }
@@ -125,8 +122,8 @@ public class VTunnelService extends VpnService {
     private void disconnect() {
         Log.i(AppConst.DEFAULT_TAG, "disconnecting...");
         try {
-            stopAllThreads();
             removeNotification();
+            stopAllThreads();
         } catch (Exception e) {
             Log.e(AppConst.DEFAULT_TAG, "disconnect error:" + e.toString());
         }
