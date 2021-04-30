@@ -97,17 +97,12 @@ public class VTunnelService extends VpnService {
                 .setOngoing(true)
                 .setShowWhen(false)
                 .setOnlyAlertOnce(true);
-        startForeground(AppConst.NOTIFICATION_ID, notificationBuilder.build());
-    }
-
-    private void removeNotification() {
-        stopForeground(true);
     }
 
     private void connect() {
         Log.i(AppConst.DEFAULT_TAG, "connecting " + serverIP + " " + serverPort + " " + localIP + " " + dns);
         try {
-            stopAllThreads();
+            stop();
             startStatThread();
             if (protocol.equals("udp")) {
                 startUdpThread();
@@ -115,37 +110,22 @@ public class VTunnelService extends VpnService {
                 startWsThread();
             }
         } catch (Exception e) {
-            Log.e(AppConst.DEFAULT_TAG, "disconnect error:" + e.toString());
+            Log.e(AppConst.DEFAULT_TAG, "connecting error:" + e.toString());
         }
     }
 
     private void disconnect() {
         Log.i(AppConst.DEFAULT_TAG, "disconnecting...");
-        try {
-            removeNotification();
-            stopAllThreads();
-        } catch (Exception e) {
-            Log.e(AppConst.DEFAULT_TAG, "disconnect error:" + e.toString());
-        }
+        stop();
     }
 
-    private void stopAllThreads() {
-        try {
-            if (udpThread != null) {
-                AppConst.UDP_THREAD_RUNNABLE = false;
-                udpThread = null;
-            }
-            if (wsThread != null) {
-                AppConst.WS_THREAD_RUNNABLE = false;
-                wsThread = null;
-            }
-            if (statThread != null) {
-                AppConst.STAT_THREAD_RUNNABLE = false;
-                statThread = null;
-            }
-        } catch (Exception e) {
-            Log.e(AppConst.DEFAULT_TAG, "close error:" + e.toString());
-        }
+    private void stop() {
+        AppConst.UDP_THREAD_RUNNABLE = false;
+        AppConst.WS_THREAD_RUNNABLE = false;
+        AppConst.STAT_THREAD_RUNNABLE = false;
+        this.udpThread = null;
+        this.wsThread = null;
+        this.statThread = null;
     }
 
     private void startUdpThread() {
@@ -162,7 +142,7 @@ public class VTunnelService extends VpnService {
 
     private void startStatThread() {
         AppConst.STAT_THREAD_RUNNABLE = true;
-        statThread = new StatThread(notificationManager, notificationBuilder);
+        statThread = new StatThread(notificationManager, notificationBuilder, this);
         statThread.start();
     }
 }
