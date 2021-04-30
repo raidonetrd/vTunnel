@@ -6,6 +6,9 @@ public class AppConst {
 
     public static final String APP_NAME = "vTunnel";
     public static final String APP_PACKAGE_NAME = "com.netbyte.vtun";
+    public static final String NOTIFICATION_CHANNEL_ID = "vTunnel";
+    public static final String NOTIFICATION_CHANNEL_NAME = "vTunnel";
+    public static final int NOTIFICATION_ID = 911;
     public static final String DEFAULT_TAG = "vTunnel";
     public static final int BUFFER_SIZE = 1500;
     public static final int MTU = 1500;
