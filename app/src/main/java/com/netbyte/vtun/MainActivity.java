@@ -15,7 +15,6 @@ import android.widget.ToggleButton;
 
 import com.netbyte.vtun.config.AppConst;
 import com.netbyte.vtun.service.VTunnelService;
-import com.netbyte.vtun.thread.StatThread;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnConn, btnDisConn;
@@ -75,9 +74,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivityForResult(intent, 0);
                 } else {
                     onActivityResult(0, RESULT_OK, null);
-                    AppConst.STAT_THREAD_RUNNABLE = true;
-                    Thread t = new Thread(new StatThread(viewInfo));
-                    t.start();
                 }
             }
         });

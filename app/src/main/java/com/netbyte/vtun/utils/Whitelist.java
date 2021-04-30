@@ -30,7 +30,6 @@ public class Whitelist {
         packageList.add("com.xunmeng.pinduoduo");
         packageList.add("com.suning.mobile.ebuy");
         packageList.add("com.jingdong.app.mall");
-        packageList.add("ctrip.android.view");
         packageList.add("com.achievo.vipshop");
         packageList.add("com.netease.newsreader.activity");
         packageList.add("com.ss.android.article.lite");
@@ -43,5 +42,18 @@ public class Whitelist {
         packageList.add("com.baidu.tieba");
         packageList.add("com.baidu.input_huawei");
         packageList.add("com.qihoo.appstore");
+        packageList.add("com.netease.cloudmusic");
+        packageList.add("com.tencent.qqmusic");
+        packageList.add("com.ximalaya.ting.android");
+        packageList.add("com.zhihu.android");
+        packageList.add("me.ele");
+        packageList.add("com.Qunar");
+        packageList.add("ctrip.android.view");
+        packageList.add("com.taobao.trip");
+        packageList.add("com.qiyi.video");
+        packageList.add("com.tencent.qqlive");
+        packageList.add("air.tv.douyu.android");
+        packageList.add("com.smile.gifmaker");
+        packageList.add("com.ss.android.ugc.aweme");
     }
 }

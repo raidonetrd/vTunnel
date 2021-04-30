@@ -1,11 +1,9 @@
 package com.netbyte.vtun.service;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.VpnService;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +14,7 @@ import android.util.Log;
 
 import com.netbyte.vtun.MainActivity;
 import com.netbyte.vtun.R;
+import com.netbyte.vtun.thread.StatThread;
 import com.netbyte.vtun.thread.UdpThread;
 import com.netbyte.vtun.thread.WsThread;
 import com.netbyte.vtun.utils.VCipher;
@@ -29,9 +28,11 @@ public class VTunnelService extends VpnService {
     private static String dns;
     private static String protocol;
     private static String token;
-    private Thread udpThread, wsThread;
+    private Thread udpThread, wsThread, statThread;
     private PendingIntent pendingIntent;
     private VCipher vCipher;
+    private NotificationManager notificationManager;
+    private NotificationCompat.Builder notificationBuilder;
 
     public VTunnelService() {
     }
@@ -49,7 +50,6 @@ public class VTunnelService extends VpnService {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(AppConst.DEFAULT_TAG, "start: " + intent.getAction());
         try {
             if (intent != null && AppConst.BTN_ACTION_DISCONNECT.equals(intent.getAction())) {
                 disconnect();
@@ -71,22 +71,24 @@ public class VTunnelService extends VpnService {
                 token = ex.getString("token");
                 vCipher = new VCipher(token);
 
-                String chanId = createNotificationChannel(AppConst.APP_NAME, AppConst.APP_NAME);
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanId);
-                builder.setContentIntent(pendingIntent)
+                String channelId = createNotificationChannel(AppConst.NOTIFICATION_CHANNEL_ID, AppConst.NOTIFICATION_CHANNEL_NAME);
+                notificationBuilder = new NotificationCompat.Builder(this, channelId);
+                notificationBuilder.setContentIntent(pendingIntent)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle(AppConst.APP_NAME)
-                        .setContentText("Running...")
-                        .setWhen(System.currentTimeMillis());
-                Notification notification = builder.build();
-                startForeground(1, notification);
+                        .setPriority(NotificationCompat.PRIORITY_MIN)
+                        .setOngoing(true)
+                        .setShowWhen(false)
+                        .setOnlyAlertOnce(true);
+                startForeground(AppConst.NOTIFICATION_ID, notificationBuilder.build());
                 connect();
             }
         } catch (Exception e) {
-            Log.e(AppConst.DEFAULT_TAG, e.toString());
+            Log.e(AppConst.DEFAULT_TAG, "onStartCommand error:" + e.toString());
         }
         return START_STICKY;
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private String createNotificationChannel(String channelId, String channelName) {
@@ -94,22 +96,29 @@ public class VTunnelService extends VpnService {
             return "";
         }
         NotificationChannel chan = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE);
-        NotificationManager service = getSystemService(NotificationManager.class);
-        service.createNotificationChannel(chan);
+        notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(chan);
         return channelId;
     }
 
-    private void initUdpThread() {
+    private void startUdpThread() {
         AppConst.UDP_THREAD_RUNNABLE = true;
         udpThread = new UdpThread(serverIP, serverPort, localIP, localPrefixLength, dns, vCipher, this);
         udpThread.start();
     }
 
-    private void initWsThread() {
+    private void startWsThread() {
         AppConst.WS_THREAD_RUNNABLE = true;
         wsThread = new WsThread(serverIP, serverPort, localIP, localPrefixLength, dns, vCipher, this);
         wsThread.start();
     }
+
+    private void startStatThread() {
+        AppConst.STAT_THREAD_RUNNABLE = true;
+        statThread = new StatThread(notificationManager, notificationBuilder);
+        statThread.start();
+    }
+
 
     private void close() {
         try {
@@ -121,10 +130,12 @@ public class VTunnelService extends VpnService {
                 AppConst.WS_THREAD_RUNNABLE = false;
                 wsThread = null;
             }
-            AppConst.UP_BYTE.set(0);
-            AppConst.DOWN_BYTE.set(0);
+            if (statThread != null) {
+                AppConst.STAT_THREAD_RUNNABLE = false;
+                statThread = null;
+            }
         } catch (Exception e) {
-            Log.e(AppConst.DEFAULT_TAG, e.toString());
+            Log.e(AppConst.DEFAULT_TAG, "close error:" + e.toString());
         }
     }
 
@@ -134,7 +145,7 @@ public class VTunnelService extends VpnService {
             close();
             stopForeground(true);
         } catch (Exception e) {
-            Log.e(AppConst.DEFAULT_TAG, e.toString());
+            Log.e(AppConst.DEFAULT_TAG, "disconnect error:" + e.toString());
         }
     }
 
@@ -143,15 +154,14 @@ public class VTunnelService extends VpnService {
         Log.i(AppConst.DEFAULT_TAG, serverIP + " " + serverPort + " " + localIP + " " + dns);
         try {
             close();
+            startStatThread();
             if (protocol.equals("udp")) {
-                initUdpThread();
-                udpThread.start();
+                startUdpThread();
             } else if (protocol.equals("ws")) {
-                initWsThread();
-                wsThread.start();
+                startWsThread();
             }
         } catch (Exception e) {
-            Log.e(AppConst.DEFAULT_TAG, e.toString());
+            Log.e(AppConst.DEFAULT_TAG, "disconnect error:" + e.toString());
         }
     }
 }
