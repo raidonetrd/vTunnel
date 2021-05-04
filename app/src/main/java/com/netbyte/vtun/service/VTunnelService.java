@@ -20,7 +20,6 @@ import com.netbyte.vtun.thread.WsThread;
 import com.netbyte.vtun.utils.VCipher;
 import com.netbyte.vtun.config.AppConst;
 
-
 public class VTunnelService extends VpnService {
     private static String serverIP, localIP;
     private static int localPrefixLength;
