@@ -52,18 +52,16 @@ public class WsThread extends VpnThread {
                     byte[] buf = new byte[AppConst.BUFFER_SIZE];
                     int ln = in.read(buf);
                     if (ln > 0) {
-                        if (wsClient.isClosing()) {
-                            Thread.sleep(1000);
-                        }
-                        if (wsClient.isClosed()) {
-                            wsClient.reconnectBlocking();
-                            Thread.sleep(3000);
-                            Log.i("wsThread", "ws client reconnect");
-                        }
                         if (wsClient.isOpen()) {
                             byte[] data = Arrays.copyOfRange(buf, 0, ln);
                             wsClient.send(vCipher.encrypt(data));
                             AppConst.UP_BYTE.addAndGet(ln);
+                        } else if (wsClient.isClosing()) {
+                            Thread.sleep(3000);
+                        } else if (wsClient.isClosed()) {
+                            wsClient.reconnectBlocking();
+                            Thread.sleep(1000);
+                            Log.i("wsThread", "ws client reconnect");
                         }
                     }
                 } catch (Exception e) {
