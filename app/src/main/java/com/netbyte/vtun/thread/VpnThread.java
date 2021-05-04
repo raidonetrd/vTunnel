@@ -62,7 +62,7 @@ public class VpnThread extends Thread {
                     }
                 }
             } catch (Exception e) {
-                Log.e(AppConst.DEFAULT_TAG, "bypassAppPackages error:" + e.getMessage());
+                Log.e(AppConst.DEFAULT_TAG, "bypass apps error:" + e.getMessage());
             }
         }
         Log.i(AppConst.DEFAULT_TAG, "bypass apps:" + result);
