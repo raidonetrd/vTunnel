@@ -1,59 +1,39 @@
 package com.netbyte.vtun.utils;
 
-import com.netbyte.vtun.config.AppConst;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Whitelist {
 
-    public static List<String> packageList = new ArrayList<>();
+    public static List<String> wordsList = new ArrayList<>();
 
     static {
-        packageList.add(AppConst.APP_PACKAGE_NAME);
-        packageList.add("cn.xuexi.android");
-        packageList.add("com.taobao.taobao");
-        packageList.add("com.eg.android.AlipayGphone");
-        packageList.add("com.cainiao.wireless");
-        packageList.add("com.alibaba.android.rimet");
-        packageList.add("com.tencent.mobileqq");
-        packageList.add("com.tencent.mm");
-        packageList.add("com.tencent.tmgp.sgame");
-        packageList.add("com.tencent.karaoke");
-        packageList.add("com.hpbr.bosszhipin");
-        packageList.add("com.qiyi.video");
-        packageList.add("com.sankuai.meituan");
-        packageList.add("com.sankuai.meituan.takeoutnew");
-        packageList.add("com.MobileTicket");
-        packageList.add("com.anjuke.android.app");
-        packageList.add("com.tencent.edu");
-        packageList.add("com.xunmeng.pinduoduo");
-        packageList.add("com.suning.mobile.ebuy");
-        packageList.add("com.jingdong.app.mall");
-        packageList.add("com.achievo.vipshop");
-        packageList.add("com.netease.newsreader.activity");
-        packageList.add("com.ss.android.article.lite");
-        packageList.add("com.ss.android.article.news");
-        packageList.add("com.UCMobile");
-        packageList.add("com.ss.android.ugc.aweme");
-        packageList.add("com.sina.weibo");
-        packageList.add("com.greenpoint.android.mc10086.activity");
-        packageList.add("com.sinovatech.unicom.ui");
-        packageList.add("com.baidu.tieba");
-        packageList.add("com.baidu.input_huawei");
-        packageList.add("com.qihoo.appstore");
-        packageList.add("com.netease.cloudmusic");
-        packageList.add("com.tencent.qqmusic");
-        packageList.add("com.ximalaya.ting.android");
-        packageList.add("com.zhihu.android");
-        packageList.add("me.ele");
-        packageList.add("com.Qunar");
-        packageList.add("ctrip.android.view");
-        packageList.add("com.taobao.trip");
-        packageList.add("com.qiyi.video");
-        packageList.add("com.tencent.qqlive");
-        packageList.add("air.tv.douyu.android");
-        packageList.add("com.smile.gifmaker");
-        packageList.add("com.ss.android.ugc.aweme");
+        wordsList.add("cn.");
+        wordsList.add("alibaba");
+        wordsList.add("taobao");
+        wordsList.add("jd");
+        wordsList.add("tencent");
+        wordsList.add("jingdong");
+        wordsList.add("sankuai");
+        wordsList.add("meituan");
+        wordsList.add("dingding");
+        wordsList.add("baidu");
+        wordsList.add("netease");
+        wordsList.add("qiyi");
+        wordsList.add("alipay");
+        wordsList.add("bosszhipin");
+        wordsList.add("lagou");
+        wordsList.add("zhihu");
+        wordsList.add("qunar");
+        wordsList.add("me.ele");
+        wordsList.add("ctrip");
+        wordsList.add("sina");
+        wordsList.add("qihoo");
+        wordsList.add("360");
+        wordsList.add("huawei");
+        wordsList.add("xiaomi");
+        wordsList.add("ximalaya");
+        wordsList.add("pinduoduo");
+        wordsList.add("suning");
     }
 }
