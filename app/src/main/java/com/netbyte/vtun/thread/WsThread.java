@@ -36,7 +36,7 @@ public class WsThread extends VpnThread {
     public void run() {
         WSClient wsClient = null;
         try {
-            Log.i("wsThread", "start");
+            Log.i("WsThread", "start");
             super.initTunnel();
             String uri = String.format("wss://%s:%d/way-to-freedom", serverIP, serverPort);
             wsClient = new WSClient(new URI(uri), vCipher);
@@ -59,18 +59,18 @@ public class WsThread extends VpnThread {
                         } else if (wsClient.isClosed()) {
                             wsClient.reconnectBlocking();
                             Thread.sleep(1000);
-                            Log.i("wsThread", "ws client reconnect");
+                            Log.i("WsThread", "ws reconnect...");
                         } else {
                             Thread.sleep(1000);
                         }
                     }
                 } catch (Exception e) {
-                    Log.e("wsThread", e.toString());
+                    Log.e("WsThread", "error on WsThread:" + e.toString());
                 }
             }
-            Log.i("wsThread", "stop");
+            Log.i("WsThread", "stop");
         } catch (Exception e) {
-            Log.e("wsThread", e.toString());
+            Log.e("WsThread", "error on WsThread:" + e.toString());
         } finally {
             if (wsClient != null) {
                 wsClient.close();

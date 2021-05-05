@@ -82,13 +82,14 @@ public class MainActivity extends AppCompatActivity {
         if (result != RESULT_OK) {
             return;
         }
-        Intent intent = new Intent(this, VTunnelService.class);
         String serverIP = editServer.getText().toString();
         String serverPort = editServerPort.getText().toString();
         String localIp = editLocal.getText().toString();
         String dns = editDNS.getText().toString();
         String token = tokenEdit.getText().toString();
         String protocol = this.protocolBtn.isChecked() ? "ws" : "udp";
+        // new intent
+        Intent intent = new Intent(this, VTunnelService.class);
         intent.setAction(AppConst.BTN_ACTION_CONNECT);
         intent.putExtra("serverIP", serverIP);
         intent.putExtra("serverPort", Integer.parseInt(serverPort));
@@ -96,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("dns", dns);
         intent.putExtra("token", token);
         intent.putExtra("protocol", protocol);
-
+        // start service
         startService(intent);
-
+        // save config
         preEditor.putString("serverIP", serverIP);
         preEditor.putString("serverPort", serverPort);
         preEditor.putString("localIP", localIp);
