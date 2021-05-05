@@ -51,17 +51,17 @@ public class VTunnelService extends VpnService {
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
             if (intent != null && AppConst.BTN_ACTION_DISCONNECT.equals(intent.getAction())) {
-                disconnect();
+                doDisconnect();
                 return START_NOT_STICKY;
             }
             // 0.init config
             initConfig(intent);
             // 1.create notification
             createNotification();
-            // 2. connect
-            connect();
+            // 2.connect
+            doConnect();
         } catch (Exception e) {
-            Log.e(AppConst.DEFAULT_TAG, "onStartCommand error:" + e.toString());
+            Log.e(AppConst.DEFAULT_TAG, "error on onStartCommand:" + e.toString());
         }
         return START_STICKY;
     }
@@ -99,10 +99,10 @@ public class VTunnelService extends VpnService {
                 .setOnlyAlertOnce(true);
     }
 
-    private void connect() {
+    private void doConnect() {
         Log.i(AppConst.DEFAULT_TAG, "connecting " + serverIP + " " + serverPort + " " + localIP + " " + dns);
         try {
-            stop();
+            stopThreads();
             startStatThread();
             if (protocol.equals("udp")) {
                 startUdpThread();
@@ -110,16 +110,16 @@ public class VTunnelService extends VpnService {
                 startWsThread();
             }
         } catch (Exception e) {
-            Log.e(AppConst.DEFAULT_TAG, "connecting error:" + e.toString());
+            Log.e(AppConst.DEFAULT_TAG, "error on connecting:" + e.toString());
         }
     }
 
-    private void disconnect() {
+    private void doDisconnect() {
         Log.i(AppConst.DEFAULT_TAG, "disconnecting...");
-        stop();
+        stopThreads();
     }
 
-    private void stop() {
+    private void stopThreads() {
         AppConst.UDP_THREAD_RUNNABLE = false;
         AppConst.WS_THREAD_RUNNABLE = false;
         AppConst.STAT_THREAD_RUNNABLE = false;

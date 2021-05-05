@@ -33,7 +33,7 @@ public class UdpThread extends VpnThread {
     @Override
     public void run() {
         try {
-            Log.i("udpThread", "start");
+            Log.i("UdpThread", "start");
             super.initTunnel();
             final DatagramChannel udp = DatagramChannel.open();
             SocketAddress serverAdd = new InetSocketAddress(serverIP, serverPort);
@@ -64,12 +64,12 @@ public class UdpThread extends VpnThread {
                         AppConst.DOWN_BYTE.addAndGet(ln);
                     }
                 } catch (Exception e) {
-                    Log.e("udpThread", e.toString());
+                    Log.e("UdpThread", e.toString());
                 }
             }
-            Log.i("udpThread", "stop");
+            Log.i("UdpThread", "stop");
         } catch (Exception e) {
-            Log.e("udpThread", e.toString());
+            Log.e("UdpThread", e.toString());
         } finally {
             if (tunnel != null) {
                 try {

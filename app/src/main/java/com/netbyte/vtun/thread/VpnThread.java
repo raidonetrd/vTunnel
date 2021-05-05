@@ -43,7 +43,7 @@ public class VpnThread extends Thread {
             builder.addDisallowedApplication(packageName);
         }
         this.tunnel = builder.establish();
-        Log.i("initTunnel", "done");
+        Log.i("VpnThread", "init tunnel has done");
     }
 
     private List<String> bypassApps() {
@@ -62,7 +62,7 @@ public class VpnThread extends Thread {
                     }
                 }
             } catch (Exception e) {
-                Log.e(AppConst.DEFAULT_TAG, "bypass apps error:" + e.getMessage());
+                Log.e(AppConst.DEFAULT_TAG, "error on bypass apps:" + e.getMessage());
             }
         }
         Log.i(AppConst.DEFAULT_TAG, "bypass apps:" + result);
