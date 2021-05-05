@@ -91,7 +91,7 @@ public class VTunnelService extends VpnService {
         notificationManager.createNotificationChannel(channel);
         notificationBuilder = new NotificationCompat.Builder(this, channel.getId());
         notificationBuilder.setContentIntent(pendingIntent)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle(AppConst.APP_NAME)
                 .setPriority(NotificationCompat.PRIORITY_MIN)
                 .setOngoing(true)
