@@ -98,6 +98,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="44dp"
+            android:background="#FFFFFF"
             android:orientation="horizontal">
 
             <TextView
@@ -112,6 +113,7 @@
                 android:layout_width="200dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
+                android:background="#FFC107"
                 android:text="ToggleButton"
                 android:textOff="UDP"
                 android:textOn="WS" />
@@ -149,6 +151,7 @@
                 android:layout_width="109dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="#3F43B5"
                 android:text="Connect" />
 
             <Button
@@ -156,6 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="#FF5722"
                 android:text="Disconnect" />
         </LinearLayout>
 
