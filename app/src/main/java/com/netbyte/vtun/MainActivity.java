@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         editServerPort = findViewById(R.id.serverPortEdit);
         editLocal = findViewById(R.id.localAddrEdit);
         viewInfo = findViewById(R.id.infoTextView);
-        tokenEdit = findViewById(R.id.tokenText);
+        tokenEdit = findViewById(R.id.keyText);
         editDNS = findViewById(R.id.dnsEdit);
 
         preferences = getPreferences(Activity.MODE_PRIVATE);
