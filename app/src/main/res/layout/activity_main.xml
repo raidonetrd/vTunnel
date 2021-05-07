@@ -19,9 +19,20 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
 
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:contentDescription="@string/logo"
+            app:srcCompat="@mipmap/ic_launcher_foreground"
+            tools:ignore="VectorDrawableCompat" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
             android:orientation="horizontal">
 
             <TextView
@@ -29,15 +40,18 @@
                 android:layout_width="229dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Server" />
+                android:text="@string/server" />
 
             <EditText
                 android:id="@+id/serverAddrEdit"
                 android:layout_width="321dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:autofillHints=""
                 android:ems="10"
-                android:text="172.16.0.1" />
+                android:hint="@string/server_address"
+                android:inputType="text"
+                android:text="@string/server_address" />
 
             <EditText
                 android:id="@+id/serverPortEdit"
@@ -45,8 +59,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:hint="@string/server_port"
+                android:importantForAutofill="no"
                 android:inputType="number"
-                android:text="443" />
+                android:text="@string/server_port" />
 
         </LinearLayout>
 
@@ -60,7 +76,7 @@
                 android:layout_width="6dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Local" />
+                android:text="@string/local" />
 
             <EditText
                 android:id="@+id/localAddrEdit"
@@ -68,7 +84,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:text="172.16.0.2/24" />
+                android:hint="@string/local_address"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:text="@string/local_address" />
 
         </LinearLayout>
 
@@ -80,25 +99,27 @@
 
             <TextView
                 android:id="@+id/dnsView"
-                android:layout_width="32dp"
+                android:layout_width="6dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="DNS" />
+                android:text="@string/dns" />
 
             <EditText
                 android:id="@+id/dnsEdit"
-                android:layout_width="wrap_content"
+                android:layout_width="187dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:text="223.5.5.5" />
+                android:hint="@string/dns_address"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:text="@string/dns_address" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="44dp"
-            android:background="#FFFFFF"
             android:orientation="horizontal">
 
             <TextView
@@ -106,17 +127,16 @@
                 android:layout_width="18dp"
                 android:layout_height="44dp"
                 android:layout_weight="1"
-                android:text="Protocol" />
+                android:text="@string/protocol" />
 
             <ToggleButton
                 android:id="@+id/protocolButton"
                 android:layout_width="200dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:background="#FFC107"
-                android:text="ToggleButton"
-                android:textOff="UDP"
-                android:textOn="WS" />
+                android:text="@string/protocol_btn"
+                android:textOff="@string/udp"
+                android:textOn="@string/ws" />
         </LinearLayout>
 
         <LinearLayout
@@ -125,42 +145,51 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tokenView"
+                android:id="@+id/keyView"
                 android:layout_width="38dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Token" />
+                android:text="@string/key" />
 
             <EditText
-                android:id="@+id/tokenText"
+                android:id="@+id/keyText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:hint="@string/default_key"
+                android:importantForAutofill="no"
                 android:inputType="textPassword"
-                android:text="123456" />
+                android:text="@string/default_key" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/connButton"
-                android:layout_width="109dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#3F43B5"
-                android:text="Connect" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#3072B9"
+                android:text="@string/connect" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/disConnButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:background="#FF5722"
-                android:text="Disconnect" />
+                android:text="@string/disconnect" />
         </LinearLayout>
 
         <android.support.constraint.Guideline
@@ -173,16 +202,26 @@
             android:id="@+id/infoTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="" />
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#FF9800" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/appVersion"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/app_version" />
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="12dp"
-        android:layout_height="8dp"
-        android:orientation="horizontal"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="220dp">
-    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
