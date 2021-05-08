@@ -1,4 +1,4 @@
-package com.netbyte.vtun;
+package com.netbyte.vtunnel;
 
 
 import java.io.IOException;

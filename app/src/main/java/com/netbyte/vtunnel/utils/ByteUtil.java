@@ -1,4 +1,4 @@
-package com.netbyte.vtun.utils;
+package com.netbyte.vtunnel.utils;
 
 import java.math.BigDecimal;
 
