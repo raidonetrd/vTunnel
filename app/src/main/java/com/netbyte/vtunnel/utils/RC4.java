@@ -1,4 +1,4 @@
-package com.netbyte.vtun.utils;
+package com.netbyte.vtunnel.utils;
 
 public class RC4 {
     private final byte[] S = new byte[256];

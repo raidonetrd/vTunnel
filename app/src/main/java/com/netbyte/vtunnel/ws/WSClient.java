@@ -1,11 +1,10 @@
-package com.netbyte.vtun.ws;
+package com.netbyte.vtunnel.ws;
 
 
 import android.util.Log;
 
-import com.netbyte.vtun.MainActivity;
-import com.netbyte.vtun.config.AppConst;
-import com.netbyte.vtun.utils.VCipher;
+import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.utils.VCipher;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;

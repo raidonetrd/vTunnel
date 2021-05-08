@@ -1,14 +1,14 @@
-package com.netbyte.vtun.thread;
+package com.netbyte.vtunnel.thread;
 
 import android.net.VpnService;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-import com.netbyte.vtun.config.AppConst;
-import com.netbyte.vtun.ws.WSClient;
-import com.netbyte.vtun.utils.SSLUtil;
-import com.netbyte.vtun.utils.VCipher;
+import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.ws.WSClient;
+import com.netbyte.vtunnel.utils.SSLUtil;
+import com.netbyte.vtunnel.utils.VCipher;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -47,7 +47,7 @@ public class WsThread extends VpnThread {
             FileInputStream in = new FileInputStream(tunnel.getFileDescriptor());
             FileOutputStream out = new FileOutputStream(tunnel.getFileDescriptor());
             wsClient.setTunOutStream(out);
-            while (AppConst.WS_THREAD_RUNNABLE) {
+            while (THREAD_RUNNABLE) {
                 try {
                     byte[] buf = new byte[AppConst.BUFFER_SIZE];
                     int ln = in.read(buf);
@@ -58,10 +58,10 @@ public class WsThread extends VpnThread {
                             AppConst.UP_BYTE.addAndGet(ln);
                         } else if (wsClient.isClosed()) {
                             wsClient.reconnectBlocking();
-                            Thread.sleep(1000);
+                            sleep(1000);
                             Log.i("WsThread", "ws reconnect...");
                         } else {
-                            Thread.sleep(1000);
+                            sleep(1000);
                         }
                     }
                 } catch (Exception e) {
@@ -84,5 +84,9 @@ public class WsThread extends VpnThread {
                 tunnel = null;
             }
         }
+    }
+
+    public void finish() {
+        super.finish();
     }
 }

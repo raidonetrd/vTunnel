@@ -1,4 +1,4 @@
-package com.netbyte.vtun.thread;
+package com.netbyte.vtunnel.thread;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,15 +10,15 @@ import android.support.annotation.RequiresApi;
 import android.system.OsConstants;
 import android.util.Log;
 
-import com.netbyte.vtun.config.AppConst;
-import com.netbyte.vtun.utils.VCipher;
-import com.netbyte.vtun.utils.Whitelist;
+import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.utils.VCipher;
+import com.netbyte.vtunnel.utils.Whitelist;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class VpnThread extends Thread {
-
+    protected volatile boolean THREAD_RUNNABLE = true;
     protected VpnService vpnService;
     protected ParcelFileDescriptor tunnel;
     protected String serverIP;
@@ -44,6 +44,10 @@ public class VpnThread extends Thread {
         }
         this.tunnel = builder.establish();
         Log.i("VpnThread", "init tunnel has done");
+    }
+
+    public void finish() {
+        this.THREAD_RUNNABLE = false;
     }
 
     private List<String> bypassApps() {

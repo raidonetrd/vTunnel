@@ -1,4 +1,4 @@
-package com.netbyte.vtun;
+package com.netbyte.vtunnel;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

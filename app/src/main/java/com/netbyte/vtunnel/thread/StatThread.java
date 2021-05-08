@@ -1,14 +1,15 @@
-package com.netbyte.vtun.thread;
+package com.netbyte.vtunnel.thread;
 
 import android.app.NotificationManager;
 import android.net.VpnService;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.netbyte.vtun.config.AppConst;
-import com.netbyte.vtun.utils.ByteUtil;
+import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.utils.ByteUtil;
 
 public class StatThread extends Thread {
+    private volatile boolean THREAD_RUNNABLE = true;
     private NotificationManager notificationManager;
     private NotificationCompat.Builder builder;
     private VpnService vpnService;
@@ -24,7 +25,7 @@ public class StatThread extends Thread {
         Log.i("StatThread", "start");
         vpnService.startForeground(AppConst.NOTIFICATION_ID, builder.build());
         int checkCount = 0;
-        while (AppConst.STAT_THREAD_RUNNABLE) {
+        while (THREAD_RUNNABLE) {
             try {
                 Thread.sleep(2000);
                 String text = "";
@@ -44,6 +45,10 @@ public class StatThread extends Thread {
         AppConst.DOWN_BYTE.set(0);
         vpnService.stopForeground(true);
         Log.i("StatThread", "stop");
+    }
+
+    public void finish() {
+        this.THREAD_RUNNABLE = false;
     }
 
 }

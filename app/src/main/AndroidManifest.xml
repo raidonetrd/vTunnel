@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.netbyte.vtun">
+    package="com.netbyte.vtunnel">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme">
 
         <service
-            android:name="com.netbyte.vtun.service.VTunnelService"
+            android:name="com.netbyte.vtunnel.service.VTunnelService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_VPN_SERVICE">
@@ -26,7 +26,7 @@
         </service>
 
         <activity
-            android:name="com.netbyte.vtun.MainActivity"
+            android:name="com.netbyte.vtunnel.MainActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:taskAffinity="">

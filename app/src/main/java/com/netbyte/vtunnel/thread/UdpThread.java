@@ -1,12 +1,12 @@
-package com.netbyte.vtun.thread;
+package com.netbyte.vtunnel.thread;
 
 import android.net.VpnService;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-import com.netbyte.vtun.config.AppConst;
-import com.netbyte.vtun.utils.VCipher;
+import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.utils.VCipher;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -42,7 +42,7 @@ public class UdpThread extends VpnThread {
             vpnService.protect(udp.socket());
             FileInputStream in = new FileInputStream(tunnel.getFileDescriptor());
             FileOutputStream out = new FileOutputStream(tunnel.getFileDescriptor());
-            while (AppConst.UDP_THREAD_RUNNABLE) {
+            while (THREAD_RUNNABLE) {
                 try {
                     byte[] buf = new byte[AppConst.BUFFER_SIZE];
                     int ln = in.read(buf);
@@ -80,5 +80,9 @@ public class UdpThread extends VpnThread {
                 tunnel = null;
             }
         }
+    }
+
+    public void finish() {
+        super.finish();
     }
 }

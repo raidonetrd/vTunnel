@@ -1,4 +1,4 @@
-package com.netbyte.vtun.service;
+package com.netbyte.vtunnel.service;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,13 +12,14 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.netbyte.vtun.MainActivity;
-import com.netbyte.vtun.R;
-import com.netbyte.vtun.thread.StatThread;
-import com.netbyte.vtun.thread.UdpThread;
-import com.netbyte.vtun.thread.WsThread;
-import com.netbyte.vtun.utils.VCipher;
-import com.netbyte.vtun.config.AppConst;
+import com.netbyte.vtunnel.MainActivity;
+import com.netbyte.vtunnel.R;
+import com.netbyte.vtunnel.thread.StatThread;
+import com.netbyte.vtunnel.thread.UdpThread;
+import com.netbyte.vtunnel.thread.VpnThread;
+import com.netbyte.vtunnel.thread.WsThread;
+import com.netbyte.vtunnel.utils.VCipher;
+import com.netbyte.vtunnel.config.AppConst;
 
 public class VTunnelService extends VpnService {
     private static String serverIP, localIP;
@@ -27,7 +28,8 @@ public class VTunnelService extends VpnService {
     private static String dns;
     private static String protocol;
     private static String token;
-    private Thread udpThread, wsThread, statThread;
+    private VpnThread udpThread, wsThread;
+    private StatThread statThread;
     private PendingIntent pendingIntent;
     private VCipher vCipher;
     private NotificationManager notificationManager;
@@ -67,6 +69,9 @@ public class VTunnelService extends VpnService {
     }
 
     private void initConfig(Intent intent) {
+        if (intent == null) {
+            return;
+        }
         Bundle ex = intent.getExtras();
         serverIP = ex.getString("serverIP");
         serverPort = ex.getInt("serverPort");
@@ -106,7 +111,7 @@ public class VTunnelService extends VpnService {
             startStatThread();
             if (protocol.equals("udp")) {
                 startUdpThread();
-            } else if (protocol.equals("ws")) {
+            } else if (protocol.equals("websocket")) {
                 startWsThread();
             }
         } catch (Exception e) {
@@ -120,28 +125,31 @@ public class VTunnelService extends VpnService {
     }
 
     private void stopThreads() {
-        AppConst.UDP_THREAD_RUNNABLE = false;
-        AppConst.WS_THREAD_RUNNABLE = false;
-        AppConst.STAT_THREAD_RUNNABLE = false;
-        this.udpThread = null;
-        this.wsThread = null;
-        this.statThread = null;
+        if (udpThread != null) {
+            udpThread.finish();
+            udpThread = null;
+        }
+        if (wsThread != null) {
+            wsThread.finish();
+            wsThread = null;
+        }
+        if (statThread != null) {
+            statThread.finish();
+            statThread = null;
+        }
     }
 
     private void startUdpThread() {
-        AppConst.UDP_THREAD_RUNNABLE = true;
         udpThread = new UdpThread(serverIP, serverPort, localIP, localPrefixLength, dns, vCipher, this);
         udpThread.start();
     }
 
     private void startWsThread() {
-        AppConst.WS_THREAD_RUNNABLE = true;
         wsThread = new WsThread(serverIP, serverPort, localIP, localPrefixLength, dns, vCipher, this);
         wsThread.start();
     }
 
     private void startStatThread() {
-        AppConst.STAT_THREAD_RUNNABLE = true;
         statThread = new StatThread(notificationManager, notificationBuilder, this);
         statThread.start();
     }
