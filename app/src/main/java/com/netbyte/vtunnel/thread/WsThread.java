@@ -35,6 +35,8 @@ public class WsThread extends VpnThread {
     @Override
     public void run() {
         WSClient wsClient = null;
+        FileInputStream in = null;
+        FileOutputStream out = null;
         try {
             Log.i("WsThread", "start");
             super.initTunnel();
@@ -44,8 +46,8 @@ public class WsThread extends VpnThread {
             SSLSocketFactory factory = sslContext.getSocketFactory();
             wsClient.setSocketFactory(factory);
             wsClient.connectBlocking();
-            FileInputStream in = new FileInputStream(tunnel.getFileDescriptor());
-            FileOutputStream out = new FileOutputStream(tunnel.getFileDescriptor());
+            in = new FileInputStream(tunnel.getFileDescriptor());
+            out = new FileOutputStream(tunnel.getFileDescriptor());
             wsClient.setOutStream(out);
             while (THREAD_RUNNABLE) {
                 try {
@@ -74,6 +76,20 @@ public class WsThread extends VpnThread {
         } finally {
             if (wsClient != null) {
                 wsClient.close();
+            }
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             if (tunnel != null) {
                 try {
