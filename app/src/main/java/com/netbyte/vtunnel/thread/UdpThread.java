@@ -32,16 +32,19 @@ public class UdpThread extends VpnThread {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void run() {
+        FileInputStream in = null;
+        FileOutputStream out = null;
+        DatagramChannel udp = null;
         try {
             Log.i("UdpThread", "start");
             super.initTunnel();
-            final DatagramChannel udp = DatagramChannel.open();
-            SocketAddress serverAdd = new InetSocketAddress(serverIP, serverPort);
-            udp.connect(serverAdd);
+            udp = DatagramChannel.open();
+            SocketAddress socketAddress = new InetSocketAddress(serverIP, serverPort);
+            udp.connect(socketAddress);
             udp.configureBlocking(false);
             vpnService.protect(udp.socket());
-            FileInputStream in = new FileInputStream(tunnel.getFileDescriptor());
-            FileOutputStream out = new FileOutputStream(tunnel.getFileDescriptor());
+            in = new FileInputStream(tunnel.getFileDescriptor());
+            out = new FileOutputStream(tunnel.getFileDescriptor());
             while (THREAD_RUNNABLE) {
                 try {
                     byte[] buf = new byte[AppConst.BUFFER_SIZE];
@@ -71,6 +74,28 @@ public class UdpThread extends VpnThread {
         } catch (Exception e) {
             Log.e("UdpThread", e.toString());
         } finally {
+            if (udp != null) {
+                try {
+                    udp.disconnect();
+                    udp.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             if (tunnel != null) {
                 try {
                     tunnel.close();
