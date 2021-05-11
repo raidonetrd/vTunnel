@@ -16,9 +16,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-
 public class WsThread extends VpnThread {
 
     public WsThread(String serverIP, int serverPort, String localIp, int localPrefixLength, String dns, VCipher vCipher, VpnService vpnService) {
@@ -40,14 +37,12 @@ public class WsThread extends VpnThread {
         try {
             Log.i("WsThread", "start");
             super.initTunnel();
-            String uri = String.format("wss://%s:%d/way-to-freedom", serverIP, serverPort);
-            wsClient = new WSClient(new URI(uri), vCipher);
-            SSLContext sslContext = SSLUtil.createEasySSLContext();
-            SSLSocketFactory factory = sslContext.getSocketFactory();
-            wsClient.setSocketFactory(factory);
-            wsClient.connectBlocking();
             in = new FileInputStream(tunnel.getFileDescriptor());
             out = new FileOutputStream(tunnel.getFileDescriptor());
+            String uri = String.format("wss://%s:%d/way-to-freedom", serverIP, serverPort);
+            wsClient = new WSClient(new URI(uri), vCipher);
+            wsClient.setSocketFactory(SSLUtil.createEasySSLContext().getSocketFactory());
+            wsClient.connectBlocking();
             wsClient.setOutStream(out);
             while (THREAD_RUNNABLE) {
                 try {
