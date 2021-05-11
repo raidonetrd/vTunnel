@@ -38,13 +38,13 @@ public class UdpThread extends VpnThread {
         try {
             Log.i("UdpThread", "start");
             super.initTunnel();
+            in = new FileInputStream(tunnel.getFileDescriptor());
+            out = new FileOutputStream(tunnel.getFileDescriptor());
             udp = DatagramChannel.open();
             SocketAddress socketAddress = new InetSocketAddress(serverIP, serverPort);
             udp.connect(socketAddress);
             udp.configureBlocking(false);
             vpnService.protect(udp.socket());
-            in = new FileInputStream(tunnel.getFileDescriptor());
-            out = new FileOutputStream(tunnel.getFileDescriptor());
             while (THREAD_RUNNABLE) {
                 try {
                     byte[] buf = new byte[AppConst.BUFFER_SIZE];
