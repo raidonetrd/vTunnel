@@ -1,5 +1,7 @@
 # vTunnel
-![](https://raw.githubusercontent.com/net-byte/vTunnel/main/Icon.png)
+<p align="center">
+	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/Icon.png" alt="vTunnel" width="450">
+</p>
 
 A simple android VPN app.
 
@@ -11,7 +13,10 @@ A simple android VPN app.
 * Support tun over WebSocket
 
 # Screenshot
-![](https://raw.githubusercontent.com/net-byte/vTunnel/main/demo.png)
+<p>
+	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/demo.png" alt="vTunnel" width="450">
+</p>
+
 
 # download
 [download](https://github.com/net-byte/vTunnel/releases)
