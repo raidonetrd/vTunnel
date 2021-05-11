@@ -18,6 +18,6 @@ A simple android VPN app.
 </p>
 
 
-# download
+# Download
 [download](https://github.com/net-byte/vTunnel/releases)
 
