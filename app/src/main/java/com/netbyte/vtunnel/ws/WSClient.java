@@ -16,32 +16,31 @@ import java.nio.ByteBuffer;
 
 public class WSClient extends WebSocketClient {
 
-    private FileOutputStream tunOutStream;
+    private FileOutputStream out;
     private VCipher vCipher;
 
     public WSClient(URI serverUri, VCipher vCipher) {
         super(serverUri);
         this.vCipher = vCipher;
-
     }
 
-    public void setTunOutStream(FileOutputStream tunOutStream) {
-        this.tunOutStream = tunOutStream;
+    public void setOutStream(FileOutputStream out) {
+        this.out = out;
     }
 
     @Override
     public void onOpen(ServerHandshake handshake) {
-        Log.i("WSClient", "ws is open");
+        Log.i("WSClient", "onOpen");
     }
 
     @Override
     public void onMessage(String message) {
-
+        Log.i("WSClient", "onMessage:" + message);
     }
 
     @Override
     public void onMessage(ByteBuffer byteBuffer) {
-        if (tunOutStream == null || byteBuffer.remaining() == 0) {
+        if (out == null || byteBuffer.remaining() == 0) {
             return;
         }
         byte[] buf = new byte[byteBuffer.remaining()];
@@ -49,7 +48,7 @@ public class WSClient extends WebSocketClient {
         try {
             byte[] data = vCipher.decrypt(buf);
             AppConst.DOWN_BYTE.addAndGet(data.length);
-            tunOutStream.write(data);
+            out.write(data);
         } catch (IOException e) {
             Log.e("WSClient", e.getMessage());
         }
