@@ -6,6 +6,6 @@ android:
     - android-30
     - extra
   licenses:
-    - 'android-sdk-preview-license-52d11cd2'
+    - 'android-sdk-preview-license-e6a904e8'
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
