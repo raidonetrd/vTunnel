@@ -19,10 +19,9 @@ public class MainActivity extends AppCompatActivity {
     private Button btnConn, btnDisConn;
     private ToggleButton protocolBtn;
     private EditText editServer, editServerPort, editLocal, editDNS, tokenEdit;
-    private TextView viewInfo;
-    private SharedPreferences preferences;
-    private SharedPreferences.Editor preEditor;
-
+    private TextView msgView;
+    SharedPreferences preferences;
+    SharedPreferences.Editor preEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         editServer = findViewById(R.id.serverAddressEdit);
         editServerPort = findViewById(R.id.serverPortEdit);
         editLocal = findViewById(R.id.localAddressEdit);
-        viewInfo = findViewById(R.id.infoTextView);
+        msgView = findViewById(R.id.msgTextView);
         tokenEdit = findViewById(R.id.keyText);
         editDNS = findViewById(R.id.dnsEdit);
 
@@ -49,17 +48,24 @@ public class MainActivity extends AppCompatActivity {
         tokenEdit.setText(preferences.getString("token", AppConst.DEFAULT_TOKEN));
         String preProtocol = preferences.getString("protocol", AppConst.DEFAULT_PROTOCOL);
         protocolBtn.setChecked(preProtocol.equals(AppConst.DEFAULT_PROTOCOL));
-
+        btnDisConn.setEnabled(preferences.getBoolean("connected", false));
         btnDisConn.setOnClickListener(v -> {
-            viewInfo.setText("Disconnected");
+            msgView.setText("Disconnected");
+            btnDisConn.setEnabled(false);
+            btnConn.setEnabled(true);
+            preEditor.putBoolean("connected", false);
+            preEditor.apply();
+
             Intent intent = new Intent();
             intent.setClass(MainActivity.this, VTunnelService.class);
             intent.setAction(AppConst.BTN_ACTION_DISCONNECT);
             startService(intent);
         });
-
+        btnConn.setEnabled(!preferences.getBoolean("connected", false));
         btnConn.setOnClickListener(v -> {
-            viewInfo.setText("Connected");
+            msgView.setText("Connected");
+            btnConn.setEnabled(false);
+            btnDisConn.setEnabled(true);
             Intent intent = VpnService.prepare(MainActivity.this);
             if (intent != null) {
                 startActivityForResult(intent, 0);
@@ -99,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
         preEditor.putString("dns", dns);
         preEditor.putString("token", token);
         preEditor.putString("protocol", protocol);
-        preEditor.commit();
+        preEditor.putBoolean("connected", true);
+        preEditor.apply();
     }
 
 }

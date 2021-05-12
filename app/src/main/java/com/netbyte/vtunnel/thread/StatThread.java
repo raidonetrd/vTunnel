@@ -10,9 +10,9 @@ import com.netbyte.vtunnel.utils.ByteUtil;
 
 public class StatThread extends Thread {
     private volatile boolean THREAD_RUNNABLE = true;
-    private NotificationManager notificationManager;
-    private NotificationCompat.Builder builder;
-    private VpnService vpnService;
+    private final NotificationManager notificationManager;
+    private final NotificationCompat.Builder builder;
+    private final VpnService vpnService;
 
     public StatThread(NotificationManager notificationManager, NotificationCompat.Builder builder, VpnService vpnService) {
         this.notificationManager = notificationManager;
@@ -28,7 +28,7 @@ public class StatThread extends Thread {
         while (THREAD_RUNNABLE) {
             try {
                 Thread.sleep(2000);
-                String text = "";
+                String text;
                 if (checkCount > 5 && AppConst.DOWN_BYTE.get() == 0) {
                     text = "Status:Failed to connect!";
                 } else {
