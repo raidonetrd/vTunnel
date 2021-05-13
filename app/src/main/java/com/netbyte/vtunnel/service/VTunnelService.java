@@ -28,7 +28,7 @@ public class VTunnelService extends VpnService {
     private static int serverPort;
     private static String dns;
     private static String protocol;
-    private static String token;
+    private static String key;
     private VpnThread udpThread, wsThread;
     private StatThread statThread;
     private PendingIntent pendingIntent;
@@ -86,8 +86,8 @@ public class VTunnelService extends VpnService {
             localPrefixLength = Integer.parseInt(localIPArray[1]);
         }
         dns = ex.getString("dns");
-        token = ex.getString("token");
-        vCipher = new VCipher(token);
+        key = ex.getString("key");
+        vCipher = new VCipher(key);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
