@@ -1,6 +1,6 @@
 # vTunnel
 <p align="center">
-	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/Icon.png" alt="vTunnel" width="250">
+	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/Icon.png" alt="vTunnel" width="200">
 </p>
 
 A simple android VPN app.
