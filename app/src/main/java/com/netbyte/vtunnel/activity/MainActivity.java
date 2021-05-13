@@ -1,4 +1,4 @@
-package com.netbyte.vtunnel;
+package com.netbyte.vtunnel.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,12 +6,14 @@ import android.content.SharedPreferences;
 import android.net.VpnService;
 import android.os.Bundle;
 
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.config.AppConst;
 import com.netbyte.vtunnel.service.VTunnelService;
 
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int request, int result, Intent data) {
+        super.onActivityResult(request, result, data);
         if (result != RESULT_OK) {
             return;
         }

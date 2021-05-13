@@ -2,8 +2,9 @@ package com.netbyte.vtunnel.thread;
 
 import android.net.VpnService;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.netbyte.vtunnel.config.AppConst;
 import com.netbyte.vtunnel.utils.VCipher;
@@ -18,6 +19,7 @@ import java.nio.channels.DatagramChannel;
 import java.util.Arrays;
 
 public class UdpThread extends VpnThread {
+    private static final String TAG = "UdpThread";
 
     public UdpThread(String serverIP, int serverPort, String localIp, int localPrefixLength, String dns, VCipher vCipher, VpnService vpnService) {
         this.serverIP = serverIP;
@@ -36,7 +38,7 @@ public class UdpThread extends VpnThread {
         FileOutputStream out = null;
         DatagramChannel udp = null;
         try {
-            Log.i("UdpThread", "start");
+            Log.i(TAG, "start");
             super.initTunnel();
             in = new FileInputStream(tunnel.getFileDescriptor());
             out = new FileOutputStream(tunnel.getFileDescriptor());
@@ -67,12 +69,12 @@ public class UdpThread extends VpnThread {
                         AppConst.DOWN_BYTE.addAndGet(ln);
                     }
                 } catch (Exception e) {
-                    Log.e("UdpThread", e.toString());
+                    Log.e(TAG, e.toString());
                 }
             }
-            Log.i("UdpThread", "stop");
+            Log.i(TAG, "stop");
         } catch (Exception e) {
-            Log.e("UdpThread", e.toString());
+            Log.e(TAG, e.toString());
         } finally {
             if (udp != null) {
                 try {

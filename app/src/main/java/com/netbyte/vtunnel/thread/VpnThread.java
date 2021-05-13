@@ -6,9 +6,10 @@ import android.content.pm.ResolveInfo;
 import android.net.VpnService;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
-import android.support.annotation.RequiresApi;
 import android.system.OsConstants;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.netbyte.vtunnel.config.AppConst;
 import com.netbyte.vtunnel.utils.VCipher;

@@ -2,8 +2,9 @@ package com.netbyte.vtunnel.thread;
 
 import android.net.VpnService;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.netbyte.vtunnel.config.AppConst;
 import com.netbyte.vtunnel.ws.WSClient;
@@ -17,6 +18,7 @@ import java.net.URI;
 import java.util.Arrays;
 
 public class WsThread extends VpnThread {
+    private static final String TAG = "WsThread";
 
     public WsThread(String serverIP, int serverPort, String localIp, int localPrefixLength, String dns, VCipher vCipher, VpnService vpnService) {
         this.serverIP = serverIP;
@@ -35,7 +37,7 @@ public class WsThread extends VpnThread {
         FileInputStream in = null;
         FileOutputStream out = null;
         try {
-            Log.i("WsThread", "start");
+            Log.i(TAG, "start");
             super.initTunnel();
             in = new FileInputStream(tunnel.getFileDescriptor());
             out = new FileOutputStream(tunnel.getFileDescriptor());
@@ -56,18 +58,18 @@ public class WsThread extends VpnThread {
                         } else if (wsClient.isClosed()) {
                             wsClient.reconnectBlocking();
                             sleep(1000);
-                            Log.i("WsThread", "ws reconnect...");
+                            Log.i(TAG, "ws reconnect...");
                         } else {
                             sleep(1000);
                         }
                     }
                 } catch (Exception e) {
-                    Log.e("WsThread", "error on WsThread:" + e.toString());
+                    Log.e(TAG, "error on WsThread:" + e.toString());
                 }
             }
-            Log.i("WsThread", "stop");
+            Log.i(TAG, "stop");
         } catch (Exception e) {
-            Log.e("WsThread", "error on WsThread:" + e.toString());
+            Log.e(TAG, "error on WsThread:" + e.toString());
         } finally {
             if (wsClient != null) {
                 wsClient.close();
