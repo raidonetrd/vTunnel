@@ -6,22 +6,24 @@ import android.content.SharedPreferences;
 import android.net.VpnService;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.config.AppConst;
 import com.netbyte.vtunnel.service.VTunnelService;
 
 public class MainActivity extends AppCompatActivity {
-    private Button btnConn, btnDisConn;
-    private ToggleButton protocolBtn;
+    private Button btnConn, btnDisConn, btnWs, btnUdp;
     private EditText editServer, editServerPort, editLocal, editDNS, tokenEdit;
     private TextView msgView;
+    private MaterialButtonToggleGroup protocolGroup;
     SharedPreferences preferences;
     SharedPreferences.Editor preEditor;
 
@@ -32,14 +34,15 @@ public class MainActivity extends AppCompatActivity {
 
         btnConn = findViewById(R.id.connButton);
         btnDisConn = findViewById(R.id.disConnButton);
-        protocolBtn = findViewById(R.id.protocolButton);
+        btnWs = findViewById(R.id.protocolBtnWs);
+        btnUdp = findViewById(R.id.protocolBtnUdp);
         editServer = findViewById(R.id.serverAddressEdit);
         editServerPort = findViewById(R.id.serverPortEdit);
         editLocal = findViewById(R.id.localAddressEdit);
         msgView = findViewById(R.id.msgTextView);
         tokenEdit = findViewById(R.id.keyText);
         editDNS = findViewById(R.id.dnsEdit);
-
+        protocolGroup = findViewById(R.id.protocolGroup);
         preferences = getPreferences(Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
 
@@ -48,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
         editLocal.setText(preferences.getString("localIP", AppConst.DEFAULT_LOCAL_ADDRESS));
         editDNS.setText(preferences.getString("dns", AppConst.DEFAULT_DNS));
         tokenEdit.setText(preferences.getString("token", AppConst.DEFAULT_TOKEN));
-        String preProtocol = preferences.getString("protocol", AppConst.DEFAULT_PROTOCOL);
-        protocolBtn.setChecked(preProtocol.equals(AppConst.DEFAULT_PROTOCOL));
+        String preProtocol = preferences.getString("protocol", AppConst.PROTOCOL_WS);
+        protocolGroup.check(preProtocol.equals(AppConst.PROTOCOL_WS) ? R.id.protocolBtnWs : R.id.protocolBtnUdp);
         btnDisConn.setEnabled(preferences.getBoolean("connected", false));
         btnDisConn.setOnClickListener(v -> {
             msgView.setText("Disconnected");
@@ -89,7 +92,8 @@ public class MainActivity extends AppCompatActivity {
         String localIp = editLocal.getText().toString();
         String dns = editDNS.getText().toString();
         String token = tokenEdit.getText().toString();
-        String protocol = this.protocolBtn.isChecked() ? "websocket" : "udp";
+        int buttonId = protocolGroup.getCheckedButtonId();
+        String protocol = (buttonId == R.id.protocolBtnWs) ? AppConst.PROTOCOL_WS : AppConst.PROTOCOL_UDP;
         // new intent
         Intent intent = new Intent(this, VTunnelService.class);
         intent.setAction(AppConst.BTN_ACTION_CONNECT);
