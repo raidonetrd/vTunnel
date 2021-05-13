@@ -32,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
         btnConn = findViewById(R.id.connButton);
         btnDisConn = findViewById(R.id.disConnButton);
-        btnWs = findViewById(R.id.protocolBtnWs);
-        btnUdp = findViewById(R.id.protocolBtnUdp);
         editServer = findViewById(R.id.serverAddressEdit);
         editServerPort = findViewById(R.id.serverPortEdit);
         editLocal = findViewById(R.id.localAddressEdit);
