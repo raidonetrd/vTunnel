@@ -18,7 +18,7 @@ import com.netbyte.vtunnel.config.AppConst;
 import com.netbyte.vtunnel.service.VTunnelService;
 
 public class MainActivity extends AppCompatActivity {
-    private Button btnConn, btnDisConn, btnWs, btnUdp;
+    private Button btnConn, btnDisConn;
     private EditText editServer, editServerPort, editLocal, editDNS, tokenEdit;
     private TextView msgView;
     private MaterialButtonToggleGroup protocolGroup;
