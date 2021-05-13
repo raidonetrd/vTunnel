@@ -26,7 +26,7 @@
         </service>
 
         <activity
-            android:name="com.netbyte.vtunnel.MainActivity"
+            android:name="com.netbyte.vtunnel.activity.MainActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:taskAffinity="">
