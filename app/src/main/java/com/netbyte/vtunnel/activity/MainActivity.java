@@ -19,7 +19,7 @@ import com.netbyte.vtunnel.service.VTunnelService;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnConn, btnDisConn;
-    private EditText editServer, editServerPort, editLocal, editDNS, tokenEdit;
+    private EditText editServer, editServerPort, editLocal, editDNS, keyEdit;
     private TextView msgView;
     private MaterialButtonToggleGroup protocolGroup;
     SharedPreferences preferences;
@@ -35,10 +35,10 @@ public class MainActivity extends AppCompatActivity {
         editServer = findViewById(R.id.serverAddressEdit);
         editServerPort = findViewById(R.id.serverPortEdit);
         editLocal = findViewById(R.id.localAddressEdit);
-        msgView = findViewById(R.id.msgTextView);
-        tokenEdit = findViewById(R.id.keyText);
+        keyEdit = findViewById(R.id.keyEdit);
         editDNS = findViewById(R.id.dnsEdit);
         protocolGroup = findViewById(R.id.protocolGroup);
+        msgView = findViewById(R.id.msgTextView);
         preferences = getPreferences(Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
 
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         editServerPort.setText(preferences.getString("serverPort", AppConst.DEFAULT_SERVER_PORT));
         editLocal.setText(preferences.getString("localIP", AppConst.DEFAULT_LOCAL_ADDRESS));
         editDNS.setText(preferences.getString("dns", AppConst.DEFAULT_DNS));
-        tokenEdit.setText(preferences.getString("token", AppConst.DEFAULT_TOKEN));
+        keyEdit.setText(preferences.getString("key", AppConst.DEFAULT_KEY));
         String preProtocol = preferences.getString("protocol", AppConst.PROTOCOL_WS);
         protocolGroup.check(preProtocol.equals(AppConst.PROTOCOL_WS) ? R.id.protocolBtnWs : R.id.protocolBtnUdp);
         btnDisConn.setEnabled(preferences.getBoolean("connected", false));
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         String serverPort = editServerPort.getText().toString();
         String localIp = editLocal.getText().toString();
         String dns = editDNS.getText().toString();
-        String token = tokenEdit.getText().toString();
+        String key = keyEdit.getText().toString();
         int buttonId = protocolGroup.getCheckedButtonId();
         String protocol = (buttonId == R.id.protocolBtnWs) ? AppConst.PROTOCOL_WS : AppConst.PROTOCOL_UDP;
         // new intent
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("serverPort", Integer.parseInt(serverPort));
         intent.putExtra("localIP", localIp);
         intent.putExtra("dns", dns);
-        intent.putExtra("token", token);
+        intent.putExtra("key", key);
         intent.putExtra("protocol", protocol);
         // start service
         startService(intent);
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         preEditor.putString("serverPort", serverPort);
         preEditor.putString("localIP", localIp);
         preEditor.putString("dns", dns);
-        preEditor.putString("token", token);
+        preEditor.putString("key", key);
         preEditor.putString("protocol", protocol);
         preEditor.putBoolean("connected", true);
         preEditor.apply();

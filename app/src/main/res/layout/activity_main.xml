@@ -61,7 +61,7 @@
                 android:id="@+id/serverPortEdit"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/default_server_port"
@@ -132,6 +132,32 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/keyView"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal|center_vertical|start"
+                android:text="@string/view_key" />
+
+            <EditText
+                android:id="@+id/keyEdit"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/default_key"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                android:text="@string/default_key" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
                 android:id="@+id/protocolText"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
@@ -161,32 +187,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/protocol_udp" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/keyView"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal|center_vertical|start"
-                android:text="@string/view_key" />
-
-            <EditText
-                android:id="@+id/keyText"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="@string/default_key"
-                android:importantForAutofill="no"
-                android:inputType="textPassword"
-                android:text="@string/default_key" />
         </LinearLayout>
 
         <LinearLayout
@@ -244,6 +244,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
