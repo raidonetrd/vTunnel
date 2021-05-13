@@ -17,7 +17,8 @@ public class AppConst {
     public static final String DEFAULT_LOCAL_ADDRESS = "172.16.0.20/24";
     public static final int DEFAULT_LOCAL_PREFIX_LENGTH = 24;
     public static final String DEFAULT_TOKEN = "6w9z$C&F)J@NcRfWjXn3r4u7x!A%D*G-";
-    public static final String DEFAULT_PROTOCOL = "websocket";
+    public static final String PROTOCOL_WS = "websocket";
+    public static final String PROTOCOL_UDP = "udp";
     public static final String DEFAULT_DNS = "223.5.5.5";
     public static final String DEFAULT_ROUTE = "0.0.0.0";
 

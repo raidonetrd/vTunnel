@@ -24,8 +24,10 @@
             android:id="@+id/logo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="40dp"
             android:contentDescription="@string/view_logo"
+            android:gravity="center_horizontal|center_vertical|start"
             app:srcCompat="@mipmap/ic_launcher_foreground"
             tools:ignore="VectorDrawableCompat" />
 
@@ -37,15 +39,17 @@
 
             <TextView
                 android:id="@+id/serverAddressView"
-                android:layout_width="229dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal|center_vertical|start"
                 android:text="@string/view_server" />
 
             <EditText
                 android:id="@+id/serverAddressEdit"
-                android:layout_width="321dp"
+                android:layout_width="190dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="start"
                 android:layout_weight="1"
                 android:autofillHints=""
                 android:ems="10"
@@ -55,8 +59,9 @@
 
             <EditText
                 android:id="@+id/serverPortEdit"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="left"
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/default_server_port"
@@ -73,15 +78,17 @@
 
             <TextView
                 android:id="@+id/localAddressView"
-                android:layout_width="6dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal|center_vertical|start"
                 android:text="@string/view_local" />
 
             <EditText
                 android:id="@+id/localAddressEdit"
-                android:layout_width="187dp"
+                android:layout_width="230dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="start"
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/default_local"
@@ -99,15 +106,17 @@
 
             <TextView
                 android:id="@+id/dnsView"
-                android:layout_width="6dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal|center_vertical|start"
                 android:text="@string/view_dns" />
 
             <EditText
                 android:id="@+id/dnsEdit"
-                android:layout_width="187dp"
+                android:layout_width="230dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="start"
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/default_dns"
@@ -119,42 +128,59 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/protocolText"
-                android:layout_width="18dp"
-                android:layout_height="44dp"
-                android:layout_weight="1"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal|center_vertical|start"
                 android:text="@string/view_protocol" />
 
-            <ToggleButton
-                android:id="@+id/protocolButton"
-                android:layout_width="200dp"
-                android:layout_height="50dp"
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/protocolGroup"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
                 android:layout_weight="1"
-                android:text="@string/btn_protocol"
-                android:textOff="@string/protocol_udp"
-                android:textOn="@string/protocol_ws" />
+                app:singleSelection="true">
+
+                <Button
+                    android:id="@+id/protocolBtnWs"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/protocol_ws" />
+
+                <Button
+                    android:id="@+id/protocolBtnUdp"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/protocol_udp" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="47dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/keyView"
-                android:layout_width="38dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal|center_vertical|start"
                 android:text="@string/view_key" />
 
             <EditText
                 android:id="@+id/keyText"
-                android:layout_width="wrap_content"
+                android:layout_width="230dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="start"
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/default_key"
@@ -169,11 +195,11 @@
             android:layout_marginTop="30dp"
             android:orientation="horizontal">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/connButton"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#3072B9"
                 android:text="@string/btn_connect" />
 
         </LinearLayout>
@@ -184,11 +210,11 @@
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/disConnButton"
+                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FF5722"
                 android:text="@string/btn_disconnect" />
         </LinearLayout>
 
@@ -196,6 +222,7 @@
             android:id="@+id/msgTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:text=""
@@ -211,7 +238,8 @@
                 android:id="@+id/appVersion"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal|center_vertical"
                 android:text="@string/app_version" />
         </LinearLayout>
 
