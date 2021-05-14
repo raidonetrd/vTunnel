@@ -77,16 +77,10 @@ public class VTunnelService extends VpnService {
         serverIP = ex.getString("serverIP");
         serverPort = ex.getInt("serverPort");
         protocol = ex.getString("protocol");
-        String[] localIPArray = ex.getString("localIP").split("/");
-        if (localIPArray.length >= 1) {
-            localIP = localIPArray[0];
-            localPrefixLength = AppConst.DEFAULT_LOCAL_PREFIX_LENGTH;
-        }
-        if (localIPArray.length >= 2) {
-            localPrefixLength = Integer.parseInt(localIPArray[1]);
-        }
         dns = ex.getString("dns");
         key = ex.getString("key");
+        localIP = AppConst.DEFAULT_LOCAL_ADDRESS;
+        localPrefixLength = AppConst.DEFAULT_LOCAL_PREFIX_LENGTH;
         vCipher = new VCipher(key);
     }
 
@@ -146,7 +140,7 @@ public class VTunnelService extends VpnService {
     }
 
     private void startWsThread() {
-        wsThread = new WsThread(serverIP, serverPort, localIP, localPrefixLength, dns, vCipher, this);
+        wsThread = new WsThread(serverIP, serverPort, dns, vCipher, this);
         wsThread.start();
     }
 

@@ -19,7 +19,7 @@ import com.netbyte.vtunnel.service.VTunnelService;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnConn, btnDisConn;
-    private EditText editServer, editServerPort, editLocal, editDNS, keyEdit;
+    private EditText editServer, editServerPort, editDNS, keyEdit;
     private TextView msgView;
     private MaterialButtonToggleGroup protocolGroup;
     SharedPreferences preferences;
@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         btnDisConn = findViewById(R.id.disConnButton);
         editServer = findViewById(R.id.serverAddressEdit);
         editServerPort = findViewById(R.id.serverPortEdit);
-        editLocal = findViewById(R.id.localAddressEdit);
         keyEdit = findViewById(R.id.keyEdit);
         editDNS = findViewById(R.id.dnsEdit);
         protocolGroup = findViewById(R.id.protocolGroup);
@@ -44,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
 
         editServer.setText(preferences.getString("serverIP", AppConst.DEFAULT_SERVER_ADDRESS));
         editServerPort.setText(preferences.getString("serverPort", AppConst.DEFAULT_SERVER_PORT));
-        editLocal.setText(preferences.getString("localIP", AppConst.DEFAULT_LOCAL_ADDRESS));
         editDNS.setText(preferences.getString("dns", AppConst.DEFAULT_DNS));
         keyEdit.setText(preferences.getString("key", AppConst.DEFAULT_KEY));
         String preProtocol = preferences.getString("protocol", AppConst.PROTOCOL_WS);
@@ -85,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         }
         String serverIP = editServer.getText().toString();
         String serverPort = editServerPort.getText().toString();
-        String localIp = editLocal.getText().toString();
         String dns = editDNS.getText().toString();
         String key = keyEdit.getText().toString();
         int buttonId = protocolGroup.getCheckedButtonId();
@@ -95,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         intent.setAction(AppConst.BTN_ACTION_CONNECT);
         intent.putExtra("serverIP", serverIP);
         intent.putExtra("serverPort", Integer.parseInt(serverPort));
-        intent.putExtra("localIP", localIp);
         intent.putExtra("dns", dns);
         intent.putExtra("key", key);
         intent.putExtra("protocol", protocol);
@@ -104,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         // save config
         preEditor.putString("serverIP", serverIP);
         preEditor.putString("serverPort", serverPort);
-        preEditor.putString("localIP", localIp);
         preEditor.putString("dns", dns);
         preEditor.putString("key", key);
         preEditor.putString("protocol", protocol);
