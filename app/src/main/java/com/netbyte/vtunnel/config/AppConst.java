@@ -27,6 +27,6 @@ public class AppConst {
 
     public static AtomicLong DOWN_BYTE = new AtomicLong(0);
     public static AtomicLong UP_BYTE = new AtomicLong(0);
-    public static String SUBNET = "172.16.0.253/24";
+    public static String LOCAL_ADDRESS = "";
 
 }

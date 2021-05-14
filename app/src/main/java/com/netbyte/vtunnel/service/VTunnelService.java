@@ -104,9 +104,9 @@ public class VTunnelService extends VpnService {
         try {
             stopThreads();
             startStatThread();
-            if (protocol.equals("udp")) {
+            if (protocol.equals(AppConst.PROTOCOL_UDP)) {
                 startUdpThread();
-            } else if (protocol.equals("websocket")) {
+            } else if (protocol.equals(AppConst.PROTOCOL_WS)) {
                 startWsThread();
             }
         } catch (Exception e) {
@@ -145,7 +145,7 @@ public class VTunnelService extends VpnService {
     }
 
     private void startStatThread() {
-        statThread = new StatThread(notificationManager, notificationBuilder, this);
+        statThread = new StatThread(protocol,serverIP, serverPort, key, notificationManager, notificationBuilder, this);
         statThread.start();
     }
 }
