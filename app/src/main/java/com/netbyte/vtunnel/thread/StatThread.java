@@ -37,7 +37,7 @@ public class StatThread extends Thread {
                     String title = "Status: Failed to connect!";
                     builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle(title));
                 } else {
-                    String title = String.format("Network: ↑ %s ↓ %s\r\n", ByteUtil.format(AppConst.UP_BYTE.get()), ByteUtil.format(AppConst.DOWN_BYTE.get()));
+                    String title = String.format("Network: ↑ %s ↓ %s", ByteUtil.format(AppConst.UP_BYTE.get()), ByteUtil.format(AppConst.DOWN_BYTE.get()));
                     String text = String.format("Subnet: %s", AppConst.SUBNET);
                     builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle(title).bigText(text));
                 }
