@@ -1,5 +1,6 @@
 package com.netbyte.vtunnel.thread;
 
+import android.annotation.SuppressLint;
 import android.net.VpnService;
 import android.os.Build;
 import android.text.TextUtils;
@@ -42,7 +43,7 @@ public class WsThread extends VpnThread {
             super.initTunnel();
             in = new FileInputStream(tunnel.getFileDescriptor());
             out = new FileOutputStream(tunnel.getFileDescriptor());
-            String uri = String.format("wss://%s:%d/way-to-freedom", serverIP, serverPort);
+            @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", serverIP, serverPort);
             wsClient = new WSClient(new URI(uri), vCipher);
             wsClient.setSocketFactory(SSLUtil.createEasySSLContext().getSocketFactory());
             wsClient.connectBlocking();
@@ -106,7 +107,7 @@ public class WsThread extends VpnThread {
     }
 
     private void pickIp(String serverIP, int serverPort, String key) {
-        String api = String.format("https://%s:%d/register/pick/ip", serverIP, serverPort);
+        @SuppressLint("DefaultLocale") String api = String.format("https://%s:%d/register/pick/ip", serverIP, serverPort);
         String resp = "";
         try {
             resp = HttpUtil.get(api, "key", key);
@@ -128,7 +129,7 @@ public class WsThread extends VpnThread {
     }
 
     private void deleteIp(String ip, String key) {
-        String api = String.format("https://%s:%d/register/delete/ip?ip=%s", serverIP, serverPort, ip);
+        @SuppressLint("DefaultLocale") String api = String.format("https://%s:%d/register/delete/ip?ip=%s", serverIP, serverPort, ip);
         String resp = "";
         try {
             resp = HttpUtil.get(api, "key", key);
