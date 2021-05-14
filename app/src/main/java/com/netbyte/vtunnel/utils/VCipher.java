@@ -21,4 +21,8 @@ public class VCipher {
         return rc4.decrypt(data);
     }
 
+    public String getKey() {
+        return this.key;
+    }
+
 }

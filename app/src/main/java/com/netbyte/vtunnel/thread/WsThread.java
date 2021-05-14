@@ -2,11 +2,13 @@ package com.netbyte.vtunnel.thread;
 
 import android.net.VpnService;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
 import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.utils.HttpUtil;
 import com.netbyte.vtunnel.ws.WSClient;
 import com.netbyte.vtunnel.utils.SSLUtil;
 import com.netbyte.vtunnel.utils.VCipher;
@@ -20,11 +22,9 @@ import java.util.Arrays;
 public class WsThread extends VpnThread {
     private static final String TAG = "WsThread";
 
-    public WsThread(String serverIP, int serverPort, String localIp, int localPrefixLength, String dns, VCipher vCipher, VpnService vpnService) {
+    public WsThread(String serverIP, int serverPort, String dns, VCipher vCipher, VpnService vpnService) {
         this.serverIP = serverIP;
         this.serverPort = serverPort;
-        this.localIP = localIp;
-        this.localPrefixLength = localPrefixLength;
         this.dns = dns;
         this.vCipher = vCipher;
         this.vpnService = vpnService;
@@ -38,6 +38,7 @@ public class WsThread extends VpnThread {
         FileOutputStream out = null;
         try {
             Log.i(TAG, "start");
+            pickIp(serverIP, serverPort, vCipher.getKey());
             super.initTunnel();
             in = new FileInputStream(tunnel.getFileDescriptor());
             out = new FileOutputStream(tunnel.getFileDescriptor());
@@ -96,10 +97,44 @@ public class WsThread extends VpnThread {
                 }
                 tunnel = null;
             }
+            deleteIp(this.localIP, vCipher.getKey());
         }
     }
 
     public void finish() {
         super.finish();
+    }
+
+    private void pickIp(String serverIP, int serverPort, String key) {
+        String api = String.format("https://%s:%d/register/pick/ip", serverIP, serverPort);
+        String resp = "";
+        try {
+            resp = HttpUtil.get(api, "key", key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, String.format("get api:%s resp:%s", api, resp));
+        if (TextUtils.isEmpty(resp)) {
+            return;
+        }
+        String[] ip = resp.split("/");
+        if (ip != null && ip.length == 2) {
+            this.localIP = ip[0];
+            this.localPrefixLength = Integer.valueOf(ip[1]);
+        } else {
+            this.localIP = AppConst.DEFAULT_LOCAL_ADDRESS;
+            this.localPrefixLength = AppConst.DEFAULT_LOCAL_PREFIX_LENGTH;
+        }
+    }
+
+    private void deleteIp(String ip, String key) {
+        String api = String.format("https://%s:%d/register/delete/ip?ip=%s", serverIP, serverPort, ip);
+        String resp = "";
+        try {
+            resp = HttpUtil.get(api, "key", key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, String.format("get api:%s resp:%s", api, resp));
     }
 }

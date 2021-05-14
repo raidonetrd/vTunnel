@@ -31,6 +31,7 @@ public class VpnThread extends Thread {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initTunnel() throws PackageManager.NameNotFoundException {
+        AppConst.SUBNET = String.format("%s/%d", localIP, localPrefixLength);
         VpnService.Builder builder = vpnService.new Builder();
         builder.setMtu(AppConst.MTU)
                 .addAddress(localIP, localPrefixLength)
