@@ -1,5 +1,6 @@
 package com.netbyte.vtunnel.thread;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.net.VpnService;
 import android.os.Build;
@@ -20,10 +21,10 @@ public class StatThread extends Thread {
     private final NotificationManager notificationManager;
     private final NotificationCompat.Builder builder;
     private final VpnService vpnService;
-    private String protocol;
-    private String serverIP;
-    private int serverPort;
-    private String key;
+    private final String protocol;
+    private final String serverIP;
+    private final int serverPort;
+    private final String key;
 
     public StatThread(String protocol, String serverIP, int serverPort, String key, NotificationManager notificationManager, NotificationCompat.Builder builder, VpnService vpnService) {
         this.protocol = protocol;
@@ -73,7 +74,7 @@ public class StatThread extends Thread {
     }
 
     private void keepAliveIp(String ip) {
-        String api = String.format("https://%s:%d/register/keepalive/ip?ip=%s", serverIP, serverPort, ip);
+        @SuppressLint("DefaultLocale") String api = String.format("https://%s:%d/register/keepalive/ip?ip=%s", serverIP, serverPort, ip);
         String resp = "";
         try {
             resp = HttpUtil.get(api, "key", key);
