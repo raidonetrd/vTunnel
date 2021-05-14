@@ -33,14 +33,14 @@ public class StatThread extends Thread {
         while (THREAD_RUNNABLE) {
             try {
                 Thread.sleep(2000);
-                String text;
                 if (checkCount > 5 && AppConst.DOWN_BYTE.get() == 0) {
-                    text = "Status: Failed to connect!";
+                    String title = "Status: Failed to connect!";
+                    builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle(title));
                 } else {
-                    text = String.format("Network: ↑ %s ↓ %s\r\n", ByteUtil.format(AppConst.UP_BYTE.get()), ByteUtil.format(AppConst.DOWN_BYTE.get()));
-                    text = text + String.format("Subnet: %s", AppConst.SUBNET);
+                    String title = String.format("Network: ↑ %s ↓ %s\r\n", ByteUtil.format(AppConst.UP_BYTE.get()), ByteUtil.format(AppConst.DOWN_BYTE.get()));
+                    String text = String.format("Subnet: %s", AppConst.SUBNET);
+                    builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle(title).bigText(text));
                 }
-                builder.setContentText(text).setStyle(new NotificationCompat.BigTextStyle().bigText(text));
                 notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
                 checkCount++;
             } catch (InterruptedException e) {
