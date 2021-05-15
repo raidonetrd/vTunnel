@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         keyEdit.setText(preferences.getString("key", AppConst.DEFAULT_KEY));
         String preProtocol = preferences.getString("protocol", AppConst.PROTOCOL_WS);
         protocolGroup.check(preProtocol.equals(AppConst.PROTOCOL_WS) ? R.id.protocolBtnWs : R.id.protocolBtnUdp);
-        Log.i("connected", "" + preferences.getBoolean("connected", false));
         btnDisConn.setEnabled(preferences.getBoolean("connected", false));
         btnDisConn.setOnClickListener(v -> {
             msgView.setText("Disconnected");
