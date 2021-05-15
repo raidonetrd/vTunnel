@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.VpnService;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         editDNS = findViewById(R.id.dnsEdit);
         protocolGroup = findViewById(R.id.protocolGroup);
         msgView = findViewById(R.id.msgTextView);
-        preferences = getPreferences(Activity.MODE_PRIVATE);
+        preferences = getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
 
         editServer.setText(preferences.getString("serverIP", AppConst.DEFAULT_SERVER_ADDRESS));
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         keyEdit.setText(preferences.getString("key", AppConst.DEFAULT_KEY));
         String preProtocol = preferences.getString("protocol", AppConst.PROTOCOL_WS);
         protocolGroup.check(preProtocol.equals(AppConst.PROTOCOL_WS) ? R.id.protocolBtnWs : R.id.protocolBtnUdp);
+        Log.i("connected", "" + preferences.getBoolean("connected", false));
         btnDisConn.setEnabled(preferences.getBoolean("connected", false));
         btnDisConn.setOnClickListener(v -> {
             msgView.setText("Disconnected");

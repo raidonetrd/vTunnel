@@ -2,8 +2,11 @@ package com.netbyte.vtunnel.thread;
 
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.VpnService;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
@@ -36,7 +39,7 @@ public class StatThread extends Thread {
         this.vpnService = vpnService;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void run() {
         Log.i(TAG, "start");
@@ -58,15 +61,35 @@ public class StatThread extends Thread {
                 if (AppConst.PROTOCOL_WS.equals(protocol) && checkCount % 100 == 0) {
                     keepAliveIp(AppConst.LOCAL_ADDRESS);
                 }
+                if (isAirplaneModeOn(vpnService.getApplicationContext())) {
+                    THREAD_RUNNABLE = false;
+                    Log.i(TAG, "airplane mode on");
+                }
             } catch (InterruptedException e) {
                 Log.i(TAG, "error:" + e.getMessage());
             }
         }
+        Log.i(TAG, "stop");
+        afterStop();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void afterStop() {
+        if (!isAirplaneModeOn(vpnService.getApplicationContext()) && AppConst.PROTOCOL_WS.equals(protocol)) {
+            deleteIp(AppConst.LOCAL_ADDRESS, key);
+        }
+        //reset network msg
         AppConst.UP_BYTE.set(0);
         AppConst.DOWN_BYTE.set(0);
         AppConst.LOCAL_ADDRESS = "";
+        //reset connected status
+        SharedPreferences preferences = vpnService.getApplicationContext().getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor preEditor = preferences.edit();
+        preEditor.putBoolean("connected", false);
+        preEditor.commit();
+        //stop service
         vpnService.stopForeground(true);
-        Log.i(TAG, "stop");
+        vpnService.stopSelf();
     }
 
     public void finish() {
@@ -82,6 +105,23 @@ public class StatThread extends Thread {
             e.printStackTrace();
         }
         Log.i(TAG, String.format("get api:%s resp:%s", api, resp));
+    }
+
+    private void deleteIp(String ip, String key) {
+        @SuppressLint("DefaultLocale") String api = String.format("https://%s:%d/register/delete/ip?ip=%s", serverIP, serverPort, ip);
+        String resp = "";
+        try {
+            resp = HttpUtil.get(api, "key", key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, String.format("get api:%s resp:%s", api, resp));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private static boolean isAirplaneModeOn(Context context) {
+        return Settings.Global.getInt(context.getContentResolver(),
+                Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
     }
 
 }

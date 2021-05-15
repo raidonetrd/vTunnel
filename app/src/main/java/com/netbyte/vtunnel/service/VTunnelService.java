@@ -69,6 +69,11 @@ public class VTunnelService extends VpnService {
         return START_STICKY;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
     private void initConfig(Intent intent) {
         if (intent == null) {
             return;
@@ -145,7 +150,7 @@ public class VTunnelService extends VpnService {
     }
 
     private void startStatThread() {
-        statThread = new StatThread(protocol,serverIP, serverPort, key, notificationManager, notificationBuilder, this);
+        statThread = new StatThread(protocol, serverIP, serverPort, key, notificationManager, notificationBuilder, this);
         statThread.start();
     }
 }
