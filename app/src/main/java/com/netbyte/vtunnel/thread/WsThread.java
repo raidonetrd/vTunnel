@@ -98,7 +98,6 @@ public class WsThread extends VpnThread {
                 }
                 tunnel = null;
             }
-            deleteIp(this.localIP, vCipher.getKey());
         }
     }
 
@@ -126,16 +125,5 @@ public class WsThread extends VpnThread {
             this.localIP = AppConst.DEFAULT_LOCAL_ADDRESS;
             this.localPrefixLength = AppConst.DEFAULT_LOCAL_PREFIX_LENGTH;
         }
-    }
-
-    private void deleteIp(String ip, String key) {
-        @SuppressLint("DefaultLocale") String api = String.format("https://%s:%d/register/delete/ip?ip=%s", serverIP, serverPort, ip);
-        String resp = "";
-        try {
-            resp = HttpUtil.get(api, "key", key);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Log.i(TAG, String.format("get api:%s resp:%s", api, resp));
     }
 }
