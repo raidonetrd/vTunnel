@@ -12,8 +12,8 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.netbyte.vtunnel.config.AppConst;
-import com.netbyte.vtunnel.utils.VCipher;
-import com.netbyte.vtunnel.utils.Whitelist;
+import com.netbyte.vtunnel.utils.CipherUtil;
+import com.netbyte.vtunnel.utils.PackageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +24,13 @@ public class VpnThread extends Thread {
     protected ParcelFileDescriptor tunnel;
     protected String serverIP;
     protected int serverPort;
-    protected VCipher vCipher;
+    protected CipherUtil cipherUtil;
     protected String localIP;
     protected int localPrefixLength;
     protected String dns;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     protected void initTunnel() throws PackageManager.NameNotFoundException {
         AppConst.LOCAL_ADDRESS = localIP;
         VpnService.Builder builder = vpnService.new Builder();
@@ -52,6 +53,7 @@ public class VpnThread extends Thread {
         this.THREAD_RUNNABLE = false;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private List<String> bypassApps() {
         PackageManager pm = vpnService.getPackageManager();
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
@@ -62,7 +64,7 @@ public class VpnThread extends Thread {
         for (ResolveInfo resolveInfo : packages) {
             try {
                 String packageName = resolveInfo.activityInfo.packageName;
-                for (String word : Whitelist.wordsList) {
+                for (String word : PackageUtil.bypassPackageList) {
                     if (packageName.toLowerCase().contains(word)) {
                         result.add(packageName);
                     }

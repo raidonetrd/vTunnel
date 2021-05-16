@@ -12,7 +12,7 @@ import com.netbyte.vtunnel.config.AppConst;
 import com.netbyte.vtunnel.utils.HttpUtil;
 import com.netbyte.vtunnel.ws.WSClient;
 import com.netbyte.vtunnel.utils.SSLUtil;
-import com.netbyte.vtunnel.utils.VCipher;
+import com.netbyte.vtunnel.utils.CipherUtil;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,15 +23,16 @@ import java.util.Arrays;
 public class WsThread extends VpnThread {
     private static final String TAG = "WsThread";
 
-    public WsThread(String serverIP, int serverPort, String dns, VCipher vCipher, VpnService vpnService) {
+    public WsThread(String serverIP, int serverPort, String dns, CipherUtil cipherUtil, VpnService vpnService) {
         this.serverIP = serverIP;
         this.serverPort = serverPort;
         this.dns = dns;
-        this.vCipher = vCipher;
+        this.cipherUtil = cipherUtil;
         this.vpnService = vpnService;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void run() {
         WSClient wsClient = null;
@@ -39,12 +40,12 @@ public class WsThread extends VpnThread {
         FileOutputStream out = null;
         try {
             Log.i(TAG, "start");
-            pickIp(serverIP, serverPort, vCipher.getKey());
+            pickIp(serverIP, serverPort, cipherUtil.getKey());
             super.initTunnel();
             in = new FileInputStream(tunnel.getFileDescriptor());
             out = new FileOutputStream(tunnel.getFileDescriptor());
             @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", serverIP, serverPort);
-            wsClient = new WSClient(new URI(uri), vCipher);
+            wsClient = new WSClient(new URI(uri), cipherUtil);
             wsClient.setSocketFactory(SSLUtil.createEasySSLContext().getSocketFactory());
             wsClient.connectBlocking();
             wsClient.setOutStream(out);
@@ -55,7 +56,7 @@ public class WsThread extends VpnThread {
                     if (ln > 0) {
                         if (wsClient.isOpen()) {
                             byte[] data = Arrays.copyOfRange(buf, 0, ln);
-                            wsClient.send(vCipher.encrypt(data));
+                            wsClient.send(cipherUtil.encrypt(data));
                             AppConst.UP_BYTE.addAndGet(ln);
                         } else if (wsClient.isClosed()) {
                             wsClient.reconnectBlocking();
@@ -118,9 +119,9 @@ public class WsThread extends VpnThread {
             return;
         }
         String[] ip = resp.split("/");
-        if (ip != null && ip.length == 2) {
+        if (ip.length == 2) {
             this.localIP = ip[0];
-            this.localPrefixLength = Integer.valueOf(ip[1]);
+            this.localPrefixLength = Integer.parseInt(ip[1]);
         } else {
             this.localIP = AppConst.DEFAULT_LOCAL_ADDRESS;
             this.localPrefixLength = AppConst.DEFAULT_LOCAL_PREFIX_LENGTH;
