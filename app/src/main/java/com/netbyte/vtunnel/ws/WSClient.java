@@ -4,7 +4,7 @@ package com.netbyte.vtunnel.ws;
 import android.util.Log;
 
 import com.netbyte.vtunnel.config.AppConst;
-import com.netbyte.vtunnel.utils.VCipher;
+import com.netbyte.vtunnel.utils.CipherUtil;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -17,9 +17,9 @@ import java.nio.ByteBuffer;
 public class WSClient extends WebSocketClient {
 
     private FileOutputStream out;
-    private VCipher vCipher;
+    private CipherUtil vCipher;
 
-    public WSClient(URI serverUri, VCipher vCipher) {
+    public WSClient(URI serverUri, CipherUtil vCipher) {
         super(serverUri);
         this.vCipher = vCipher;
     }

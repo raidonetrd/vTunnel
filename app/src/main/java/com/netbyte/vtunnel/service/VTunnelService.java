@@ -19,7 +19,7 @@ import com.netbyte.vtunnel.thread.StatThread;
 import com.netbyte.vtunnel.thread.UdpThread;
 import com.netbyte.vtunnel.thread.VpnThread;
 import com.netbyte.vtunnel.thread.WsThread;
-import com.netbyte.vtunnel.utils.VCipher;
+import com.netbyte.vtunnel.utils.CipherUtil;
 import com.netbyte.vtunnel.config.AppConst;
 
 public class VTunnelService extends VpnService {
@@ -32,7 +32,7 @@ public class VTunnelService extends VpnService {
     private VpnThread udpThread, wsThread;
     private StatThread statThread;
     private PendingIntent pendingIntent;
-    private VCipher vCipher;
+    private CipherUtil cipherUtil;
     private NotificationManager notificationManager;
     private NotificationCompat.Builder notificationBuilder;
 
@@ -86,7 +86,7 @@ public class VTunnelService extends VpnService {
         key = ex.getString("key");
         localIP = AppConst.DEFAULT_LOCAL_ADDRESS;
         localPrefixLength = AppConst.DEFAULT_LOCAL_PREFIX_LENGTH;
-        vCipher = new VCipher(key);
+        cipherUtil = new CipherUtil(key);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -140,12 +140,12 @@ public class VTunnelService extends VpnService {
     }
 
     private void startUdpThread() {
-        udpThread = new UdpThread(serverIP, serverPort, localIP, localPrefixLength, dns, vCipher, this);
+        udpThread = new UdpThread(serverIP, serverPort, localIP, localPrefixLength, dns, cipherUtil, this);
         udpThread.start();
     }
 
     private void startWsThread() {
-        wsThread = new WsThread(serverIP, serverPort, dns, vCipher, this);
+        wsThread = new WsThread(serverIP, serverPort, dns, cipherUtil, this);
         wsThread.start();
     }
 

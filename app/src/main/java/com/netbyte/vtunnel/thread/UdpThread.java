@@ -7,7 +7,7 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.netbyte.vtunnel.config.AppConst;
-import com.netbyte.vtunnel.utils.VCipher;
+import com.netbyte.vtunnel.utils.CipherUtil;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -21,17 +21,17 @@ import java.util.Arrays;
 public class UdpThread extends VpnThread {
     private static final String TAG = "UdpThread";
 
-    public UdpThread(String serverIP, int serverPort, String localIp, int localPrefixLength, String dns, VCipher vCipher, VpnService vpnService) {
+    public UdpThread(String serverIP, int serverPort, String localIp, int localPrefixLength, String dns, CipherUtil cipherUtil, VpnService vpnService) {
         this.serverIP = serverIP;
         this.serverPort = serverPort;
         this.localIP = localIp;
         this.localPrefixLength = localPrefixLength;
         this.dns = dns;
-        this.vCipher = vCipher;
+        this.cipherUtil = cipherUtil;
         this.vpnService = vpnService;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void run() {
         FileInputStream in = null;
@@ -53,7 +53,7 @@ public class UdpThread extends VpnThread {
                     int ln = in.read(buf);
                     if (ln > 0) {
                         byte[] data = Arrays.copyOfRange(buf, 0, ln);
-                        ByteBuffer bf = ByteBuffer.wrap(vCipher.encrypt(data));
+                        ByteBuffer bf = ByteBuffer.wrap(cipherUtil.encrypt(data));
                         udp.write(bf);
                         AppConst.UP_BYTE.addAndGet(ln);
                     }
@@ -65,7 +65,7 @@ public class UdpThread extends VpnThread {
                         bf.rewind();
                         buf = new byte[ln];
                         bf.get(buf);
-                        out.write(vCipher.decrypt(buf));
+                        out.write(cipherUtil.decrypt(buf));
                         AppConst.DOWN_BYTE.addAndGet(ln);
                     }
                 } catch (Exception e) {
