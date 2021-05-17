@@ -10,7 +10,7 @@ import androidx.annotation.RequiresApi;
 
 import com.netbyte.vtunnel.config.AppConst;
 import com.netbyte.vtunnel.utils.HttpUtil;
-import com.netbyte.vtunnel.ws.WSClient;
+import com.netbyte.vtunnel.ws.WsClient;
 import com.netbyte.vtunnel.utils.SSLUtil;
 import com.netbyte.vtunnel.utils.CipherUtil;
 
@@ -35,7 +35,7 @@ public class WsThread extends VpnThread {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void run() {
-        WSClient wsClient = null;
+        WsClient wsClient = null;
         FileInputStream in = null;
         FileOutputStream out = null;
         try {
@@ -45,7 +45,7 @@ public class WsThread extends VpnThread {
             in = new FileInputStream(tunnel.getFileDescriptor());
             out = new FileOutputStream(tunnel.getFileDescriptor());
             @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", serverIP, serverPort);
-            wsClient = new WSClient(new URI(uri), cipherUtil);
+            wsClient = new WsClient(new URI(uri), cipherUtil);
             wsClient.setSocketFactory(SSLUtil.createEasySSLContext().getSocketFactory());
             wsClient.connectBlocking();
             wsClient.setOutStream(out);

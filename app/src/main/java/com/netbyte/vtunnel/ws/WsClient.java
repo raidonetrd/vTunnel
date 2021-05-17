@@ -14,14 +14,14 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-public class WSClient extends WebSocketClient {
-
+public class WsClient extends WebSocketClient {
+    private static final String TAG = "WsClient";
+    private final CipherUtil cipherUtil;
     private FileOutputStream out;
-    private CipherUtil vCipher;
 
-    public WSClient(URI serverUri, CipherUtil vCipher) {
+    public WsClient(URI serverUri, CipherUtil cipherUtil) {
         super(serverUri);
-        this.vCipher = vCipher;
+        this.cipherUtil = cipherUtil;
     }
 
     public void setOutStream(FileOutputStream out) {
@@ -30,12 +30,12 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshake) {
-        Log.i("WSClient", "onOpen");
+        Log.i(TAG, "onOpen");
     }
 
     @Override
     public void onMessage(String message) {
-        Log.i("WSClient", "onMessage:" + message);
+        Log.i(TAG, "onMessage:" + message);
     }
 
     @Override
@@ -45,22 +45,22 @@ public class WSClient extends WebSocketClient {
         }
         byte[] buf = new byte[byteBuffer.remaining()];
         byteBuffer.get(buf);
+        byte[] data = cipherUtil.decrypt(buf);
+        AppConst.DOWN_BYTE.addAndGet(data.length);
         try {
-            byte[] data = vCipher.decrypt(buf);
-            AppConst.DOWN_BYTE.addAndGet(data.length);
             out.write(data);
         } catch (IOException e) {
-            Log.e("WSClient", e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        Log.i("WSClient", "code:" + code + " reason:" + reason + "remote:" + remote);
+        Log.i(TAG, "code:" + code + " reason:" + reason + "remote:" + remote);
     }
 
     @Override
     public void onError(Exception ex) {
-        Log.e("WSClient", ex.getMessage());
+        Log.e(TAG, ex.getMessage());
     }
 }

@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.VpnService;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.config.AppConst;
-import com.netbyte.vtunnel.service.VTunnelService;
+import com.netbyte.vtunnel.service.TunnelService;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnConn, btnDisConn;
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             preEditor.apply();
 
             Intent intent = new Intent();
-            intent.setClass(MainActivity.this, VTunnelService.class);
+            intent.setClass(MainActivity.this, TunnelService.class);
             intent.setAction(AppConst.BTN_ACTION_DISCONNECT);
             startService(intent);
         });
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         int buttonId = protocolGroup.getCheckedButtonId();
         String protocol = (buttonId == R.id.protocolBtnWs) ? AppConst.PROTOCOL_WS : AppConst.PROTOCOL_UDP;
         // new intent
-        Intent intent = new Intent(this, VTunnelService.class);
+        Intent intent = new Intent(this, TunnelService.class);
         intent.setAction(AppConst.BTN_ACTION_CONNECT);
         intent.putExtra("serverIP", serverIP);
         intent.putExtra("serverPort", Integer.parseInt(serverPort));

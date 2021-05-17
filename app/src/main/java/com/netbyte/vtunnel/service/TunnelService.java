@@ -22,7 +22,7 @@ import com.netbyte.vtunnel.thread.WsThread;
 import com.netbyte.vtunnel.utils.CipherUtil;
 import com.netbyte.vtunnel.config.AppConst;
 
-public class VTunnelService extends VpnService {
+public class TunnelService extends VpnService {
     private static String serverIP, localIP;
     private static int localPrefixLength;
     private static int serverPort;
@@ -36,7 +36,7 @@ public class VTunnelService extends VpnService {
     private NotificationManager notificationManager;
     private NotificationCompat.Builder notificationBuilder;
 
-    public VTunnelService() {
+    public TunnelService() {
     }
 
     @Override
