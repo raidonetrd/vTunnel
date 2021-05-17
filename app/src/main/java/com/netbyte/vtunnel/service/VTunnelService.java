@@ -52,32 +52,38 @@ public class VTunnelService extends VpnService {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        try {
-            if (intent != null && AppConst.BTN_ACTION_DISCONNECT.equals(intent.getAction())) {
+        if (intent == null) {
+            return START_NOT_STICKY;
+        }
+        switch (intent.getAction()) {
+            case AppConst.BTN_ACTION_CONNECT:
+                // 0.init config
+                initConfig(intent);
+                // 1.create notification
+                createNotification();
+                // 2.connect
+                doConnect();
+                return START_STICKY;
+            case AppConst.BTN_ACTION_DISCONNECT:
                 doDisconnect();
                 return START_NOT_STICKY;
-            }
-            // 0.init config
-            initConfig(intent);
-            // 1.create notification
-            createNotification();
-            // 2.connect
-            doConnect();
-        } catch (Exception e) {
-            Log.e(AppConst.DEFAULT_TAG, "error on onStartCommand:" + e.toString());
+            default:
+                return START_NOT_STICKY;
         }
-        return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        doDisconnect();
+    }
+
+    @Override
+    public void onRevoke() {
+        doDisconnect();
     }
 
     private void initConfig(Intent intent) {
-        if (intent == null) {
-            return;
-        }
         Bundle ex = intent.getExtras();
         serverIP = ex.getString("serverIP");
         serverPort = ex.getInt("serverPort");
