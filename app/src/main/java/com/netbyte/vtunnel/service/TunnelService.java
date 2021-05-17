@@ -5,12 +5,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.VpnService;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.netbyte.vtunnel.activity.MainActivity;
@@ -49,7 +47,6 @@ public class TunnelService extends VpnService {
         return null;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent == null) {
@@ -95,7 +92,7 @@ public class TunnelService extends VpnService {
         cipherUtil = new CipherUtil(key);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     private void createNotification() {
         NotificationChannel channel = new NotificationChannel(AppConst.NOTIFICATION_CHANNEL_ID, AppConst.NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_NONE);
         notificationManager = getSystemService(NotificationManager.class);

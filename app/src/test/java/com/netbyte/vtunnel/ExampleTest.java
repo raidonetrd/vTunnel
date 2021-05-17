@@ -7,7 +7,9 @@ public class ExampleTest {
 
     @org.junit.Test
     public void testAppPackageList() {
+
         System.out.println(PackageUtil.bypassPackageList);
+        System.out.println(PackageUtil.bypassPackageList.size());
     }
 
 }

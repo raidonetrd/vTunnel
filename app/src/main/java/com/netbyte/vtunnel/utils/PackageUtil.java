@@ -17,7 +17,7 @@ public class PackageUtil {
 
     static {
         String decodeAppList = new String(Base64.getDecoder().decode(base64AppList.getBytes(StandardCharsets.UTF_8)));
-        String[] appList = decodeAppList.split("\r\n");
+        String[] appList = decodeAppList.split("\n");
         if (appList.length > 0) {
             bypassPackageList.addAll(Arrays.asList(appList));
         }

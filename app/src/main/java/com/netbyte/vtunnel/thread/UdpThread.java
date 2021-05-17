@@ -8,7 +8,6 @@ import androidx.annotation.RequiresApi;
 
 import com.netbyte.vtunnel.config.AppConst;
 import com.netbyte.vtunnel.utils.CipherUtil;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,7 +30,7 @@ public class UdpThread extends VpnThread {
         this.vpnService = vpnService;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void run() {
         FileInputStream in = null;
