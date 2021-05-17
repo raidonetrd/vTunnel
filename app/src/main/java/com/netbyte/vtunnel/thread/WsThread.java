@@ -31,8 +31,7 @@ public class WsThread extends VpnThread {
         this.vpnService = vpnService;
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void run() {
         WsClient wsClient = null;

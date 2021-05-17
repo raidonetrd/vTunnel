@@ -1,8 +1,7 @@
 package com.netbyte.vtunnel.thread;
 
-import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.VpnService;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VpnThread extends Thread {
+    private static final String TAG = "VpnThread";
     protected volatile boolean THREAD_RUNNABLE = true;
     protected VpnService vpnService;
     protected ParcelFileDescriptor tunnel;
@@ -29,8 +29,7 @@ public class VpnThread extends Thread {
     protected int localPrefixLength;
     protected String dns;
 
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initTunnel() throws PackageManager.NameNotFoundException {
         AppConst.LOCAL_ADDRESS = localIP;
         VpnService.Builder builder = vpnService.new Builder();
@@ -46,34 +45,27 @@ public class VpnThread extends Thread {
             builder.addDisallowedApplication(packageName);
         }
         this.tunnel = builder.establish();
-        Log.i("VpnThread", "init tunnel has done");
+        Log.i(TAG, "init tunnel has done");
     }
 
     public void finish() {
         this.THREAD_RUNNABLE = false;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private List<String> bypassApps() {
-        PackageManager pm = vpnService.getPackageManager();
-        Intent intent = new Intent(Intent.ACTION_MAIN, null);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> packages = pm.queryIntentActivities(intent, 0);
+        List<PackageInfo> packageInfoList = vpnService.getApplicationContext().getPackageManager().getInstalledPackages(0);
         ArrayList<String> result = new ArrayList<>();
         result.add(AppConst.APP_PACKAGE_NAME);
-        for (ResolveInfo resolveInfo : packages) {
-            try {
-                String packageName = resolveInfo.activityInfo.packageName;
-                for (String word : PackageUtil.bypassPackageList) {
-                    if (packageName.toLowerCase().contains(word)) {
-                        result.add(packageName);
-                    }
+        for (PackageInfo info : packageInfoList) {
+            String packageName = info.packageName;
+            for (String p : PackageUtil.bypassPackageList) {
+                p = p.trim();
+                if (packageName.startsWith(p)) {
+                    result.add(packageName);
                 }
-            } catch (Exception e) {
-                Log.e(AppConst.DEFAULT_TAG, "error on bypass apps:" + e.getMessage());
             }
         }
-        Log.i(AppConst.DEFAULT_TAG, "bypass apps:" + result);
+        Log.i(TAG, "bypass apps:" + result);
         return result;
     }
 }
