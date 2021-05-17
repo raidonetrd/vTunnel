@@ -48,7 +48,7 @@ public class StatThread extends Thread {
         while (THREAD_RUNNABLE) {
             try {
                 Thread.sleep(3000);
-                if (checkCount > 5 && AppConst.DOWN_BYTE.get() == 0) {
+                if (checkCount > 3 && AppConst.DOWN_BYTE.get() == 0) {
                     String title = "Status: Failed to connect!";
                     builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle(title));
                 } else {
@@ -62,8 +62,8 @@ public class StatThread extends Thread {
                     keepAliveIp(AppConst.LOCAL_ADDRESS);
                 }
                 if (isAirplaneModeOn(vpnService.getApplicationContext())) {
-                    THREAD_RUNNABLE = false;
                     Log.i(TAG, "airplane mode on");
+                    finish();
                 }
             } catch (InterruptedException e) {
                 Log.i(TAG, "error:" + e.getMessage());
@@ -78,11 +78,11 @@ public class StatThread extends Thread {
         if (!isAirplaneModeOn(vpnService.getApplicationContext()) && AppConst.PROTOCOL_WS.equals(protocol)) {
             deleteIp(AppConst.LOCAL_ADDRESS, key);
         }
-        //reset network msg
+        //reset notification data
         AppConst.UP_BYTE.set(0);
         AppConst.DOWN_BYTE.set(0);
         AppConst.LOCAL_ADDRESS = "";
-        //reset connected status
+        //reset connection status
         SharedPreferences preferences = vpnService.getApplicationContext().getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor preEditor = preferences.edit();
         preEditor.putBoolean("connected", false);
@@ -120,8 +120,7 @@ public class StatThread extends Thread {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private static boolean isAirplaneModeOn(Context context) {
-        return Settings.Global.getInt(context.getContentResolver(),
-                Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
+        return Settings.Global.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
     }
 
 }
