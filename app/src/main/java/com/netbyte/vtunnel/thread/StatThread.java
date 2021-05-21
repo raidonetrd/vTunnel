@@ -52,8 +52,8 @@ public class StatThread extends Thread {
                     String title = "Status: Failed to connect!";
                     builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle(title));
                 } else {
-                    String title = String.format("Local: %s", AppConst.LOCAL_ADDRESS);
-                    String text = String.format("Network: ↑ %s ↓ %s", ByteUtil.format(AppConst.UP_BYTE.get()), ByteUtil.format(AppConst.DOWN_BYTE.get()));
+                    String title = String.format("Network: %s", AppConst.LOCAL_ADDRESS);
+                    String text = String.format("Activity: ↑ %s ↓ %s", ByteUtil.format(AppConst.UP_BYTE.get()), ByteUtil.format(AppConst.DOWN_BYTE.get()));
                     builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle(title).bigText(text));
                 }
                 notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());

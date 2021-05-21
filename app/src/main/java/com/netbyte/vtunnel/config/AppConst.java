@@ -16,7 +16,7 @@ public class AppConst {
     public static final String DEFAULT_SERVER_PORT = "443";
     public static final String DEFAULT_LOCAL_ADDRESS = "172.16.0.253";
     public static final int DEFAULT_LOCAL_PREFIX_LENGTH = 24;
-    public static final String DEFAULT_KEY = "6w9z$C&F)J@NcRfWjXn3r4u7x!A%D*G-";
+    public static final String DEFAULT_KEY = "1233456";
     public static final String PROTOCOL_WS = "websocket";
     public static final String PROTOCOL_UDP = "udp";
     public static final String DEFAULT_DNS = "223.5.5.5";
