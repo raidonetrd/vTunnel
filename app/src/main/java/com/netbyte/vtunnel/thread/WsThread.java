@@ -55,7 +55,7 @@ public class WsThread extends VpnThread {
                     if (ln > 0) {
                         if (wsClient.isOpen()) {
                             byte[] data = Arrays.copyOfRange(buf, 0, ln);
-                            wsClient.send(cipherUtil.encrypt(data));
+                            wsClient.send(cipherUtil.xor(data));
                             AppConst.UP_BYTE.addAndGet(ln);
                         } else if (wsClient.isClosed()) {
                             wsClient.reconnectBlocking();

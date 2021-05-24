@@ -45,7 +45,7 @@ public class WsClient extends WebSocketClient {
         }
         byte[] buf = new byte[byteBuffer.remaining()];
         byteBuffer.get(buf);
-        byte[] data = cipherUtil.decrypt(buf);
+        byte[] data = cipherUtil.xor(buf);
         AppConst.DOWN_BYTE.addAndGet(data.length);
         try {
             out.write(data);
