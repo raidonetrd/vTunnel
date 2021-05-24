@@ -52,7 +52,7 @@ public class UdpThread extends VpnThread {
                     int ln = in.read(buf);
                     if (ln > 0) {
                         byte[] data = Arrays.copyOfRange(buf, 0, ln);
-                        ByteBuffer bf = ByteBuffer.wrap(cipherUtil.encrypt(data));
+                        ByteBuffer bf = ByteBuffer.wrap(cipherUtil.xor(data));
                         udp.write(bf);
                         AppConst.UP_BYTE.addAndGet(ln);
                     }
@@ -64,7 +64,7 @@ public class UdpThread extends VpnThread {
                         bf.rewind();
                         buf = new byte[ln];
                         bf.get(buf);
-                        out.write(cipherUtil.decrypt(buf));
+                        out.write(cipherUtil.xor(buf));
                         AppConst.DOWN_BYTE.addAndGet(ln);
                     }
                 } catch (Exception e) {

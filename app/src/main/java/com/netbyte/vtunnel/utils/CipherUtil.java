@@ -7,14 +7,9 @@ public class CipherUtil {
         this.key = key;
     }
 
-    public byte[] encrypt(byte[] data) {
+    public byte[] xor(byte[] data) {
         RC4 rc4 = new RC4(key.getBytes());
-        return rc4.encrypt(data);
-    }
-
-    public byte[] decrypt(byte[] data) {
-        RC4 rc4 = new RC4(key.getBytes());
-        return rc4.decrypt(data);
+        return rc4.xor(data);
     }
 
     public String getKey() {
@@ -47,7 +42,7 @@ public class CipherUtil {
             }
         }
 
-        public byte[] encrypt(final byte[] plaintext) {
+        public byte[] xor(final byte[] plaintext) {
             final byte[] cipherText = new byte[plaintext.length];
             int i = 0, j = 0, k, t;
             byte tmp;
@@ -62,10 +57,6 @@ public class CipherUtil {
                 cipherText[counter] = (byte) (plaintext[counter] ^ k);
             }
             return cipherText;
-        }
-
-        public byte[] decrypt(final byte[] ciphertext) {
-            return encrypt(ciphertext);
         }
     }
 
