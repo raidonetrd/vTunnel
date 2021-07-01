@@ -49,11 +49,11 @@ public class StatThread extends Thread {
             try {
                 Thread.sleep(3000);
                 if (checkCount > 3 && AppConst.DOWN_BYTE.get() == 0) {
-                    String title = "Status: Failed to connect!";
+                    String title = "Failed to connect!";
                     builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle(title));
                 } else {
-                    String title = String.format("Network: %s", AppConst.LOCAL_ADDRESS);
-                    String text = String.format("Activity: ↑ %s ↓ %s", ByteUtil.format(AppConst.UP_BYTE.get()), ByteUtil.format(AppConst.DOWN_BYTE.get()));
+                    String title = String.format("Local IP: %s", AppConst.LOCAL_ADDRESS);
+                    String text = String.format("Total: ↑ %s ↓ %s", ByteUtil.format(AppConst.UP_BYTE.get()), ByteUtil.format(AppConst.DOWN_BYTE.get()));
                     builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle(title).bigText(text));
                 }
                 notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
