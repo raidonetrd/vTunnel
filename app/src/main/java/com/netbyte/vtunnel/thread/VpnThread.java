@@ -59,14 +59,18 @@ public class VpnThread extends Thread {
         this.THREAD_RUNNABLE = false;
     }
 
-    private List<String> bypassApps() throws IOException {
+    private List<String> bypassApps() {
         List<String> bypassPackageList = new ArrayList<>();
         if (!TextUtils.isEmpty(bypassUrl)) {
-            String base64AppList = HttpUtil.get(bypassUrl);
-            String decodeAppList = new String(Base64.getDecoder().decode(base64AppList.getBytes(StandardCharsets.UTF_8)));
-            String[] appList = decodeAppList.split("\n");
-            if (appList.length > 0) {
-                bypassPackageList.addAll(Arrays.asList(appList));
+            try {
+                String base64AppList = HttpUtil.get(bypassUrl);
+                String decodeAppList = new String(Base64.getDecoder().decode(base64AppList.getBytes(StandardCharsets.UTF_8)));
+                String[] appList = decodeAppList.split("\n");
+                if (appList.length > 0) {
+                    bypassPackageList.addAll(Arrays.asList(appList));
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "failed to get bypass url");
             }
         }
         List<PackageInfo> packageInfoList = vpnService.getApplicationContext().getPackageManager().getInstalledPackages(0);
