@@ -21,7 +21,7 @@ public class AppConst {
     public static final String PROTOCOL_UDP = "udp";
     public static final String DEFAULT_DNS = "223.5.5.5";
     public static final String DEFAULT_ROUTE = "0.0.0.0";
-
+    public static final String DEFAULT_BYPASS_URL = "https://raw.githubusercontent.com/net-byte/vTunnel/main/bypass.txt";
     public static final String BTN_ACTION_CONNECT = "connect";
     public static final String BTN_ACTION_DISCONNECT = "disconnect";
 

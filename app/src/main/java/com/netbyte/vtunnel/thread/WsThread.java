@@ -23,10 +23,11 @@ import java.util.Arrays;
 public class WsThread extends VpnThread {
     private static final String TAG = "WsThread";
 
-    public WsThread(String serverIP, int serverPort, String dns, CipherUtil cipherUtil, VpnService vpnService) {
+    public WsThread(String serverIP, int serverPort, String dns, String bypassUrl, CipherUtil cipherUtil, VpnService vpnService) {
         this.serverIP = serverIP;
         this.serverPort = serverPort;
         this.dns = dns;
+        this.bypassUrl = bypassUrl;
         this.cipherUtil = cipherUtil;
         this.vpnService = vpnService;
     }

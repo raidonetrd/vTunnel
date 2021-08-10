@@ -27,6 +27,7 @@ public class TunnelService extends VpnService {
     private static String dns;
     private static String protocol;
     private static String key;
+    private static String bypassUrl;
     private VpnThread udpThread, wsThread;
     private StatThread statThread;
     private PendingIntent pendingIntent;
@@ -87,6 +88,7 @@ public class TunnelService extends VpnService {
         protocol = ex.getString("protocol");
         dns = ex.getString("dns");
         key = ex.getString("key");
+        bypassUrl = ex.getString("bypassUrl");
         localIP = AppConst.DEFAULT_LOCAL_ADDRESS;
         localPrefixLength = AppConst.DEFAULT_LOCAL_PREFIX_LENGTH;
         cipherUtil = new CipherUtil(key);
@@ -143,12 +145,12 @@ public class TunnelService extends VpnService {
     }
 
     private void startUdpThread() {
-        udpThread = new UdpThread(serverIP, serverPort, localIP, localPrefixLength, dns, cipherUtil, this);
+        udpThread = new UdpThread(serverIP, serverPort, localIP, localPrefixLength, dns, bypassUrl, cipherUtil, this);
         udpThread.start();
     }
 
     private void startWsThread() {
-        wsThread = new WsThread(serverIP, serverPort, dns, cipherUtil, this);
+        wsThread = new WsThread(serverIP, serverPort, dns, bypassUrl, cipherUtil, this);
         wsThread.start();
     }
 

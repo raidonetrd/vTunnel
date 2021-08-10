@@ -20,12 +20,13 @@ import java.util.Arrays;
 public class UdpThread extends VpnThread {
     private static final String TAG = "UdpThread";
 
-    public UdpThread(String serverIP, int serverPort, String localIp, int localPrefixLength, String dns, CipherUtil cipherUtil, VpnService vpnService) {
+    public UdpThread(String serverIP, int serverPort, String localIp, int localPrefixLength, String dns,String bypassUrl, CipherUtil cipherUtil, VpnService vpnService) {
         this.serverIP = serverIP;
         this.serverPort = serverPort;
         this.localIP = localIp;
         this.localPrefixLength = localPrefixLength;
         this.dns = dns;
+        this.bypassUrl = bypassUrl;
         this.cipherUtil = cipherUtil;
         this.vpnService = vpnService;
     }

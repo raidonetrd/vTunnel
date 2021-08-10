@@ -12,9 +12,13 @@ import androidx.annotation.RequiresApi;
 
 import com.netbyte.vtunnel.config.AppConst;
 import com.netbyte.vtunnel.utils.CipherUtil;
-import com.netbyte.vtunnel.utils.PackageUtil;
+import com.netbyte.vtunnel.utils.HttpUtil;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 public class VpnThread extends Thread {
@@ -28,9 +32,10 @@ public class VpnThread extends Thread {
     protected String localIP;
     protected int localPrefixLength;
     protected String dns;
+    protected String bypassUrl;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    protected void initTunnel() throws PackageManager.NameNotFoundException {
+    protected void initTunnel() throws PackageManager.NameNotFoundException, IOException {
         AppConst.LOCAL_ADDRESS = localIP;
         VpnService.Builder builder = vpnService.new Builder();
         builder.setMtu(AppConst.MTU)
@@ -52,13 +57,20 @@ public class VpnThread extends Thread {
         this.THREAD_RUNNABLE = false;
     }
 
-    private List<String> bypassApps() {
+    private List<String> bypassApps() throws IOException {
+        List<String> bypassPackageList = new ArrayList<>();
+        String base64AppList = HttpUtil.get(bypassUrl);
+        String decodeAppList = new String(Base64.getDecoder().decode(base64AppList.getBytes(StandardCharsets.UTF_8)));
+        String[] appList = decodeAppList.split("\n");
+        if (appList.length > 0) {
+            bypassPackageList.addAll(Arrays.asList(appList));
+        }
         List<PackageInfo> packageInfoList = vpnService.getApplicationContext().getPackageManager().getInstalledPackages(0);
         ArrayList<String> result = new ArrayList<>();
         result.add(AppConst.APP_PACKAGE_NAME);
         for (PackageInfo info : packageInfoList) {
             String packageName = info.packageName;
-            for (String p : PackageUtil.bypassPackageList) {
+            for (String p : bypassPackageList) {
                 p = p.trim();
                 if (packageName.startsWith(p)) {
                     result.add(packageName);
