@@ -1,22 +1,15 @@
 <resources>
     <string name="app_name">vTunnel</string>
-    <string name="app_version">Version:1.2.8</string>
-    <string name="view_logo">logo</string>
+    <string name="app_version">Version:1.3.0</string>
     <string name="view_server">Server</string>
-    <string name="view_local">Local</string>
     <string name="view_dns">DNS</string>
     <string name="view_protocol">Protocol</string>
     <string name="view_key">Key</string>
-    <string name="view_bypass_url">Bypass URL</string>
-    <string name="btn_protocol">ToggleButton</string>
+    <string name="view_bypass_url">Bypass</string>
     <string name="btn_connect">Connect</string>
     <string name="btn_disconnect">Disconnect</string>
-    <string name="default_server">172.16.0.1</string>
+    <string name="default_server">172.16.0.1:443</string>
     <string name="default_key">123456</string>
-    <string name="default_local">172.16.0.2/24</string>
-    <string name="default_server_port">443</string>
     <string name="default_dns">223.5.5.5</string>
-    <string name="default_bypass_url">https://raw.githubusercontent.com/net-byte/vTunnel/main/bypass.txt</string>
-    <string name="protocol_udp">udp</string>
-    <string name="protocol_ws">websocket</string>
+    <string name="default_bypass_url">https://...</string>
 </resources>
