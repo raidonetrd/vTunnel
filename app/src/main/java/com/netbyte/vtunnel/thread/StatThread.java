@@ -24,13 +24,11 @@ public class StatThread extends Thread {
     private final NotificationManager notificationManager;
     private final NotificationCompat.Builder builder;
     private final VpnService vpnService;
-    private final String protocol;
     private final String serverIP;
     private final int serverPort;
     private final String key;
 
-    public StatThread(String protocol, String serverIP, int serverPort, String key, NotificationManager notificationManager, NotificationCompat.Builder builder, VpnService vpnService) {
-        this.protocol = protocol;
+    public StatThread(String serverIP, int serverPort, String key, NotificationManager notificationManager, NotificationCompat.Builder builder, VpnService vpnService) {
         this.serverIP = serverIP;
         this.serverPort = serverPort;
         this.key = key;
@@ -58,7 +56,7 @@ public class StatThread extends Thread {
                 }
                 notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
                 checkCount++;
-                if (AppConst.PROTOCOL_WS.equals(protocol) && checkCount % 100 == 0) {
+                if (checkCount % 100 == 0) {
                     keepAliveIp(AppConst.LOCAL_ADDRESS);
                 }
                 if (isAirplaneModeOn(vpnService.getApplicationContext())) {
@@ -75,7 +73,7 @@ public class StatThread extends Thread {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void afterStop() {
-        if (!isAirplaneModeOn(vpnService.getApplicationContext()) && AppConst.PROTOCOL_WS.equals(protocol)) {
+        if (!isAirplaneModeOn(vpnService.getApplicationContext())) {
             deleteIp(AppConst.LOCAL_ADDRESS, key);
         }
         //reset notification data

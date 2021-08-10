@@ -14,7 +14,6 @@ import androidx.core.app.NotificationCompat;
 import com.netbyte.vtunnel.activity.MainActivity;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.thread.StatThread;
-import com.netbyte.vtunnel.thread.UdpThread;
 import com.netbyte.vtunnel.thread.VpnThread;
 import com.netbyte.vtunnel.thread.WsThread;
 import com.netbyte.vtunnel.utils.CipherUtil;
@@ -22,13 +21,11 @@ import com.netbyte.vtunnel.config.AppConst;
 
 public class TunnelService extends VpnService {
     private static String serverIP, localIP;
-    private static int localPrefixLength;
     private static int serverPort;
     private static String dns;
-    private static String protocol;
     private static String key;
     private static String bypassUrl;
-    private VpnThread udpThread, wsThread;
+    private VpnThread wsThread;
     private StatThread statThread;
     private PendingIntent pendingIntent;
     private CipherUtil cipherUtil;
@@ -83,14 +80,18 @@ public class TunnelService extends VpnService {
 
     private void initConfig(Intent intent) {
         Bundle ex = intent.getExtras();
-        serverIP = ex.getString("serverIP");
-        serverPort = ex.getInt("serverPort");
-        protocol = ex.getString("protocol");
+        String server = ex.getString("server").trim();
+        if (server.contains(":")) {
+            serverIP = server.split(":")[0];
+            serverPort = Integer.valueOf(server.split(":")[1]);
+        } else {
+            serverIP = server;
+            serverPort = 443;
+        }
         dns = ex.getString("dns");
         key = ex.getString("key");
         bypassUrl = ex.getString("bypassUrl");
         localIP = AppConst.DEFAULT_LOCAL_ADDRESS;
-        localPrefixLength = AppConst.DEFAULT_LOCAL_PREFIX_LENGTH;
         cipherUtil = new CipherUtil(key);
     }
 
@@ -114,11 +115,7 @@ public class TunnelService extends VpnService {
         try {
             stopThreads();
             startStatThread();
-            if (protocol.equals(AppConst.PROTOCOL_UDP)) {
-                startUdpThread();
-            } else if (protocol.equals(AppConst.PROTOCOL_WS)) {
-                startWsThread();
-            }
+            startWsThread();
         } catch (Exception e) {
             Log.e(AppConst.DEFAULT_TAG, "error on connecting:" + e.toString());
         }
@@ -130,10 +127,6 @@ public class TunnelService extends VpnService {
     }
 
     private void stopThreads() {
-        if (udpThread != null) {
-            udpThread.finish();
-            udpThread = null;
-        }
         if (wsThread != null) {
             wsThread.finish();
             wsThread = null;
@@ -144,18 +137,13 @@ public class TunnelService extends VpnService {
         }
     }
 
-    private void startUdpThread() {
-        udpThread = new UdpThread(serverIP, serverPort, localIP, localPrefixLength, dns, bypassUrl, cipherUtil, this);
-        udpThread.start();
-    }
-
     private void startWsThread() {
         wsThread = new WsThread(serverIP, serverPort, dns, bypassUrl, cipherUtil, this);
         wsThread.start();
     }
 
     private void startStatThread() {
-        statThread = new StatThread(protocol, serverIP, serverPort, key, notificationManager, notificationBuilder, this);
+        statThread = new StatThread(serverIP, serverPort, key, notificationManager, notificationBuilder, this);
         statThread.start();
     }
 }
