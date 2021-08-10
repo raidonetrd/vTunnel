@@ -1,15 +1,11 @@
 package com.netbyte.vtunnel;
 
 
-import com.netbyte.vtunnel.utils.PackageUtil;
-
 public class ExampleTest {
 
     @org.junit.Test
-    public void testAppPackageList() {
+    public void testApp() {
 
-        System.out.println(PackageUtil.bypassPackageList);
-        System.out.println(PackageUtil.bypassPackageList.size());
     }
 
 }

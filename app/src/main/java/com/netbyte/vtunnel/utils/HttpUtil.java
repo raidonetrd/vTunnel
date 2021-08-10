@@ -10,9 +10,18 @@ public class HttpUtil {
 
     private static OkHttpClient client = new OkHttpClient();
 
-    public static String get(String url,String headerName,String headerValue) throws IOException {
+    public static String get(String url) throws IOException {
         Request request = new Request.Builder()
-                .addHeader(headerName,headerValue)
+                .url(url)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
+        }
+    }
+
+    public static String get(String url, String headerName, String headerValue) throws IOException {
+        Request request = new Request.Builder()
+                .addHeader(headerName, headerValue)
                 .url(url)
                 .build();
         try (Response response = client.newCall(request).execute()) {

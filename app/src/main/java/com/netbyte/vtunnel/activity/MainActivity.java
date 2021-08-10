@@ -19,7 +19,7 @@ import com.netbyte.vtunnel.service.TunnelService;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnConn, btnDisConn;
-    private EditText editServer, editServerPort, editDNS, keyEdit;
+    private EditText editServer, editServerPort, editDNS, editKey, editBypass;
     private TextView msgView;
     private MaterialButtonToggleGroup protocolGroup;
     SharedPreferences preferences;
@@ -34,8 +34,10 @@ public class MainActivity extends AppCompatActivity {
         btnDisConn = findViewById(R.id.disConnButton);
         editServer = findViewById(R.id.serverAddressEdit);
         editServerPort = findViewById(R.id.serverPortEdit);
-        keyEdit = findViewById(R.id.keyEdit);
+        editKey = findViewById(R.id.keyEdit);
+        editBypass = findViewById(R.id.bypassUrlEdit);
         editDNS = findViewById(R.id.dnsEdit);
+
         protocolGroup = findViewById(R.id.protocolGroup);
         msgView = findViewById(R.id.msgTextView);
         preferences = getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
@@ -43,8 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
         editServer.setText(preferences.getString("serverIP", AppConst.DEFAULT_SERVER_ADDRESS));
         editServerPort.setText(preferences.getString("serverPort", AppConst.DEFAULT_SERVER_PORT));
+        editBypass.setText(preferences.getString("bypassUrl", AppConst.DEFAULT_BYPASS_URL));
         editDNS.setText(preferences.getString("dns", AppConst.DEFAULT_DNS));
-        keyEdit.setText(preferences.getString("key", AppConst.DEFAULT_KEY));
+        editKey.setText(preferences.getString("key", AppConst.DEFAULT_KEY));
         String preProtocol = preferences.getString("protocol", AppConst.PROTOCOL_WS);
         protocolGroup.check(preProtocol.equals(AppConst.PROTOCOL_WS) ? R.id.protocolBtnWs : R.id.protocolBtnUdp);
         btnDisConn.setEnabled(preferences.getBoolean("connected", false));
@@ -84,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
         String serverIP = editServer.getText().toString();
         String serverPort = editServerPort.getText().toString();
         String dns = editDNS.getText().toString();
-        String key = keyEdit.getText().toString();
+        String key = editKey.getText().toString();
+        String bypassUrl = editBypass.getText().toString();
         int buttonId = protocolGroup.getCheckedButtonId();
         String protocol = (buttonId == R.id.protocolBtnWs) ? AppConst.PROTOCOL_WS : AppConst.PROTOCOL_UDP;
         // new intent
@@ -95,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("dns", dns);
         intent.putExtra("key", key);
         intent.putExtra("protocol", protocol);
+        intent.putExtra("bypassUrl", bypassUrl);
         // start service
         startService(intent);
         // save config
@@ -103,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         preEditor.putString("dns", dns);
         preEditor.putString("key", key);
         preEditor.putString("protocol", protocol);
+        preEditor.putString("bypassUrl", bypassUrl);
         preEditor.putBoolean("connected", true);
         preEditor.apply();
     }
