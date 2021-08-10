@@ -61,9 +61,12 @@ public class VpnThread extends Thread {
 
     private List<String> bypassApps() {
         List<String> bypassPackageList = new ArrayList<>();
+        Log.i(TAG, "bypassUrl:" + bypassUrl);
         if (!TextUtils.isEmpty(bypassUrl)) {
             try {
                 String base64AppList = HttpUtil.get(bypassUrl);
+                base64AppList = base64AppList.trim();
+                Log.i(TAG, "base64AppList:" + base64AppList);
                 String decodeAppList = new String(Base64.getDecoder().decode(base64AppList.getBytes(StandardCharsets.UTF_8)));
                 String[] appList = decodeAppList.split("\n");
                 if (appList.length > 0) {
