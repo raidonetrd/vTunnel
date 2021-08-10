@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         editServer.setText(preferences.getString("serverIP", AppConst.DEFAULT_SERVER_ADDRESS));
         editServerPort.setText(preferences.getString("serverPort", AppConst.DEFAULT_SERVER_PORT));
-        editBypass.setText(preferences.getString("bypassUrl", AppConst.DEFAULT_BYPASS_URL));
+        editBypass.setText(preferences.getString("bypassUrl", ""));
         editDNS.setText(preferences.getString("dns", AppConst.DEFAULT_DNS));
         editKey.setText(preferences.getString("key", AppConst.DEFAULT_KEY));
         String preProtocol = preferences.getString("protocol", AppConst.PROTOCOL_WS);

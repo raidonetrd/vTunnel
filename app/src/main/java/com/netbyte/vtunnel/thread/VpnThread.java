@@ -6,6 +6,7 @@ import android.net.VpnService;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.system.OsConstants;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 
 public class VpnThread extends Thread {
     private static final String TAG = "VpnThread";
@@ -59,11 +61,13 @@ public class VpnThread extends Thread {
 
     private List<String> bypassApps() throws IOException {
         List<String> bypassPackageList = new ArrayList<>();
-        String base64AppList = HttpUtil.get(bypassUrl);
-        String decodeAppList = new String(Base64.getDecoder().decode(base64AppList.getBytes(StandardCharsets.UTF_8)));
-        String[] appList = decodeAppList.split("\n");
-        if (appList.length > 0) {
-            bypassPackageList.addAll(Arrays.asList(appList));
+        if (!TextUtils.isEmpty(bypassUrl)) {
+            String base64AppList = HttpUtil.get(bypassUrl);
+            String decodeAppList = new String(Base64.getDecoder().decode(base64AppList.getBytes(StandardCharsets.UTF_8)));
+            String[] appList = decodeAppList.split("\n");
+            if (appList.length > 0) {
+                bypassPackageList.addAll(Arrays.asList(appList));
+            }
         }
         List<PackageInfo> packageInfoList = vpnService.getApplicationContext().getPackageManager().getInstalledPackages(0);
         ArrayList<String> result = new ArrayList<>();
