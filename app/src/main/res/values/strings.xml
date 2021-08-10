@@ -16,7 +16,7 @@
     <string name="default_local">172.16.0.2/24</string>
     <string name="default_server_port">443</string>
     <string name="default_dns">223.5.5.5</string>
-    <string name="default_bypass_url">Bypass URL</string>
+    <string name="default_bypass_url">https://raw.githubusercontent.com/net-byte/vTunnel/main/bypass.txt</string>
     <string name="protocol_udp">udp</string>
     <string name="protocol_ws">websocket</string>
 </resources>
