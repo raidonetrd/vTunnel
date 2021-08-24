@@ -54,7 +54,7 @@ public class HomeTab extends Fragment {
         FragmentActivity activity = this.getActivity();
         preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         switchMaterial = getView().findViewById(R.id.connButton);
-        switchMaterial.setActivated(activity.getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE).getBoolean("connected", false));
+        switchMaterial.setChecked(activity.getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE).getBoolean("connected", false));
         switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
             Intent intent = VpnService.prepare(this.getActivity());
             if (intent != null) {
