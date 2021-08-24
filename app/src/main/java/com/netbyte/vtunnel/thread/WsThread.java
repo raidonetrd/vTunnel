@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class WsThread extends VpnThread {
     private static final String TAG = "WsThread";
@@ -42,6 +43,9 @@ public class WsThread extends VpnThread {
             Log.i(TAG, "start");
             pickIp(serverIP, serverPort, cipherUtil.getKey());
             super.initTunnel();
+            if (Objects.isNull(this.tunnel)) {
+                return;
+            }
             in = new FileInputStream(tunnel.getFileDescriptor());
             out = new FileOutputStream(tunnel.getFileDescriptor());
             @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", serverIP, serverPort);

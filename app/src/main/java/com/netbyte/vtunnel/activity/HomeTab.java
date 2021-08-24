@@ -1,11 +1,14 @@
 package com.netbyte.vtunnel.activity;
 
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.net.VpnService;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,21 +56,14 @@ public class HomeTab extends Fragment {
         switchMaterial = getView().findViewById(R.id.connButton);
         switchMaterial.setActivated(activity.getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE).getBoolean("connected", false));
         switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            SharedPreferences.Editor preEditor = activity.getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE).edit();
-            preEditor.putBoolean("connected", isChecked);
-            preEditor.apply();
-            String server = preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS);
-            String dns = preferences.getString("dns", AppConst.DEFAULT_DNS);
-            String key = preferences.getString("key", AppConst.DEFAULT_KEY);
-            String bypassUrl = preferences.getString("bypassUrl", "");
-            Intent intent = new Intent();
-            intent.setClass(activity, TunnelService.class);
-            intent.setAction(isChecked ? AppConst.BTN_ACTION_CONNECT : AppConst.BTN_ACTION_DISCONNECT);
-            intent.putExtra("server", server);
-            intent.putExtra("dns", dns);
-            intent.putExtra("key", key);
-            intent.putExtra("bypassUrl", bypassUrl);
-            this.startActivity(intent);
+            Intent intent = VpnService.prepare(this.getActivity());
+            if (intent != null) {
+                startActivityForResult(intent, 0);
+            } else {
+                Intent data = new Intent();
+                data.putExtra("isChecked", isChecked);
+                onActivityResult(0, RESULT_OK, data);
+            }
             Toast.makeText(activity, isChecked ? "connected！" : "disconnected!", Toast.LENGTH_LONG).show();
         });
         {
@@ -100,5 +96,28 @@ public class HomeTab extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onActivityResult(int request, int result, Intent data) {
+        super.onActivityResult(request, result, data);
+        if (result != RESULT_OK) {
+            return;
+        }
+        SharedPreferences.Editor preEditor = this.getActivity().getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE).edit();
+        preEditor.putBoolean("connected", data.getBooleanExtra("isChecked", false));
+        preEditor.apply();
+        String server = preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS);
+        String dns = preferences.getString("dns", AppConst.DEFAULT_DNS);
+        String key = preferences.getString("key", AppConst.DEFAULT_KEY);
+        String bypassUrl = preferences.getString("bypassUrl", "");
+
+        Intent intent = new Intent(this.getActivity(), TunnelService.class);
+        intent.setAction(data.getBooleanExtra("isChecked", false) ? AppConst.BTN_ACTION_CONNECT : AppConst.BTN_ACTION_DISCONNECT);
+        intent.putExtra("server", server);
+        intent.putExtra("dns", dns);
+        intent.putExtra("key", key);
+        intent.putExtra("bypassUrl", bypassUrl);
+        getActivity().startService(intent);
     }
 }

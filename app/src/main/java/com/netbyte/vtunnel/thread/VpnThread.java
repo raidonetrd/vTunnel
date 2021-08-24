@@ -39,6 +39,7 @@ public class VpnThread extends Thread {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initTunnel() throws PackageManager.NameNotFoundException, IOException {
         AppConst.LOCAL_ADDRESS = localIP;
+        Log.i(TAG, "local ip:" + localIP + " dns:" + dns);
         VpnService.Builder builder = vpnService.new Builder();
         builder.setMtu(AppConst.MTU)
                 .addAddress(localIP, localPrefixLength)
@@ -52,6 +53,10 @@ public class VpnThread extends Thread {
             builder.addDisallowedApplication(packageName);
         }
         this.tunnel = builder.establish();
+        if (Objects.isNull(this.tunnel)) {
+            Log.e(TAG, "init tunnel failed");
+            return;
+        }
         Log.i(TAG, "init tunnel has done");
     }
 
