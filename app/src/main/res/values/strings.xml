@@ -7,7 +7,7 @@
     <string name="view_key">Key</string>
     <string name="view_bypass_url">Bypass</string>
     <string name="btn_connect">Connect</string>
-    <string name="btn_disconnect">Disconnect</string>
+    <string name="btn_save">Save</string>
     <string name="default_server">172.16.0.1:443</string>
     <string name="default_key">123456</string>
     <string name="default_dns">223.5.5.5</string>

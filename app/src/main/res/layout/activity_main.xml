@@ -1,192 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.netbyte.vtunnel.activity.MainActivity">
 
-    <LinearLayout
+    <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_height="wrap_content"
+        android:id="@+id/tablayout"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        tools:ignore="MissingClass">
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="wrap_content"
-            android:layout_height="180dp"
-            android:layout_gravity="center"
-            app:srcCompat="@drawable/banner" />
+    </com.google.android.material.tabs.TabLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/pager">
+    </androidx.viewpager.widget.ViewPager>
 
-            <TextView
-                android:id="@+id/serverAddressView"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal|center_vertical|start"
-                android:text="@string/view_server" />
-
-            <EditText
-                android:id="@+id/serverAddressEdit"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:autofillHints=""
-                android:ems="10"
-                android:hint="@string/default_server"
-                android:inputType="text"
-                android:text="@string/default_server" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:layout_editor_absoluteX="8dp">
-
-            <TextView
-                android:id="@+id/dnsView"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal|center_vertical|start"
-                android:text="@string/view_dns" />
-
-            <EditText
-                android:id="@+id/dnsEdit"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="@string/default_dns"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:text="@string/default_dns" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/keyView"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal|center_vertical|start"
-                android:text="@string/view_key" />
-
-            <EditText
-                android:id="@+id/keyEdit"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="@string/default_key"
-                android:importantForAutofill="no"
-                android:inputType="textPassword"
-                android:text="@string/default_key" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/bypassUrlView"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal|center_vertical|start"
-                android:text="@string/view_bypass_url" />
-
-            <EditText
-                android:id="@+id/bypassUrlEdit"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="@string/default_bypass_url"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:text="@string/default_bypass_url" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:orientation="horizontal">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/connButton"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="@string/btn_connect" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/disConnButton"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="@string/btn_disconnect" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/msgTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text=""
-                android:textColor="#FF9800" />
-
-            <TextView
-                android:id="@+id/appVersion"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="@string/app_version" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>
