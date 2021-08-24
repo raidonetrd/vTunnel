@@ -9,7 +9,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.netbyte.vtunnel.R;
 
-public class MainActivity extends AppCompatActivity implements HomeTab.OnFragmentInteractionListener, ConfigTab.OnFragmentInteractionListener, AboutTab.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements HomeTab.OnFragmentInteractionListener, ConfigTab.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity implements HomeTab.OnFragmen
         TabLayout tabLayout = findViewById(R.id.tablayout);
         tabLayout.addTab(tabLayout.newTab().setText("Home"));
         tabLayout.addTab(tabLayout.newTab().setText("Config"));
-        tabLayout.addTab(tabLayout.newTab().setText("About"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = findViewById(R.id.pager);
