@@ -25,7 +25,7 @@ public class ConfigTab extends Fragment {
     EditText editServer, editDNS, editKey, editBypass;
     SharedPreferences preferences;
     SharedPreferences.Editor preEditor;
-    private OnFragmentInteractionListener mListener;
+    OnFragmentInteractionListener mListener;
 
     public ConfigTab() {
 
@@ -37,10 +37,10 @@ public class ConfigTab extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_tab_config, container, false);
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -70,7 +70,7 @@ public class ConfigTab extends Fragment {
             preEditor.putString("key", key);
             preEditor.putString("bypassUrl", bypassUrl);
             preEditor.apply();
-            Toast.makeText(activity, "saved！", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, "Saved！", Toast.LENGTH_LONG).show();
         });
     }
     public void onButtonPressed(Uri uri) {
@@ -85,8 +85,7 @@ public class ConfigTab extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
         }
     }
 

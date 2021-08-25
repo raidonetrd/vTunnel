@@ -7,7 +7,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,7 +30,7 @@
 
             <EditText
                 android:id="@+id/serverAddressEdit"
-                android:layout_width="230dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_weight="1"
@@ -36,7 +39,6 @@
                 android:hint="@string/default_server"
                 android:inputType="text"
                 android:text="@string/default_server" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -57,7 +59,7 @@
 
             <EditText
                 android:id="@+id/dnsEdit"
-                android:layout_width="230dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_weight="1"
@@ -66,7 +68,6 @@
                 android:importantForAutofill="no"
                 android:inputType="text"
                 android:text="@string/default_dns" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -86,7 +87,7 @@
 
             <EditText
                 android:id="@+id/keyEdit"
-                android:layout_width="230dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_weight="1"
@@ -114,7 +115,7 @@
 
             <EditText
                 android:id="@+id/bypassUrlEdit"
-                android:layout_width="230dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_weight="1"
@@ -122,7 +123,8 @@
                 android:hint="@string/default_bypass_url"
                 android:importantForAutofill="no"
                 android:inputType="text"
-                android:text="@string/default_bypass_url" />
+                android:text="@string/default_bypass_url"
+                tools:ignore="TextFields" />
         </LinearLayout>
 
         <LinearLayout
@@ -137,8 +139,26 @@
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/btn_save" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:gravity="center|bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:gravity="center|bottom"
+                android:text="@string/app_version"
+                android:textSize="10sp" />
+
         </LinearLayout>
 
     </LinearLayout>
