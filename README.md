@@ -9,12 +9,11 @@ A simple android VPN app.
 ![image](https://img.shields.io/badge/License-Anti--996-red)
 
 # Features
-* Support tun over UDP
 * Support tun over WebSocket
 
 # Screenshot
 <p>
-	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/demo.png" alt="vTunnel" width="450">
+	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/demo.jpg" alt="vTunnel" width="450">
 </p>
 
 # Server setup
