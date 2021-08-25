@@ -86,7 +86,7 @@ public class TunnelService extends VpnService {
             serverPort = Integer.valueOf(server.split(":")[1]);
         } else {
             serverIP = server;
-            serverPort = 443;
+            serverPort = AppConst.DEFAULT_SERVER_PORT;
         }
         dns = ex.getString("dns");
         key = ex.getString("key");

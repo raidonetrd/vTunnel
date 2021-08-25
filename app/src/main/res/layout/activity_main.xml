@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.netbyte.vtunnel.activity.MainActivity">
 
@@ -12,6 +13,7 @@
         android:id="@+id/tablayout"
         android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
+        app:tabTextColor="#FFFFFF"
         tools:ignore="MissingClass">
 
     </com.google.android.material.tabs.TabLayout>
