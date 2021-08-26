@@ -12,6 +12,9 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.model.Config;
+import com.netbyte.vtunnel.model.LocalIP;
+import com.netbyte.vtunnel.service.IPService;
 import com.netbyte.vtunnel.utils.CipherUtil;
 import com.netbyte.vtunnel.utils.HttpUtil;
 
@@ -28,23 +31,20 @@ public class VpnThread extends Thread {
     protected volatile boolean THREAD_RUNNABLE = true;
     protected VpnService vpnService;
     protected ParcelFileDescriptor tunnel;
-    protected String serverIP;
-    protected int serverPort;
     protected CipherUtil cipherUtil;
-    protected String localIP;
-    protected int localPrefixLength;
-    protected String dns;
-    protected String bypassUrl;
+    protected IPService ipService;
+    protected Config config;
+    protected LocalIP localIP;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initTunnel() throws PackageManager.NameNotFoundException, IOException {
-        AppConst.LOCAL_ADDRESS = localIP;
-        Log.i(TAG, "local ip:" + localIP + " dns:" + dns);
+        AppConst.LOCAL_ADDRESS = localIP.getLocalIP();
+        Log.i(TAG, "local ip:" + localIP.getLocalIP() + " dns:" + config.getDns());
         VpnService.Builder builder = vpnService.new Builder();
         builder.setMtu(AppConst.MTU)
-                .addAddress(localIP, localPrefixLength)
+                .addAddress(localIP.getLocalIP(), localIP.getLocalPrefixLength())
                 .addRoute(AppConst.DEFAULT_ROUTE, 0)
-                .addDnsServer(dns)
+                .addDnsServer(config.getDns())
                 .setSession(AppConst.APP_NAME)
                 .setConfigureIntent(null)
                 .allowFamily(OsConstants.AF_INET)
@@ -66,10 +66,10 @@ public class VpnThread extends Thread {
 
     private List<String> bypassApps() {
         List<String> bypassPackageList = new ArrayList<>();
-        Log.i(TAG, "bypassUrl:" + bypassUrl);
-        if (!TextUtils.isEmpty(bypassUrl)) {
+        Log.i(TAG, "bypassUrl:" + config.getBypassUrl());
+        if (!TextUtils.isEmpty(config.getBypassUrl())) {
             try {
-                String base64AppList = HttpUtil.get(bypassUrl);
+                String base64AppList = HttpUtil.get(config.getBypassUrl());
                 base64AppList = base64AppList.trim();
                 Log.i(TAG, "base64AppList:" + base64AppList);
                 String decodeAppList = new String(Base64.getDecoder().decode(base64AppList.getBytes(StandardCharsets.UTF_8)));
