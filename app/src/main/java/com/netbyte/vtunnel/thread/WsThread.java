@@ -9,6 +9,8 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.model.Config;
+import com.netbyte.vtunnel.service.IPService;
 import com.netbyte.vtunnel.utils.HttpUtil;
 import com.netbyte.vtunnel.ws.WsClient;
 import com.netbyte.vtunnel.utils.SSLUtil;
@@ -24,13 +26,11 @@ import java.util.Objects;
 public class WsThread extends VpnThread {
     private static final String TAG = "WsThread";
 
-    public WsThread(String serverIP, int serverPort, String dns, String bypassUrl, CipherUtil cipherUtil, VpnService vpnService) {
-        this.serverIP = serverIP;
-        this.serverPort = serverPort;
-        this.dns = dns;
-        this.bypassUrl = bypassUrl;
+    public WsThread(Config config, CipherUtil cipherUtil, VpnService vpnService, IPService ipService) {
+        this.config = config;
         this.cipherUtil = cipherUtil;
         this.vpnService = vpnService;
+        this.ipService = ipService;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -41,14 +41,14 @@ public class WsThread extends VpnThread {
         FileOutputStream out = null;
         try {
             Log.i(TAG, "start");
-            pickIp(serverIP, serverPort, cipherUtil.getKey());
+            this.localIP = ipService.pickIp();
             super.initTunnel();
             if (Objects.isNull(this.tunnel)) {
                 return;
             }
             in = new FileInputStream(tunnel.getFileDescriptor());
             out = new FileOutputStream(tunnel.getFileDescriptor());
-            @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", serverIP, serverPort);
+            @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", config.getServerIP(), config.getServerPort());
             wsClient = new WsClient(new URI(uri), cipherUtil);
             wsClient.setSocketFactory(SSLUtil.createEasySSLContext().getSocketFactory());
             wsClient.connectBlocking();
@@ -110,25 +110,4 @@ public class WsThread extends VpnThread {
         super.finish();
     }
 
-    private void pickIp(String serverIP, int serverPort, String key) {
-        @SuppressLint("DefaultLocale") String api = String.format("https://%s:%d/register/pick/ip", serverIP, serverPort);
-        String resp = "";
-        try {
-            resp = HttpUtil.get(api, "key", key);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Log.i(TAG, String.format("get api:%s resp:%s", api, resp));
-        if (TextUtils.isEmpty(resp)) {
-            return;
-        }
-        String[] ip = resp.split("/");
-        if (ip.length == 2) {
-            this.localIP = ip[0];
-            this.localPrefixLength = Integer.parseInt(ip[1]);
-        } else {
-            this.localIP = AppConst.DEFAULT_LOCAL_ADDRESS;
-            this.localPrefixLength = AppConst.DEFAULT_LOCAL_PREFIX_LENGTH;
-        }
-    }
 }

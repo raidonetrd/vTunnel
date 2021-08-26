@@ -13,6 +13,8 @@ import androidx.core.app.NotificationCompat;
 
 import com.netbyte.vtunnel.activity.MainActivity;
 import com.netbyte.vtunnel.R;
+import com.netbyte.vtunnel.model.Config;
+import com.netbyte.vtunnel.model.LocalIP;
 import com.netbyte.vtunnel.thread.StatThread;
 import com.netbyte.vtunnel.thread.VpnThread;
 import com.netbyte.vtunnel.thread.WsThread;
@@ -20,17 +22,15 @@ import com.netbyte.vtunnel.utils.CipherUtil;
 import com.netbyte.vtunnel.config.AppConst;
 
 public class TunnelService extends VpnService {
-    private static String serverIP, localIP;
-    private static int serverPort;
-    private static String dns;
-    private static String key;
-    private static String bypassUrl;
+    private Config config;
+    private LocalIP localIP;
     private VpnThread wsThread;
     private StatThread statThread;
     private PendingIntent pendingIntent;
     private CipherUtil cipherUtil;
     private NotificationManager notificationManager;
     private NotificationCompat.Builder notificationBuilder;
+    private IPService ipService;
 
     public TunnelService() {
     }
@@ -81,6 +81,11 @@ public class TunnelService extends VpnService {
     private void initConfig(Intent intent) {
         Bundle ex = intent.getExtras();
         String server = ex.getString("server").trim();
+        String serverIP;
+        int serverPort;
+        String dns;
+        String key;
+        String bypassUrl;
         if (server.contains(":")) {
             serverIP = server.split(":")[0];
             serverPort = Integer.valueOf(server.split(":")[1]);
@@ -91,8 +96,10 @@ public class TunnelService extends VpnService {
         dns = ex.getString("dns");
         key = ex.getString("key");
         bypassUrl = ex.getString("bypassUrl");
-        localIP = AppConst.DEFAULT_LOCAL_ADDRESS;
-        cipherUtil = new CipherUtil(key);
+        this.config = new Config(serverIP, serverPort, dns, key, bypassUrl);
+        this.localIP = new LocalIP(AppConst.DEFAULT_LOCAL_ADDRESS, AppConst.DEFAULT_LOCAL_PREFIX_LENGTH);
+        this.cipherUtil = new CipherUtil(key);
+        this.ipService = new IPService(config.getServerIP(), config.getServerPort(), config.getKey());
     }
 
 
@@ -111,7 +118,7 @@ public class TunnelService extends VpnService {
     }
 
     private void doConnect() {
-        Log.i(AppConst.DEFAULT_TAG, "connecting " + serverIP + " " + serverPort + " " + localIP + " " + dns);
+        Log.i(AppConst.DEFAULT_TAG, "connecting " + config.getServerIP() + " " + config.getServerPort() + " " + localIP.getLocalIP() + " " + config.getDns());
         try {
             stopThreads();
             startStatThread();
@@ -138,12 +145,12 @@ public class TunnelService extends VpnService {
     }
 
     private void startWsThread() {
-        wsThread = new WsThread(serverIP, serverPort, dns, bypassUrl, cipherUtil, this);
+        wsThread = new WsThread(config, cipherUtil, this, ipService);
         wsThread.start();
     }
 
     private void startStatThread() {
-        statThread = new StatThread(serverIP, serverPort, key, notificationManager, notificationBuilder, this);
+        statThread = new StatThread(config, notificationManager, notificationBuilder, this, ipService);
         statThread.start();
     }
 }
