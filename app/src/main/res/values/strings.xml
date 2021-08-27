@@ -1,15 +1,14 @@
 <resources>
     <string name="app_name">vTunnel</string>
-    <string name="app_version">Version:1.3.1</string>
+    <string name="app_version">Version:1.3.2</string>
     <string name="view_server">Server</string>
     <string name="view_dns">DNS</string>
-    <string name="view_protocol">Protocol</string>
     <string name="view_key">Key</string>
     <string name="view_bypass_url">Bypass</string>
-    <string name="btn_connect">Connect</string>
+    <string name="btn_connect">Go to the free world</string>
     <string name="btn_save">Save</string>
-    <string name="default_server">172.16.0.1:443</string>
-    <string name="default_key">123456</string>
+    <string name="default_server">Localhost</string>
+    <string name="default_key">key</string>
     <string name="default_dns">223.5.5.5</string>
-    <string name="default_bypass_url">https://...</string>
+    <string name="default_bypass_url">URL</string>
 </resources>
