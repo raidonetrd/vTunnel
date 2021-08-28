@@ -20,14 +20,14 @@ import androidx.fragment.app.FragmentActivity;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.config.AppConst;
 
-public class ConfigTab extends Fragment {
+public class SettingsTab extends Fragment {
     Button btnSave;
     EditText editServer, editDNS, editKey, editBypass;
     SharedPreferences preferences;
     SharedPreferences.Editor preEditor;
     OnFragmentInteractionListener mListener;
 
-    public ConfigTab() {
+    public SettingsTab() {
 
     }
 
@@ -38,7 +38,7 @@ public class ConfigTab extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_tab_config, container, false);
+        return inflater.inflate(R.layout.fragment_tab_settings, container, false);
     }
 
     @Override

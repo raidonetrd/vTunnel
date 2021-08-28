@@ -20,7 +20,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new HomeTab();
             case 1:
-                return new ConfigTab();
+                return new SettingsTab();
             default:
                 return null;
         }
