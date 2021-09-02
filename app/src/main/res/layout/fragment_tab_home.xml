@@ -43,7 +43,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:thumb="@drawable/switch_thumb"
-                app:switchMinWidth="100dp"
+                app:switchMinWidth="80dp"
                 app:track="@drawable/switch_track" />
         </LinearLayout>
 
@@ -61,7 +61,7 @@
                 android:layout_gravity="center|top"
                 android:gravity="center"
                 android:text="@string/btn_connect"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorAccent"
                 android:textSize="20sp" />
 
         </LinearLayout>
