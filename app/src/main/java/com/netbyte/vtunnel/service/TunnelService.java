@@ -150,7 +150,7 @@ public class TunnelService extends VpnService {
     }
 
     private void startStatThread() {
-        statThread = new StatThread(config, notificationManager, notificationBuilder, this, ipService);
+        statThread = new StatThread(notificationManager, notificationBuilder, this, ipService);
         statThread.start();
     }
 }

@@ -15,7 +15,6 @@ public class CipherUtil {
             src[i] ^= keys[i%keyLength];
         }
         return src;
-
     }
 
 }
