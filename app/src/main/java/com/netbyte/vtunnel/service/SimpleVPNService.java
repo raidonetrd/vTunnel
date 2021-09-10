@@ -151,7 +151,6 @@ public class SimpleVPNService extends VpnService {
         // reset notification data
         AppConst.UP_BYTE.set(0);
         AppConst.DOWN_BYTE.set(0);
-        AppConst.LOCAL_ADDRESS = "";
         // reset connection status
         SharedPreferences preferences = this.getApplicationContext().getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor preEditor = preferences.edit();
