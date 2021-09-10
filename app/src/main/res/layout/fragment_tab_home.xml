@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="80dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="100dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="125dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -61,8 +61,8 @@
                 android:layout_gravity="center|top"
                 android:gravity="center"
                 android:text="@string/btn_connect"
-                android:textColor="@color/colorAccent"
-                android:textSize="20sp" />
+                android:textColor="@color/colorSlogan"
+                android:textSize="15sp" />
 
         </LinearLayout>
 
