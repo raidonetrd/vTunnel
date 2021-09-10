@@ -23,7 +23,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.config.AppConst;
-import com.netbyte.vtunnel.service.TunnelService;
+import com.netbyte.vtunnel.service.SimpleVPNService;
 
 
 public class HomeTab extends Fragment {
@@ -108,7 +108,7 @@ public class HomeTab extends Fragment {
         String key = preferences.getString("key", AppConst.DEFAULT_KEY);
         String bypassUrl = preferences.getString("bypassUrl", "");
 
-        Intent intent = new Intent(this.getActivity(), TunnelService.class);
+        Intent intent = new Intent(this.getActivity(), SimpleVPNService.class);
         intent.setAction(data.getBooleanExtra("isChecked", false) ? AppConst.BTN_ACTION_CONNECT : AppConst.BTN_ACTION_DISCONNECT);
         intent.putExtra("server", server);
         intent.putExtra("dns", dns);

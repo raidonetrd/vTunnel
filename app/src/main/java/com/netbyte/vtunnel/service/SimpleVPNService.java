@@ -3,7 +3,9 @@ package com.netbyte.vtunnel.service;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.VpnService;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -21,7 +23,9 @@ import com.netbyte.vtunnel.thread.WsThread;
 import com.netbyte.vtunnel.utils.CipherUtil;
 import com.netbyte.vtunnel.config.AppConst;
 
-public class TunnelService extends VpnService {
+import java.util.Objects;
+
+public class SimpleVPNService extends VpnService {
     private Config config;
     private LocalIP localIP;
     private VpnThread wsThread;
@@ -32,7 +36,7 @@ public class TunnelService extends VpnService {
     private NotificationCompat.Builder notificationBuilder;
     private IPService ipService;
 
-    public TunnelService() {
+    public SimpleVPNService() {
     }
 
     @Override
@@ -56,11 +60,12 @@ public class TunnelService extends VpnService {
                 initConfig(intent);
                 // 1.create notification
                 createNotification();
-                // 2.connect
-                doConnect();
+                // 2.start
+                startVPN();
                 return START_STICKY;
             case AppConst.BTN_ACTION_DISCONNECT:
-                doDisconnect();
+                // stop
+                stopVPN();
                 return START_NOT_STICKY;
             default:
                 return START_NOT_STICKY;
@@ -70,22 +75,20 @@ public class TunnelService extends VpnService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        doDisconnect();
+        stopVPN();
     }
 
     @Override
     public void onRevoke() {
-        doDisconnect();
+        stopVPN();
     }
 
     private void initConfig(Intent intent) {
         Bundle ex = intent.getExtras();
-        String server = ex.getString("server").trim();
         String serverIP;
         int serverPort;
-        String dns;
-        String key;
-        String bypassUrl;
+        String dns, key, bypassUrl;
+        String server = ex.getString("server").trim();
         if (server.contains(":")) {
             serverIP = server.split(":")[0];
             serverPort = Integer.valueOf(server.split(":")[1]);
@@ -117,40 +120,46 @@ public class TunnelService extends VpnService {
                 .setOnlyAlertOnce(true);
     }
 
-    private void doConnect() {
-        Log.i(AppConst.DEFAULT_TAG, "connecting " + config.getServerIP() + " " + config.getServerPort() + " " + localIP.getLocalIP() + " " + config.getDns());
+    public void startVPN() {
+        Log.i(AppConst.DEFAULT_TAG, "starting VPN");
         try {
-            stopThreads();
-            startStatThread();
-            startWsThread();
+            if (Objects.nonNull(wsThread)) {
+                wsThread.stopRunning();
+            }
+            if (Objects.nonNull(statThread)) {
+                statThread.stopRunning();
+            }
+            wsThread = new WsThread(config, cipherUtil, this, ipService);
+            wsThread.start();
+            statThread = new StatThread(notificationManager, notificationBuilder, this, ipService);
+            statThread.start();
         } catch (Exception e) {
-            Log.e(AppConst.DEFAULT_TAG, "error on connecting:" + e.toString());
+            Log.e(AppConst.DEFAULT_TAG, "error on startVPN:" + e.toString());
         }
     }
 
-    private void doDisconnect() {
-        Log.i(AppConst.DEFAULT_TAG, "disconnecting...");
-        stopThreads();
-    }
-
-    private void stopThreads() {
+    public void stopVPN() {
+        Log.i(AppConst.DEFAULT_TAG, "stopping VPN...");
         if (wsThread != null) {
-            wsThread.finish();
+            wsThread.stopRunning();
             wsThread = null;
         }
         if (statThread != null) {
-            statThread.finish();
+            statThread.stopRunning();
             statThread = null;
         }
+        // reset notification data
+        AppConst.UP_BYTE.set(0);
+        AppConst.DOWN_BYTE.set(0);
+        AppConst.LOCAL_ADDRESS = "";
+        // reset connection status
+        SharedPreferences preferences = this.getApplicationContext().getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor preEditor = preferences.edit();
+        preEditor.putBoolean("connected", false);
+        preEditor.commit();
+        // stop vpn service
+        this.stopForeground(true);
+        this.stopSelf();
     }
 
-    private void startWsThread() {
-        wsThread = new WsThread(config, cipherUtil, this, ipService);
-        wsThread.start();
-    }
-
-    private void startStatThread() {
-        statThread = new StatThread(notificationManager, notificationBuilder, this, ipService);
-        statThread.start();
-    }
 }

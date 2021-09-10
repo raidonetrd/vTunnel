@@ -1,9 +1,7 @@
 package com.netbyte.vtunnel.thread;
 
 import android.annotation.SuppressLint;
-import android.net.VpnService;
 import android.os.Build;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
@@ -11,7 +9,7 @@ import androidx.annotation.RequiresApi;
 import com.netbyte.vtunnel.config.AppConst;
 import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.service.IPService;
-import com.netbyte.vtunnel.utils.HttpUtil;
+import com.netbyte.vtunnel.service.SimpleVPNService;
 import com.netbyte.vtunnel.ws.WsClient;
 import com.netbyte.vtunnel.utils.SSLUtil;
 import com.netbyte.vtunnel.utils.CipherUtil;
@@ -26,7 +24,7 @@ import java.util.Objects;
 public class WsThread extends VpnThread {
     private static final String TAG = "WsThread";
 
-    public WsThread(Config config, CipherUtil cipherUtil, VpnService vpnService, IPService ipService) {
+    public WsThread(Config config, CipherUtil cipherUtil, SimpleVPNService vpnService, IPService ipService) {
         this.config = config;
         this.cipherUtil = cipherUtil;
         this.vpnService = vpnService;
@@ -53,7 +51,7 @@ public class WsThread extends VpnThread {
             wsClient.setSocketFactory(SSLUtil.createEasySSLContext().getSocketFactory());
             wsClient.connectBlocking();
             wsClient.setOutStream(out);
-            while (THREAD_RUNNABLE) {
+            while (RUNNING) {
                 try {
                     byte[] buf = new byte[AppConst.BUFFER_SIZE];
                     int ln = in.read(buf);
@@ -106,8 +104,8 @@ public class WsThread extends VpnThread {
         }
     }
 
-    public void finish() {
-        super.finish();
+    public void stopRunning() {
+        super.stopRunning();
     }
 
 }
