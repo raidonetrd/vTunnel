@@ -61,7 +61,7 @@ public class HomeTab extends Fragment {
                 data.putExtra("isChecked", isChecked);
                 onActivityResult(0, RESULT_OK, data);
             }
-            Toast.makeText(activity, isChecked ? "Connected！" : "Disconnected!", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, isChecked ? "STARTED ！" : "STOPPED !", Toast.LENGTH_LONG).show();
         });
         {
 

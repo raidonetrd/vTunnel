@@ -42,7 +42,7 @@ public class StatThread extends Thread {
                 Thread.sleep(3000);
                 if (TextUtils.isEmpty(AppConst.LOCAL_ADDRESS)) {
                     String title = "Failed to connect!";
-                    builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle(title));
+                    builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle("").bigText(title));
                     break;
                 }
                 if (isAirplaneModeOn(vpnService.getApplicationContext())) {
@@ -51,8 +51,8 @@ public class StatThread extends Thread {
                     break;
                 }
                 String title = String.format("IP: %s", AppConst.LOCAL_ADDRESS);
-                String text = String.format("Net: ↑ %s ↓ %s", ByteUtil.format(AppConst.UP_BYTE.get()), ByteUtil.format(AppConst.DOWN_BYTE.get()));
-                builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle(title).bigText(text));
+                String text = String.format("Network: ↓ %s ↑ %s", ByteUtil.format(AppConst.DOWN_BYTE.get()), ByteUtil.format(AppConst.UP_BYTE.get()));
+                builder.setStyle(new NotificationCompat.BigTextStyle().setSummaryText(title).setBigContentTitle("").bigText(text));
                 notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
                 checkCount++;
                 if (checkCount % 100 == 0) {
@@ -69,6 +69,7 @@ public class StatThread extends Thread {
             ipService.deleteIp(AppConst.LOCAL_ADDRESS);
         }
         vpnService.stopForeground(true);
+        notificationManager.cancel(AppConst.NOTIFICATION_ID);
         Log.i(TAG, "stop");
     }
 
