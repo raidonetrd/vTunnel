@@ -15,6 +15,7 @@ import com.netbyte.vtunnel.config.AppConst;
 import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.model.LocalIP;
 import com.netbyte.vtunnel.service.IPService;
+import com.netbyte.vtunnel.service.SimpleVPNService;
 import com.netbyte.vtunnel.utils.CipherUtil;
 import com.netbyte.vtunnel.utils.HttpUtil;
 
@@ -28,8 +29,8 @@ import java.util.Objects;
 
 public class VpnThread extends Thread {
     private static final String TAG = "VpnThread";
-    protected volatile boolean THREAD_RUNNABLE = true;
-    protected VpnService vpnService;
+    protected volatile boolean RUNNING = true;
+    protected SimpleVPNService vpnService;
     protected ParcelFileDescriptor tunnel;
     protected CipherUtil cipherUtil;
     protected IPService ipService;
@@ -60,8 +61,8 @@ public class VpnThread extends Thread {
         Log.i(TAG, "init tunnel has done");
     }
 
-    public void finish() {
-        this.THREAD_RUNNABLE = false;
+    public void stopRunning() {
+        this.RUNNING = false;
     }
 
     private List<String> bypassApps() {

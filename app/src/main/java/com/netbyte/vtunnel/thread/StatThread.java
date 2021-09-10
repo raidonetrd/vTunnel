@@ -2,8 +2,6 @@ package com.netbyte.vtunnel.thread;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.VpnService;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -13,20 +11,20 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.netbyte.vtunnel.config.AppConst;
-import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.service.IPService;
+import com.netbyte.vtunnel.service.SimpleVPNService;
 import com.netbyte.vtunnel.utils.ByteUtil;
 
 
 public class StatThread extends Thread {
     private static final String TAG = "StatThread";
-    private volatile boolean THREAD_RUNNABLE = true;
+    private volatile boolean RUNNING = true;
     private final NotificationManager notificationManager;
     private final NotificationCompat.Builder builder;
-    private final VpnService vpnService;
+    private final SimpleVPNService vpnService;
     private final IPService ipService;
 
-    public StatThread(NotificationManager notificationManager, NotificationCompat.Builder builder, VpnService vpnService, IPService ipService) {
+    public StatThread(NotificationManager notificationManager, NotificationCompat.Builder builder, SimpleVPNService vpnService, IPService ipService) {
         this.notificationManager = notificationManager;
         this.builder = builder;
         this.vpnService = vpnService;
@@ -39,7 +37,7 @@ public class StatThread extends Thread {
         Log.i(TAG, "start");
         vpnService.startForeground(AppConst.NOTIFICATION_ID, builder.build());
         int checkCount = 0;
-        while (THREAD_RUNNABLE) {
+        while (RUNNING) {
             try {
                 Thread.sleep(3000);
                 if (TextUtils.isEmpty(AppConst.LOCAL_ADDRESS)) {
@@ -49,6 +47,7 @@ public class StatThread extends Thread {
                 }
                 if (isAirplaneModeOn(vpnService.getApplicationContext())) {
                     Log.i(TAG, "airplane mode on");
+                    vpnService.stopVPN();
                     break;
                 }
                 String title = String.format("IP: %s", AppConst.LOCAL_ADDRESS);
@@ -65,35 +64,19 @@ public class StatThread extends Thread {
                 Log.i(TAG, "error:" + e.getMessage());
             }
         }
-        Log.i(TAG, "stop");
-        afterStop();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void afterStop() {
         if (!isAirplaneModeOn(vpnService.getApplicationContext())) {
+            // delete local ip
             ipService.deleteIp(AppConst.LOCAL_ADDRESS);
         }
-        //reset notification data
-        AppConst.UP_BYTE.set(0);
-        AppConst.DOWN_BYTE.set(0);
-        AppConst.LOCAL_ADDRESS = "";
-        //reset connection status
-        SharedPreferences preferences = vpnService.getApplicationContext().getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor preEditor = preferences.edit();
-        preEditor.putBoolean("connected", false);
-        preEditor.commit();
-        //stop service
-        vpnService.stopForeground(true);
-        vpnService.stopSelf();
+        Log.i(TAG, "stop");
     }
 
-    public void finish() {
-        this.THREAD_RUNNABLE = false;
+    public void stopRunning() {
+        this.RUNNING = false;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private static boolean isAirplaneModeOn(Context context) {
+    private  boolean isAirplaneModeOn(Context context) {
         return Settings.Global.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
     }
 
