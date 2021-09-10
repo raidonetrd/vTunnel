@@ -68,6 +68,7 @@ public class StatThread extends Thread {
             // delete local ip
             ipService.deleteIp(AppConst.LOCAL_ADDRESS);
         }
+        vpnService.stopForeground(true);
         Log.i(TAG, "stop");
     }
 
@@ -76,7 +77,7 @@ public class StatThread extends Thread {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private  boolean isAirplaneModeOn(Context context) {
+    private boolean isAirplaneModeOn(Context context) {
         return Settings.Global.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
     }
 
