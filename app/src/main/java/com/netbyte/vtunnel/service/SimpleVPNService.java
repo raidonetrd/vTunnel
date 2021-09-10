@@ -157,7 +157,6 @@ public class SimpleVPNService extends VpnService {
         preEditor.putBoolean("connected", false);
         preEditor.commit();
         // stop vpn service
-        this.stopForeground(true);
         this.stopSelf();
     }
 
