@@ -22,8 +22,10 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.netbyte.vtunnel.R;
-import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.service.SimpleVPNService;
+
+import java.util.Objects;
 
 
 public class HomeTab extends Fragment {
@@ -100,17 +102,18 @@ public class HomeTab extends Fragment {
         if (result != RESULT_OK) {
             return;
         }
+        boolean isChecked = Objects.isNull(data) ? true : data.getBooleanExtra("isChecked", false);
         SharedPreferences.Editor preEditor = this.getActivity().getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE).edit();
-        preEditor.putBoolean("connected", data.getBooleanExtra("isChecked", false));
+        preEditor.putBoolean("connected", isChecked);
         preEditor.apply();
         String server = preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS);
         String dns = preferences.getString("dns", AppConst.DEFAULT_DNS);
         String key = preferences.getString("key", AppConst.DEFAULT_KEY);
         String bypassUrl = preferences.getString("bypassUrl", "");
-        boolean obfuscate = preferences.getBoolean("obfuscate", true);
+        boolean obfuscate = preferences.getBoolean("obfuscate", false);
 
         Intent intent = new Intent(this.getActivity(), SimpleVPNService.class);
-        intent.setAction(data.getBooleanExtra("isChecked", false) ? AppConst.BTN_ACTION_CONNECT : AppConst.BTN_ACTION_DISCONNECT);
+        intent.setAction(isChecked ? AppConst.BTN_ACTION_CONNECT : AppConst.BTN_ACTION_DISCONNECT);
         intent.putExtra("server", server);
         intent.putExtra("dns", dns);
         intent.putExtra("key", key);

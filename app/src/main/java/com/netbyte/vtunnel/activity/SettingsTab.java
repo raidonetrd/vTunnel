@@ -18,9 +18,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.netbyte.vtunnel.R;
-import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.model.AppConst;
 
 public class SettingsTab extends Fragment {
     ToggleButton obfuscateBtn;
@@ -63,7 +62,7 @@ public class SettingsTab extends Fragment {
         editBypass.setText(preferences.getString("bypassUrl", ""));
         editDNS.setText(preferences.getString("dns", AppConst.DEFAULT_DNS));
         editKey.setText(preferences.getString("key", AppConst.DEFAULT_KEY));
-        obfuscateBtn.setChecked(preferences.getBoolean("obfuscate", true));
+        obfuscateBtn.setChecked(preferences.getBoolean("obfuscate", false));
 
         btnSave.setOnClickListener(v -> {
             String server = editServer.getText().toString().trim();
@@ -77,7 +76,7 @@ public class SettingsTab extends Fragment {
             preEditor.putString("bypassUrl", bypassUrl);
             preEditor.putBoolean("obfuscate", obfuscate);
             preEditor.apply();
-            Toast.makeText(activity, "Saved！", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, "SAVED !", Toast.LENGTH_LONG).show();
         });
     }
 

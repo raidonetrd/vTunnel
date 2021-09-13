@@ -6,7 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.service.IPService;
 import com.netbyte.vtunnel.service.SimpleVPNService;
@@ -21,7 +21,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class WsThread extends VpnThread {
+public class WsThread extends VPNThread {
     private static final String TAG = "WsThread";
 
     public WsThread(Config config, CipherUtil cipherUtil, SimpleVPNService vpnService, IPService ipService) {
@@ -62,7 +62,7 @@ public class WsThread extends VpnThread {
                                 data = cipherUtil.xor(data);
                             }
                             wsClient.send(data);
-                            AppConst.UP_BYTE.addAndGet(ln);
+                            AppConst.UPLOAD_BYTES.addAndGet(ln);
                         } else if (wsClient.isClosed()) {
                             wsClient.reconnectBlocking();
                             sleep(1000);

@@ -3,7 +3,7 @@ package com.netbyte.vtunnel.ws;
 
 import android.util.Log;
 
-import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.utils.CipherUtil;
 
@@ -51,7 +51,7 @@ public class WsClient extends WebSocketClient {
         if (config.isObfuscate()) {
             buf = cipherUtil.xor(buf);
         }
-        AppConst.DOWN_BYTE.addAndGet(buf.length);
+        AppConst.DOWNLOAD_BYTES.addAndGet(buf.length);
         try {
             out.write(buf);
         } catch (IOException e) {

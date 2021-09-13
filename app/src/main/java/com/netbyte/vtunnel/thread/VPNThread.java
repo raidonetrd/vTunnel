@@ -11,7 +11,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.model.LocalIP;
 import com.netbyte.vtunnel.service.IPService;
@@ -27,7 +27,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
-public class VpnThread extends Thread {
+public class VPNThread extends Thread {
     private static final String TAG = "VpnThread";
     protected volatile boolean RUNNING = true;
     protected SimpleVPNService vpnService;
@@ -39,7 +39,7 @@ public class VpnThread extends Thread {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initTunnel() throws PackageManager.NameNotFoundException {
-        AppConst.LOCAL_ADDRESS = localIP.getLocalIP();
+        AppConst.LOCAL_IP = localIP.getLocalIP();
         Log.i(TAG, "local ip:" + localIP.getLocalIP() + " dns:" + config.getDns());
         VpnService.Builder builder = vpnService.new Builder();
         builder.setMtu(AppConst.MTU)

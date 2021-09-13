@@ -10,7 +10,7 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
-import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.service.IPService;
 import com.netbyte.vtunnel.service.SimpleVPNService;
 import com.netbyte.vtunnel.utils.ByteUtil;
@@ -40,7 +40,7 @@ public class StatThread extends Thread {
         while (RUNNING) {
             try {
                 Thread.sleep(3000);
-                if (TextUtils.isEmpty(AppConst.LOCAL_ADDRESS)) {
+                if (TextUtils.isEmpty(AppConst.LOCAL_IP)) {
                     String title = "Failed to connect!";
                     builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle("").bigText(title));
                     break;
@@ -50,23 +50,23 @@ public class StatThread extends Thread {
                     vpnService.stopVPN();
                     break;
                 }
-                String title = String.format("IP: %s", AppConst.LOCAL_ADDRESS);
-                String text = String.format("Network: ↓ %s ↑ %s", ByteUtil.format(AppConst.DOWN_BYTE.get()), ByteUtil.format(AppConst.UP_BYTE.get()));
+                String title = String.format("IP: %s", AppConst.LOCAL_IP);
+                String text = String.format("Network: ↓ %s ↑ %s", ByteUtil.format(AppConst.DOWNLOAD_BYTES.get()), ByteUtil.format(AppConst.UPLOAD_BYTES.get()));
                 builder.setStyle(new NotificationCompat.BigTextStyle().setSummaryText(title).setBigContentTitle("").bigText(text));
                 notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
                 checkCount++;
                 if (checkCount % 100 == 0) {
-                    ipService.keepAliveIp(AppConst.LOCAL_ADDRESS);
+                    ipService.keepAliveIp(AppConst.LOCAL_IP);
                 }
-                AppConst.UP_BYTE.set(0);
-                AppConst.DOWN_BYTE.set(0);
+                AppConst.UPLOAD_BYTES.set(0);
+                AppConst.DOWNLOAD_BYTES.set(0);
             } catch (InterruptedException e) {
                 Log.i(TAG, "error:" + e.getMessage());
             }
         }
         if (!isAirplaneModeOn(vpnService.getApplicationContext())) {
             // delete local ip
-            ipService.deleteIp(AppConst.LOCAL_ADDRESS);
+            ipService.deleteIp(AppConst.LOCAL_IP);
         }
         vpnService.stopForeground(true);
         notificationManager.cancel(AppConst.NOTIFICATION_ID);
