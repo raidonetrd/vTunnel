@@ -11,16 +11,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.config.AppConst;
 
 public class SettingsTab extends Fragment {
+    ToggleButton obfuscateBtn;
     Button btnSave;
     EditText editServer, editDNS, editKey, editBypass;
     SharedPreferences preferences;
@@ -51,6 +54,7 @@ public class SettingsTab extends Fragment {
         editKey = getView().findViewById(R.id.keyEdit);
         editBypass = getView().findViewById(R.id.bypassUrlEdit);
         editDNS = getView().findViewById(R.id.dnsEdit);
+        obfuscateBtn = getView().findViewById(R.id.obfuscateBtn);
 
         preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
@@ -59,20 +63,24 @@ public class SettingsTab extends Fragment {
         editBypass.setText(preferences.getString("bypassUrl", ""));
         editDNS.setText(preferences.getString("dns", AppConst.DEFAULT_DNS));
         editKey.setText(preferences.getString("key", AppConst.DEFAULT_KEY));
+        obfuscateBtn.setChecked(preferences.getBoolean("obfuscate", true));
 
         btnSave.setOnClickListener(v -> {
             String server = editServer.getText().toString().trim();
             String dns = editDNS.getText().toString().trim();
             String key = editKey.getText().toString().trim();
             String bypassUrl = editBypass.getText().toString().trim();
+            boolean obfuscate = obfuscateBtn.isChecked();
             preEditor.putString("server", server);
             preEditor.putString("dns", dns);
             preEditor.putString("key", key);
             preEditor.putString("bypassUrl", bypassUrl);
+            preEditor.putBoolean("obfuscate", obfuscate);
             preEditor.apply();
             Toast.makeText(activity, "Saved！", Toast.LENGTH_LONG).show();
         });
     }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);

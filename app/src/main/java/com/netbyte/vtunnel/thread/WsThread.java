@@ -47,7 +47,7 @@ public class WsThread extends VpnThread {
             in = new FileInputStream(tunnel.getFileDescriptor());
             out = new FileOutputStream(tunnel.getFileDescriptor());
             @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", config.getServerIP(), config.getServerPort());
-            wsClient = new WsClient(new URI(uri), cipherUtil);
+            wsClient = new WsClient(new URI(uri), cipherUtil, config);
             wsClient.setSocketFactory(SSLUtil.createEasySSLContext().getSocketFactory());
             wsClient.connectBlocking();
             wsClient.setOutStream(out);
@@ -58,7 +58,10 @@ public class WsThread extends VpnThread {
                     if (ln > 0) {
                         if (wsClient.isOpen()) {
                             byte[] data = Arrays.copyOfRange(buf, 0, ln);
-                            wsClient.send(cipherUtil.xor(data));
+                            if (config.isObfuscate()) {
+                                data = cipherUtil.xor(data);
+                            }
+                            wsClient.send(data);
                             AppConst.UP_BYTE.addAndGet(ln);
                         } else if (wsClient.isClosed()) {
                             wsClient.reconnectBlocking();

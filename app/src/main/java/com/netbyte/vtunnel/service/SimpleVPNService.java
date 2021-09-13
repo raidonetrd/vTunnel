@@ -88,6 +88,7 @@ public class SimpleVPNService extends VpnService {
         String serverIP;
         int serverPort;
         String dns, key, bypassUrl;
+        boolean obfuscate;
         String server = ex.getString("server").trim();
         if (server.contains(":")) {
             serverIP = server.split(":")[0];
@@ -99,7 +100,8 @@ public class SimpleVPNService extends VpnService {
         dns = ex.getString("dns");
         key = ex.getString("key");
         bypassUrl = ex.getString("bypassUrl");
-        this.config = new Config(serverIP, serverPort, dns, key, bypassUrl);
+        obfuscate = ex.getBoolean("obfuscate", true);
+        this.config = new Config(serverIP, serverPort, dns, key, bypassUrl, obfuscate);
         this.localIP = new LocalIP(AppConst.DEFAULT_LOCAL_ADDRESS, AppConst.DEFAULT_LOCAL_PREFIX_LENGTH);
         this.cipherUtil = new CipherUtil(key);
         this.ipService = new IPService(config.getServerIP(), config.getServerPort(), config.getKey());

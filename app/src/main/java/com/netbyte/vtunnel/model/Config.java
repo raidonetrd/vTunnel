@@ -9,17 +9,19 @@ public class Config implements Serializable {
     private String dns;
     private String key;
     private String bypassUrl;
+    private boolean obfuscate;
 
     public Config() {
 
     }
 
-    public Config(String serverIP, int serverPort, String dns, String key, String bypassUrl) {
+    public Config(String serverIP, int serverPort, String dns, String key, String bypassUrl, boolean obfuscate) {
         this.serverIP = serverIP;
         this.serverPort = serverPort;
         this.dns = dns;
         this.key = key;
         this.bypassUrl = bypassUrl;
+        this.obfuscate = obfuscate;
     }
 
     public String getServerIP() {
@@ -60,5 +62,13 @@ public class Config implements Serializable {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public boolean isObfuscate() {
+        return obfuscate;
+    }
+
+    public void setObfuscate(boolean obfuscate) {
+        this.obfuscate = obfuscate;
     }
 }
