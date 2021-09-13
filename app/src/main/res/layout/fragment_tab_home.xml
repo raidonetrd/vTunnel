@@ -59,10 +59,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|top"
+                android:fontFamily="sans-serif-condensed"
                 android:gravity="center"
                 android:text="@string/btn_connect"
                 android:textColor="@color/colorSlogan"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:textStyle="bold|italic" />
 
         </LinearLayout>
 
@@ -80,7 +82,7 @@
                 android:layout_gravity="center|bottom"
                 android:gravity="center|bottom"
                 android:text="@string/app_version"
-                android:textSize="10sp" />
+                android:textSize="11sp" />
 
         </LinearLayout>
     </LinearLayout>

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.LocalIP;
 import com.netbyte.vtunnel.utils.HttpUtil;
 
@@ -12,9 +12,9 @@ import java.io.IOException;
 
 public class IPService {
     private static final String TAG = "IPService";
-    private String serverIP;
-    private int serverPort;
-    private String key;
+    private final String serverIP;
+    private final int serverPort;
+    private final String key;
 
     public IPService(String serverIP, int serverPort, String key) {
         this.serverIP = serverIP;

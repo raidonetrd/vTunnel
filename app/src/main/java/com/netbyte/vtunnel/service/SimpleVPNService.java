@@ -18,17 +18,17 @@ import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.model.LocalIP;
 import com.netbyte.vtunnel.thread.StatThread;
-import com.netbyte.vtunnel.thread.VpnThread;
+import com.netbyte.vtunnel.thread.VPNThread;
 import com.netbyte.vtunnel.thread.WsThread;
 import com.netbyte.vtunnel.utils.CipherUtil;
-import com.netbyte.vtunnel.config.AppConst;
+import com.netbyte.vtunnel.model.AppConst;
 
 import java.util.Objects;
 
 public class SimpleVPNService extends VpnService {
     private Config config;
     private LocalIP localIP;
-    private VpnThread wsThread;
+    private VPNThread wsThread;
     private StatThread statThread;
     private PendingIntent pendingIntent;
     private CipherUtil cipherUtil;
@@ -151,8 +151,8 @@ public class SimpleVPNService extends VpnService {
             statThread = null;
         }
         // reset notification data
-        AppConst.UP_BYTE.set(0);
-        AppConst.DOWN_BYTE.set(0);
+        AppConst.UPLOAD_BYTES.set(0);
+        AppConst.DOWNLOAD_BYTES.set(0);
         // reset connection status
         SharedPreferences preferences = this.getApplicationContext().getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor preEditor = preferences.edit();

@@ -22,7 +22,7 @@
 
             <TextView
                 android:id="@+id/serverAddressView"
-                android:layout_width="90dp"
+                android:layout_width="85dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical|start"
@@ -50,7 +50,7 @@
 
             <TextView
                 android:id="@+id/keyView"
-                android:layout_width="90dp"
+                android:layout_width="85dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical|start"
@@ -79,7 +79,7 @@
 
             <TextView
                 android:id="@+id/dnsView"
-                android:layout_width="90dp"
+                android:layout_width="85dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical|start"
@@ -107,7 +107,7 @@
 
             <TextView
                 android:id="@+id/bypassUrlView"
-                android:layout_width="90dp"
+                android:layout_width="85dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical|start"
@@ -136,7 +136,7 @@
 
             <TextView
                 android:id="@+id/view_obfuscate"
-                android:layout_width="90dp"
+                android:layout_width="85dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical|start"
@@ -146,8 +146,10 @@
                 android:id="@+id/obfuscateBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:gravity="start" />
+                android:layout_gravity="start|center"
+                android:gravity="start|center"
+                android:textOff="@string/default_toggle_off"
+                android:textOn="@string/default_toggle_on" />
 
         </LinearLayout>
 
@@ -181,7 +183,7 @@
                 android:layout_gravity="center|bottom"
                 android:gravity="center|bottom"
                 android:text="@string/app_version"
-                android:textSize="10sp" />
+                android:textSize="11sp" />
 
         </LinearLayout>
 
