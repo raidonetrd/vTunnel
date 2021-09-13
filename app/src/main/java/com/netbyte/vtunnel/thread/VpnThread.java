@@ -38,7 +38,7 @@ public class VpnThread extends Thread {
     protected LocalIP localIP;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    protected void initTunnel() throws PackageManager.NameNotFoundException, IOException {
+    protected void initTunnel() throws PackageManager.NameNotFoundException {
         AppConst.LOCAL_ADDRESS = localIP.getLocalIP();
         Log.i(TAG, "local ip:" + localIP.getLocalIP() + " dns:" + config.getDns());
         VpnService.Builder builder = vpnService.new Builder();

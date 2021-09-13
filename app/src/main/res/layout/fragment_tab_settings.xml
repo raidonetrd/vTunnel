@@ -22,7 +22,7 @@
 
             <TextView
                 android:id="@+id/serverAddressView"
-                android:layout_width="80dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical|start"
@@ -46,12 +46,40 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/keyView"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal|center_vertical|start"
+                android:text="@string/view_key" />
+
+            <EditText
+                android:id="@+id/keyEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/default_key"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                android:text="@string/default_key" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:orientation="horizontal"
             tools:layout_editor_absoluteX="8dp">
 
             <TextView
                 android:id="@+id/dnsView"
-                android:layout_width="80dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical|start"
@@ -78,36 +106,8 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/keyView"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal|center_vertical|start"
-                android:text="@string/view_key" />
-
-            <EditText
-                android:id="@+id/keyEdit"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="@string/default_key"
-                android:importantForAutofill="no"
-                android:inputType="textPassword"
-                android:text="@string/default_key" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
                 android:id="@+id/bypassUrlView"
-                android:layout_width="80dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical|start"
@@ -125,6 +125,30 @@
                 android:inputType="text"
                 android:text="@string/default_bypass_url"
                 tools:ignore="TextFields" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/view_obfuscate"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal|center_vertical|start"
+                android:text="@string/view_obfuscate" />
+
+            <ToggleButton
+                android:id="@+id/obfuscateBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:gravity="start" />
+
         </LinearLayout>
 
         <LinearLayout
