@@ -1,5 +1,6 @@
 package com.netbyte.vtunnel.service;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -41,6 +42,7 @@ public class SimpleVPNService extends VpnService {
     public SimpleVPNService() {
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     @Override
     public void onCreate() {
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT);
@@ -96,7 +98,7 @@ public class SimpleVPNService extends VpnService {
         String server = ex.getString("server").trim();
         if (server.contains(":")) {
             serverIP = server.split(":")[0];
-            serverPort = Integer.valueOf(server.split(":")[1]);
+            serverPort = Integer.parseInt(server.split(":")[1]);
         } else {
             serverIP = server;
             serverPort = AppConst.DEFAULT_SERVER_PORT;
@@ -175,7 +177,7 @@ public class SimpleVPNService extends VpnService {
         SharedPreferences preferences = this.getApplicationContext().getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor preEditor = preferences.edit();
         preEditor.putBoolean("connected", false);
-        preEditor.commit();
+        preEditor.apply();
         // stop vpn service
         this.stopSelf();
     }
