@@ -7,29 +7,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.VpnService;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.netbyte.vtunnel.activity.MainActivity;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.model.LocalIP;
-import com.netbyte.vtunnel.thread.StatThread;
+import com.netbyte.vtunnel.thread.MonitorThread;
+import com.netbyte.vtunnel.thread.NotifyThread;
 import com.netbyte.vtunnel.thread.VPNThread;
 import com.netbyte.vtunnel.thread.WsThread;
 import com.netbyte.vtunnel.utils.CipherUtil;
 import com.netbyte.vtunnel.model.AppConst;
 
-import java.util.Objects;
-
 public class SimpleVPNService extends VpnService {
     private Config config;
     private LocalIP localIP;
     private VPNThread wsThread;
-    private StatThread statThread;
+    private NotifyThread notifyThread;
+    private MonitorThread monitorThread;
     private PendingIntent pendingIntent;
     private CipherUtil cipherUtil;
     private NotificationManager notificationManager;
@@ -59,7 +61,9 @@ public class SimpleVPNService extends VpnService {
                 // 0.init config
                 initConfig(intent);
                 // 1.create notification
-                createNotification();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    createNotification();
+                }
                 // 2.start
                 startVPN();
                 return START_STICKY;
@@ -108,6 +112,7 @@ public class SimpleVPNService extends VpnService {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void createNotification() {
         NotificationChannel channel = new NotificationChannel(AppConst.NOTIFICATION_CHANNEL_ID, AppConst.NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_NONE);
         notificationManager = getSystemService(NotificationManager.class);
@@ -125,16 +130,23 @@ public class SimpleVPNService extends VpnService {
     public void startVPN() {
         Log.i(AppConst.DEFAULT_TAG, "starting VPN");
         try {
-            if (Objects.nonNull(wsThread)) {
+            if (wsThread != null) {
                 wsThread.stopRunning();
             }
-            if (Objects.nonNull(statThread)) {
-                statThread.stopRunning();
+            if (monitorThread != null) {
+                monitorThread.stopRunning();
             }
             wsThread = new WsThread(config, cipherUtil, this, ipService);
             wsThread.start();
-            statThread = new StatThread(notificationManager, notificationBuilder, this, ipService);
-            statThread.start();
+            monitorThread = new MonitorThread(this, ipService);
+            monitorThread.start();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (notifyThread != null) {
+                    notifyThread.stopRunning();
+                }
+                notifyThread = new NotifyThread(notificationManager, notificationBuilder, this);
+                notifyThread.start();
+            }
         } catch (Exception e) {
             Log.e(AppConst.DEFAULT_TAG, "error on startVPN:" + e.toString());
         }
@@ -146,9 +158,15 @@ public class SimpleVPNService extends VpnService {
             wsThread.stopRunning();
             wsThread = null;
         }
-        if (statThread != null) {
-            statThread.stopRunning();
-            statThread = null;
+        if (monitorThread != null) {
+            monitorThread.stopRunning();
+            monitorThread = null;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (notifyThread != null) {
+                notifyThread.stopRunning();
+                notifyThread = null;
+            }
         }
         // reset notification data
         AppConst.UPLOAD_BYTES.set(0);

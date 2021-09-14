@@ -25,8 +25,6 @@ import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.service.SimpleVPNService;
 
-import java.util.Objects;
-
 
 public class HomeTab extends Fragment {
     SharedPreferences preferences;
@@ -102,7 +100,10 @@ public class HomeTab extends Fragment {
         if (result != RESULT_OK) {
             return;
         }
-        boolean isChecked = Objects.isNull(data) ? true : data.getBooleanExtra("isChecked", false);
+        boolean isChecked = true;
+        if (data != null) {
+            isChecked = data.getBooleanExtra("isChecked", false);
+        }
         SharedPreferences.Editor preEditor = this.getActivity().getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE).edit();
         preEditor.putBoolean("connected", isChecked);
         preEditor.apply();

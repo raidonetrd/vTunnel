@@ -19,7 +19,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class WsThread extends VPNThread {
     private static final String TAG = "WsThread";
@@ -41,7 +40,7 @@ public class WsThread extends VPNThread {
             Log.i(TAG, "start");
             this.localIP = ipService.pickIp();
             super.initTunnel();
-            if (Objects.isNull(this.tunnel)) {
+            if (this.tunnel == null) {
                 return;
             }
             in = new FileInputStream(tunnel.getFileDescriptor());
