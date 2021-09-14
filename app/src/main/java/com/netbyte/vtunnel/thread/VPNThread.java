@@ -20,12 +20,10 @@ import com.netbyte.vtunnel.utils.CipherUtil;
 import com.netbyte.vtunnel.utils.HttpUtil;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class VPNThread extends Thread {
     private static final String TAG = "VpnThread";
@@ -54,7 +52,7 @@ public class VPNThread extends Thread {
             builder.addDisallowedApplication(packageName);
         }
         this.tunnel = builder.establish();
-        if (Objects.isNull(this.tunnel)) {
+        if (this.tunnel == null) {
             Log.e(TAG, "init tunnel failed");
             return;
         }
@@ -66,21 +64,22 @@ public class VPNThread extends Thread {
     }
 
     private List<String> bypassApps() {
-        List<String> bypassPackageList = new ArrayList<>();
         Log.i(TAG, "bypassUrl:" + config.getBypassUrl());
-        if (!TextUtils.isEmpty(config.getBypassUrl())) {
-            try {
-                String base64AppList = HttpUtil.get(config.getBypassUrl());
-                base64AppList = base64AppList.trim();
-                Log.i(TAG, "base64AppList:" + base64AppList);
-                String decodeAppList = new String(Base64.getDecoder().decode(base64AppList.getBytes(StandardCharsets.UTF_8)));
-                String[] appList = decodeAppList.split("\n");
-                if (appList.length > 0) {
-                    bypassPackageList.addAll(Arrays.asList(appList));
-                }
-            } catch (IOException e) {
-                Log.e(TAG, "failed to get bypass url");
+        if (TextUtils.isEmpty(config.getBypassUrl())) {
+            return Collections.emptyList();
+        }
+        List<String> bypassPackageList = new ArrayList<>();
+        try {
+            String bypassText = HttpUtil.get(config.getBypassUrl());
+            if (TextUtils.isEmpty(bypassText)) {
+                return Collections.emptyList();
             }
+            String[] appList = bypassText.split("\n");
+            if (appList.length > 0) {
+                bypassPackageList.addAll(Arrays.asList(appList));
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "failed to get bypass url");
         }
         List<PackageInfo> packageInfoList = vpnService.getApplicationContext().getPackageManager().getInstalledPackages(0);
         ArrayList<String> result = new ArrayList<>();
