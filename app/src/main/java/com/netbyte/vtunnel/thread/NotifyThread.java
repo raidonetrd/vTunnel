@@ -27,7 +27,6 @@ public class NotifyThread extends Thread {
         this.vpnService = vpnService;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void run() {
         Log.i(TAG, "start");

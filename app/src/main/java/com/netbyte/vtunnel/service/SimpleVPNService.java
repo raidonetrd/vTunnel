@@ -63,9 +63,7 @@ public class SimpleVPNService extends VpnService {
                 // 0.init config
                 initConfig(intent);
                 // 1.create notification
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    createNotification();
-                }
+                createNotification();
                 // 2.start
                 startVPN();
                 return START_STICKY;
@@ -113,8 +111,6 @@ public class SimpleVPNService extends VpnService {
         this.ipService = new IPService(config.getServerIP(), config.getServerPort(), config.getKey());
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void createNotification() {
         NotificationChannel channel = new NotificationChannel(AppConst.NOTIFICATION_CHANNEL_ID, AppConst.NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_NONE);
         notificationManager = getSystemService(NotificationManager.class);
@@ -138,17 +134,15 @@ public class SimpleVPNService extends VpnService {
             if (monitorThread != null) {
                 monitorThread.stopRunning();
             }
+            if (notifyThread != null) {
+                notifyThread.stopRunning();
+            }
             wsThread = new WsThread(config, cipherUtil, this, ipService);
             wsThread.start();
             monitorThread = new MonitorThread(this, ipService);
             monitorThread.start();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                if (notifyThread != null) {
-                    notifyThread.stopRunning();
-                }
-                notifyThread = new NotifyThread(notificationManager, notificationBuilder, this);
-                notifyThread.start();
-            }
+            notifyThread = new NotifyThread(notificationManager, notificationBuilder, this);
+            notifyThread.start();
         } catch (Exception e) {
             Log.e(AppConst.DEFAULT_TAG, "error on startVPN:" + e.toString());
         }
@@ -164,11 +158,9 @@ public class SimpleVPNService extends VpnService {
             monitorThread.stopRunning();
             monitorThread = null;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (notifyThread != null) {
-                notifyThread.stopRunning();
-                notifyThread = null;
-            }
+        if (notifyThread != null) {
+            notifyThread.stopRunning();
+            notifyThread = null;
         }
         // reset notification data
         AppConst.UPLOAD_BYTES.set(0);

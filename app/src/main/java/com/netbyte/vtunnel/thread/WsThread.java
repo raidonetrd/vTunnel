@@ -1,10 +1,7 @@
 package com.netbyte.vtunnel.thread;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 import android.util.Log;
-
-import androidx.annotation.RequiresApi;
 
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Config;
@@ -30,7 +27,6 @@ public class WsThread extends VPNThread {
         this.ipService = ipService;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void run() {
         WsClient wsClient = null;
