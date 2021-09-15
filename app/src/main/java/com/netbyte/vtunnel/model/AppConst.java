@@ -23,6 +23,7 @@ public class AppConst {
 
     public static AtomicLong DOWNLOAD_BYTES = new AtomicLong(0);
     public static AtomicLong UPLOAD_BYTES = new AtomicLong(0);
+    public static AtomicLong TOTAL_BYTES = new AtomicLong(0);
     public static String LOCAL_IP = "";
 
 }
