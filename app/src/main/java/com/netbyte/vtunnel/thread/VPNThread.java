@@ -34,9 +34,10 @@ public class VPNThread extends Thread {
     protected Config config;
     protected LocalIP localIP;
 
-    protected void initTunnel() throws PackageManager.NameNotFoundException {
-        AppConst.LOCAL_IP = localIP.getLocalIP();
-        Log.i(TAG, "local ip:" + localIP.getLocalIP() + " dns:" + config.getDns());
+    protected ParcelFileDescriptor createTunnel() throws PackageManager.NameNotFoundException {
+        if (config == null || localIP == null) {
+            return null;
+        }
         VpnService.Builder builder = vpnService.new Builder();
         builder.setMtu(AppConst.MTU)
                 .addAddress(localIP.getLocalIP(), localIP.getLocalPrefixLength())
@@ -49,12 +50,8 @@ public class VPNThread extends Thread {
         for (String packageName : bypassApps()) {
             builder.addDisallowedApplication(packageName);
         }
-        this.tunnel = builder.establish();
-        if (this.tunnel == null) {
-            Log.e(TAG, "init tunnel failed");
-            return;
-        }
-        Log.i(TAG, "init tunnel has done");
+        tunnel = builder.establish();
+        return tunnel;
     }
 
     public void stopRunning() {

@@ -8,6 +8,8 @@ import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.service.IPService;
 import com.netbyte.vtunnel.service.SimpleVPNService;
 
+import java.util.concurrent.TimeUnit;
+
 public class MonitorThread extends Thread {
     private static final String TAG = "MonitorThread";
     private volatile boolean RUNNING = true;
@@ -25,7 +27,7 @@ public class MonitorThread extends Thread {
         int checkCount = 0;
         while (RUNNING) {
             try {
-                Thread.sleep(3000);
+                TimeUnit.SECONDS.sleep(3);
                 if (isAirplaneModeOn(vpnService.getApplicationContext())) {
                     Log.i(TAG, "airplane mode on");
                     vpnService.stopVPN();

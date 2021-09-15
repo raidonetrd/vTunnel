@@ -12,6 +12,8 @@ import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.service.SimpleVPNService;
 import com.netbyte.vtunnel.utils.ByteUtil;
 
+import java.util.concurrent.TimeUnit;
+
 
 public class NotifyThread extends Thread {
     private static final String TAG = "NotifyThread";
@@ -33,15 +35,16 @@ public class NotifyThread extends Thread {
         vpnService.startForeground(AppConst.NOTIFICATION_ID, builder.build());
         while (RUNNING) {
             try {
-                Thread.sleep(3000);
+                TimeUnit.SECONDS.sleep(2);
                 if (TextUtils.isEmpty(AppConst.LOCAL_IP)) {
-                    String title = "Failed to connect!";
+                    String title = "VPN failed!!!";
                     builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle("").bigText(title));
                     break;
                 }
-                String title = String.format("IP: %s", AppConst.LOCAL_IP);
+                AppConst.TOTAL_BYTES.addAndGet(AppConst.DOWNLOAD_BYTES.get() + AppConst.UPLOAD_BYTES.get());
                 String text = String.format("Network: ↓ %s ↑ %s", ByteUtil.format(AppConst.DOWNLOAD_BYTES.get()), ByteUtil.format(AppConst.UPLOAD_BYTES.get()));
-                builder.setStyle(new NotificationCompat.BigTextStyle().setSummaryText(title).setBigContentTitle("").bigText(text));
+                String summary = String.format("IP: %s Total: %s", AppConst.LOCAL_IP, ByteUtil.format(AppConst.TOTAL_BYTES.get()));
+                builder.setStyle(new NotificationCompat.BigTextStyle().setSummaryText(summary).setBigContentTitle("").bigText(text));
                 notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
                 AppConst.UPLOAD_BYTES.set(0);
                 AppConst.DOWNLOAD_BYTES.set(0);

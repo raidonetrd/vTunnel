@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 public class WsThread extends VPNThread {
     private static final String TAG = "WsThread";
@@ -34,11 +35,16 @@ public class WsThread extends VPNThread {
         FileOutputStream out = null;
         try {
             Log.i(TAG, "start");
-            this.localIP = ipService.pickIp();
-            super.initTunnel();
-            if (this.tunnel == null) {
+            localIP = ipService.pickIp();
+            if (localIP == null) {
+                vpnService.stopVPN();
                 return;
             }
+            if (super.createTunnel() == null) {
+                vpnService.stopVPN();
+                return;
+            }
+            AppConst.LOCAL_IP = localIP.getLocalIP();
             in = new FileInputStream(tunnel.getFileDescriptor());
             out = new FileOutputStream(tunnel.getFileDescriptor());
             @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", config.getServerIP(), config.getServerPort());
@@ -59,11 +65,11 @@ public class WsThread extends VPNThread {
                             wsClient.send(data);
                             AppConst.UPLOAD_BYTES.addAndGet(ln);
                         } else if (wsClient.isClosed()) {
+                            Log.i(TAG, "ws client reconnecting...");
                             wsClient.reconnectBlocking();
-                            sleep(1000);
-                            Log.i(TAG, "ws reconnect...");
+                            TimeUnit.SECONDS.sleep(1);
                         } else {
-                            sleep(1000);
+                            TimeUnit.SECONDS.sleep(1);
                         }
                     }
                 } catch (Exception e) {

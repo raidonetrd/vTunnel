@@ -60,15 +60,15 @@ public class SimpleVPNService extends VpnService {
         }
         switch (intent.getAction()) {
             case AppConst.BTN_ACTION_CONNECT:
-                // 0.init config
+                // init config
                 initConfig(intent);
-                // 1.create notification
+                // create notification
                 createNotification();
-                // 2.start
+                // start VPN
                 startVPN();
                 return START_STICKY;
             case AppConst.BTN_ACTION_DISCONNECT:
-                // stop
+                // stop VPN
                 stopVPN();
                 return START_NOT_STICKY;
             default:
@@ -143,6 +143,7 @@ public class SimpleVPNService extends VpnService {
             monitorThread.start();
             notifyThread = new NotifyThread(notificationManager, notificationBuilder, this);
             notifyThread.start();
+
         } catch (Exception e) {
             Log.e(AppConst.DEFAULT_TAG, "error on startVPN:" + e.toString());
         }
@@ -162,6 +163,13 @@ public class SimpleVPNService extends VpnService {
             notifyThread.stopRunning();
             notifyThread = null;
         }
+        // stop vpn service
+        this.reset();
+        this.stopSelf();
+    }
+
+    public void reset() {
+        Log.i(AppConst.DEFAULT_TAG, "resetting data");
         // reset notification data
         AppConst.UPLOAD_BYTES.set(0);
         AppConst.DOWNLOAD_BYTES.set(0);
@@ -170,8 +178,6 @@ public class SimpleVPNService extends VpnService {
         SharedPreferences.Editor preEditor = preferences.edit();
         preEditor.putBoolean("connected", false);
         preEditor.apply();
-        // stop vpn service
-        this.stopSelf();
     }
 
 }
