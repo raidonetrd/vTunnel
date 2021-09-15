@@ -8,7 +8,7 @@ import okhttp3.Response;
 
 public class HttpUtil {
 
-    private static OkHttpClient client = new OkHttpClient();
+    private static final OkHttpClient client = new OkHttpClient();
 
     public static String get(String url) throws IOException {
         Request request = new Request.Builder()

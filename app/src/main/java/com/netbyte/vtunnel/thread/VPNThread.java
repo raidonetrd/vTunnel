@@ -3,13 +3,10 @@ package com.netbyte.vtunnel.thread;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.VpnService;
-import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.system.OsConstants;
 import android.text.TextUtils;
 import android.util.Log;
-
-import androidx.annotation.RequiresApi;
 
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Config;
@@ -20,8 +17,10 @@ import com.netbyte.vtunnel.utils.CipherUtil;
 import com.netbyte.vtunnel.utils.HttpUtil;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,7 +34,6 @@ public class VPNThread extends Thread {
     protected Config config;
     protected LocalIP localIP;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initTunnel() throws PackageManager.NameNotFoundException {
         AppConst.LOCAL_IP = localIP.getLocalIP();
         Log.i(TAG, "local ip:" + localIP.getLocalIP() + " dns:" + config.getDns());
@@ -74,6 +72,9 @@ public class VPNThread extends Thread {
             if (TextUtils.isEmpty(bypassText)) {
                 return Collections.emptyList();
             }
+            bypassText = bypassText.trim();
+            bypassText = new String(Base64.getDecoder().decode(bypassText.getBytes(StandardCharsets.UTF_8)));
+            Log.i(TAG, "bypassText:" + bypassText);
             String[] appList = bypassText.split("\n");
             if (appList.length > 0) {
                 bypassPackageList.addAll(Arrays.asList(appList));

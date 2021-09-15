@@ -1,5 +1,7 @@
 package com.netbyte.vtunnel.utils;
 
+import android.annotation.SuppressLint;
+
 import java.io.IOException;
 
 import javax.net.ssl.SSLContext;
@@ -17,16 +19,19 @@ public class SSLUtil {
         }
     }
 
+    @SuppressLint("CustomX509TrustManager")
     private static class TrivialTrustManager implements javax.net.ssl.X509TrustManager {
         public java.security.cert.X509Certificate[] getAcceptedIssuers() {
             return new java.security.cert.X509Certificate[0];
         }
 
+        @SuppressLint("TrustAllX509TrustManager")
         @Override
         public void checkClientTrusted(
                 java.security.cert.X509Certificate[] chain, String authType) {
         }
 
+        @SuppressLint("TrustAllX509TrustManager")
         @Override
         public void checkServerTrusted(
                 java.security.cert.X509Certificate[] chain, String authType) {
