@@ -60,14 +60,16 @@ public class VPNThread extends Thread {
 
     private List<String> bypassApps() {
         Log.i(TAG, "bypassUrl:" + config.getBypassUrl());
+        ArrayList<String> result = new ArrayList<>();
+        result.add(AppConst.APP_PACKAGE_NAME);
         if (TextUtils.isEmpty(config.getBypassUrl())) {
-            return Collections.emptyList();
+            return result;
         }
         List<String> bypassPackageList = new ArrayList<>();
         try {
             String bypassText = HttpUtil.get(config.getBypassUrl());
             if (TextUtils.isEmpty(bypassText)) {
-                return Collections.emptyList();
+                return result;
             }
             bypassText = bypassText.trim();
             bypassText = new String(Base64.getDecoder().decode(bypassText.getBytes(StandardCharsets.UTF_8)));
@@ -80,8 +82,6 @@ public class VPNThread extends Thread {
             Log.e(TAG, "failed to get bypass url");
         }
         List<PackageInfo> packageInfoList = vpnService.getApplicationContext().getPackageManager().getInstalledPackages(0);
-        ArrayList<String> result = new ArrayList<>();
-        result.add(AppConst.APP_PACKAGE_NAME);
         for (PackageInfo info : packageInfoList) {
             String packageName = info.packageName;
             for (String p : bypassPackageList) {
