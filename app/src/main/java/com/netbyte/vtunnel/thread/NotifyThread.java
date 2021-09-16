@@ -1,11 +1,8 @@
 package com.netbyte.vtunnel.thread;
 
 import android.app.NotificationManager;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
-
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.netbyte.vtunnel.model.AppConst;
@@ -15,13 +12,10 @@ import com.netbyte.vtunnel.utils.ByteUtil;
 import java.util.concurrent.TimeUnit;
 
 
-public class NotifyThread extends Thread {
+public class NotifyThread extends BaseThread {
     private static final String TAG = "NotifyThread";
-    private volatile boolean RUNNING = true;
     private final NotificationManager notificationManager;
     private final NotificationCompat.Builder builder;
-    private final SimpleVPNService vpnService;
-
 
     public NotifyThread(NotificationManager notificationManager, NotificationCompat.Builder builder, SimpleVPNService vpnService) {
         this.notificationManager = notificationManager;
@@ -55,14 +49,6 @@ public class NotifyThread extends Thread {
         vpnService.stopForeground(true);
         notificationManager.cancel(AppConst.NOTIFICATION_ID);
         Log.i(TAG, "stop");
-    }
-
-    public void stopRunning() {
-        this.RUNNING = false;
-    }
-
-    public boolean isRunning() {
-        return this.RUNNING;
     }
 
 }

@@ -39,6 +39,6 @@ public class App implements Serializable {
 
     @Override
     public String toString() {
-        return this.name +":"+ this.packageName;
+        return this.name;
     }
 }

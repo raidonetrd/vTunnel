@@ -11,10 +11,6 @@ public class Config implements Serializable {
     private String bypassApps;
     private boolean obfuscate;
 
-    public Config() {
-
-    }
-
     public Config(String serverIP, int serverPort, String dns, String key, String bypassUrl, boolean obfuscate) {
         this.serverIP = serverIP;
         this.serverPort = serverPort;

@@ -49,13 +49,12 @@ public class SettingsTab extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FragmentActivity activity = this.getActivity();
-
         btnSave = getView().findViewById(R.id.saveButton);
         editServer = getView().findViewById(R.id.serverAddressEdit);
         editKey = getView().findViewById(R.id.keyEdit);
         editDNS = getView().findViewById(R.id.dnsEdit);
         obfuscateSwitch = getView().findViewById(R.id.obfuscateSwitch);
-
+        assert activity != null;
         preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
 

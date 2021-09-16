@@ -20,10 +20,8 @@ public class AppConst {
     public static final String DEFAULT_ROUTE = "0.0.0.0";
     public static final String BTN_ACTION_CONNECT = "connect";
     public static final String BTN_ACTION_DISCONNECT = "disconnect";
-
+    public static String LOCAL_IP = "";
     public static AtomicLong DOWNLOAD_BYTES = new AtomicLong(0);
     public static AtomicLong UPLOAD_BYTES = new AtomicLong(0);
     public static AtomicLong TOTAL_BYTES = new AtomicLong(0);
-    public static String LOCAL_IP = "";
-
 }
