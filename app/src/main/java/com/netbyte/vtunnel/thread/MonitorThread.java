@@ -10,11 +10,8 @@ import com.netbyte.vtunnel.service.SimpleVPNService;
 
 import java.util.concurrent.TimeUnit;
 
-public class MonitorThread extends Thread {
+public class MonitorThread extends BaseThread {
     private static final String TAG = "MonitorThread";
-    private volatile boolean RUNNING = true;
-    private final SimpleVPNService vpnService;
-    private final IPService ipService;
 
     public MonitorThread(SimpleVPNService vpnService, IPService ipService) {
         this.vpnService = vpnService;
@@ -46,14 +43,6 @@ public class MonitorThread extends Thread {
             ipService.deleteIp(AppConst.LOCAL_IP);
         }
         Log.i(TAG, "stop");
-    }
-
-    public void stopRunning() {
-        this.RUNNING = false;
-    }
-
-    public boolean isRunning() {
-        return this.RUNNING;
     }
 
     private boolean isAirplaneModeOn(Context context) {

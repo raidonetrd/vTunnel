@@ -24,6 +24,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.service.SimpleVPNService;
+import com.netbyte.vtunnel.thread.WsThread;
 
 
 public class HomeTab extends Fragment {
@@ -49,9 +50,10 @@ public class HomeTab extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FragmentActivity activity = this.getActivity();
+        assert activity != null;
         preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         switchMaterial = getView().findViewById(R.id.connButton);
-        switchMaterial.setChecked(activity.getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE).getBoolean("connected", false));
+        switchMaterial.setChecked(WsThread.RUNNING);
         switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
             Intent intent = VpnService.prepare(this.getActivity());
             if (intent != null) {
@@ -104,9 +106,6 @@ public class HomeTab extends Fragment {
         if (data != null) {
             isChecked = data.getBooleanExtra("isChecked", false);
         }
-        SharedPreferences.Editor preEditor = this.getActivity().getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE).edit();
-        preEditor.putBoolean("connected", isChecked);
-        preEditor.apply();
         String server = preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS);
         String dns = preferences.getString("dns", AppConst.DEFAULT_DNS);
         String key = preferences.getString("key", AppConst.DEFAULT_KEY);

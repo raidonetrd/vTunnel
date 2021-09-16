@@ -55,6 +55,7 @@ public class BypassTab extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FragmentActivity activity = this.getActivity();
+        assert activity != null;
         preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
         listView = (ListView) getView().findViewById(R.id.listView);
@@ -66,10 +67,10 @@ public class BypassTab extends Fragment {
             app.setBypass(v.isChecked());
         });
         btnSave.setOnClickListener(v -> {
-            SparseBooleanArray sp = listView.getCheckedItemPositions();
+            SparseBooleanArray sparseBooleanArray = listView.getCheckedItemPositions();
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < sp.size(); i++) {
-                if (sp.valueAt(i)) {
+            for (int i = 0; i < sparseBooleanArray.size(); i++) {
+                if (sparseBooleanArray.valueAt(i)) {
                     App app = (App) listView.getItemAtPosition(i);
                     if (app != null && app.isBypass()) {
                         if (sb.length() == 0) {
@@ -94,7 +95,7 @@ public class BypassTab extends Fragment {
         PackageManager packageManager = this.getActivity().getPackageManager();
         List<PackageInfo> packageInfoList = packageManager.getInstalledPackages(0);
         for (PackageInfo info : packageInfoList) {
-            if (!isUserApp(info)) {
+            if (!isUserApp(info) || AppConst.APP_PACKAGE_NAME.equals(info.packageName)) {
                 continue;
             }
             ApplicationInfo applicationInfo = null;

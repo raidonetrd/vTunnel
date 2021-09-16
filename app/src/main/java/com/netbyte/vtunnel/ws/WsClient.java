@@ -14,16 +14,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class WsClient extends WebSocketClient {
     private static final String TAG = "WsClient";
-    private final CipherUtil cipherUtil;
     private final Config config;
     private FileOutputStream out;
 
-    public WsClient(URI serverUri, CipherUtil cipherUtil, Config config) {
+    public WsClient(URI serverUri, Config config) {
         super(serverUri);
-        this.cipherUtil = cipherUtil;
         this.config = config;
     }
 
@@ -49,7 +48,7 @@ public class WsClient extends WebSocketClient {
         byte[] buf = new byte[byteBuffer.remaining()];
         byteBuffer.get(buf);
         if (config.isObfuscate()) {
-            buf = cipherUtil.xor(buf);
+            buf = CipherUtil.xor(buf, config.getKey().getBytes(StandardCharsets.UTF_8));
         }
         AppConst.DOWNLOAD_BYTES.addAndGet(buf.length);
         try {

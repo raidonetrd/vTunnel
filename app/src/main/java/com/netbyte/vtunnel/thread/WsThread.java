@@ -1,10 +1,16 @@
 package com.netbyte.vtunnel.thread;
 
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.net.VpnService;
+import android.os.ParcelFileDescriptor;
+import android.system.OsConstants;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Config;
+import com.netbyte.vtunnel.model.LocalIP;
 import com.netbyte.vtunnel.service.IPService;
 import com.netbyte.vtunnel.service.SimpleVPNService;
 import com.netbyte.vtunnel.ws.WsClient;
@@ -15,15 +21,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-public class WsThread extends VPNThread {
+public class WsThread extends BaseThread {
     private static final String TAG = "WsThread";
+    private final Config config;
 
-    public WsThread(Config config, CipherUtil cipherUtil, SimpleVPNService vpnService, IPService ipService) {
+    public WsThread(Config config, SimpleVPNService vpnService, IPService ipService) {
         this.config = config;
-        this.cipherUtil = cipherUtil;
         this.vpnService = vpnService;
         this.ipService = ipService;
     }
@@ -33,22 +41,24 @@ public class WsThread extends VPNThread {
         WsClient wsClient = null;
         FileInputStream in = null;
         FileOutputStream out = null;
+        ParcelFileDescriptor tun = null;
         try {
             Log.i(TAG, "start");
-            localIP = ipService.pickIp();
+            LocalIP localIP = ipService.pickIp();
             if (localIP == null) {
                 vpnService.stopVPN();
                 return;
             }
-            if (super.createTunnel() == null) {
+            tun = createTunnel(config, localIP);
+            if (tun == null) {
                 vpnService.stopVPN();
                 return;
             }
             AppConst.LOCAL_IP = localIP.getLocalIP();
-            in = new FileInputStream(tunnel.getFileDescriptor());
-            out = new FileOutputStream(tunnel.getFileDescriptor());
+            in = new FileInputStream(tun.getFileDescriptor());
+            out = new FileOutputStream(tun.getFileDescriptor());
             @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", config.getServerIP(), config.getServerPort());
-            wsClient = new WsClient(new URI(uri), cipherUtil, config);
+            wsClient = new WsClient(new URI(uri), config);
             wsClient.setSocketFactory(SSLUtil.createEasySSLContext().getSocketFactory());
             wsClient.connectBlocking();
             wsClient.setOutStream(out);
@@ -60,7 +70,7 @@ public class WsThread extends VPNThread {
                         if (wsClient.isOpen()) {
                             byte[] data = Arrays.copyOfRange(buf, 0, ln);
                             if (config.isObfuscate()) {
-                                data = cipherUtil.xor(data);
+                                data = CipherUtil.xor(data, config.getKey().getBytes(StandardCharsets.UTF_8));
                             }
                             wsClient.send(data);
                             AppConst.UPLOAD_BYTES.addAndGet(ln);
@@ -97,23 +107,40 @@ public class WsThread extends VPNThread {
                     e.printStackTrace();
                 }
             }
-            if (tunnel != null) {
+            if (tun != null) {
                 try {
-                    tunnel.close();
+                    tun.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                tunnel = null;
             }
         }
     }
 
-    public void stopRunning() {
-        super.stopRunning();
-    }
-
-    public boolean isRunning() {
-        return this.RUNNING;
+    private ParcelFileDescriptor createTunnel(Config config, LocalIP localIP) throws PackageManager.NameNotFoundException {
+        if (config == null || localIP == null) {
+            return null;
+        }
+        VpnService.Builder builder = vpnService.new Builder();
+        builder.setMtu(AppConst.MTU)
+                .addAddress(localIP.getLocalIP(), localIP.getLocalPrefixLength())
+                .addRoute(AppConst.DEFAULT_ROUTE, 0)
+                .addDnsServer(config.getDns())
+                .setSession(AppConst.APP_NAME)
+                .setConfigureIntent(null)
+                .allowFamily(OsConstants.AF_INET)
+                .setBlocking(true);
+        // add apps to bypass
+        ArrayList<String> appList = new ArrayList<>();
+        appList.add(AppConst.APP_PACKAGE_NAME);
+        if (!TextUtils.isEmpty(config.getBypassApps())) {
+            appList.addAll(Arrays.asList(config.getBypassApps().split(",")));
+        }
+        for (String packageName : appList) {
+            builder.addDisallowedApplication(packageName);
+        }
+        Log.i(TAG, "bypass apps:" + appList);
+        return builder.establish();
     }
 
 }

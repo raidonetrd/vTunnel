@@ -10,7 +10,12 @@ A simple android VPN app.
 
 # Screenshot
 <p>
-	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/Screenshot.png" alt="vTunnel" width="450">
+	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/assets/Screenshot_1.png" alt="vTunnel" width="450">
+	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/assets/Screenshot_2.png" alt="vTunnel" width="450">
+</p>
+<p>
+	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/assets/Screenshot_3.png" alt="vTunnel" width="450">
+	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/assets/Screenshot_4.png" alt="vTunnel" width="450">
 </p>
 
 # Requirements

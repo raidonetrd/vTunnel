@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements HomeTab.OnFragmen
 
         TabLayout tabLayout = findViewById(R.id.tablayout);
         tabLayout.addTab(tabLayout.newTab().setText("VPN"));
-        tabLayout.addTab(tabLayout.newTab().setText("Settings"));
+        tabLayout.addTab(tabLayout.newTab().setText("Server"));
         tabLayout.addTab(tabLayout.newTab().setText("Bypass"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 

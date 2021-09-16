@@ -4,37 +4,26 @@ import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.VpnService;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-
 import com.netbyte.vtunnel.activity.MainActivity;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.Config;
-import com.netbyte.vtunnel.model.LocalIP;
 import com.netbyte.vtunnel.thread.MonitorThread;
 import com.netbyte.vtunnel.thread.NotifyThread;
-import com.netbyte.vtunnel.thread.VPNThread;
 import com.netbyte.vtunnel.thread.WsThread;
-import com.netbyte.vtunnel.utils.CipherUtil;
 import com.netbyte.vtunnel.model.AppConst;
 
 public class SimpleVPNService extends VpnService {
     private Config config;
-    private LocalIP localIP;
-    private VPNThread wsThread;
+    private WsThread wsThread;
     private NotifyThread notifyThread;
     private MonitorThread monitorThread;
     private PendingIntent pendingIntent;
-    private CipherUtil cipherUtil;
     private NotificationManager notificationManager;
     private NotificationCompat.Builder notificationBuilder;
     private IPService ipService;
@@ -79,7 +68,6 @@ public class SimpleVPNService extends VpnService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopVPN();
     }
 
     @Override
@@ -91,8 +79,6 @@ public class SimpleVPNService extends VpnService {
         Bundle ex = intent.getExtras();
         String serverIP;
         int serverPort;
-        String dns, key, bypassApps;
-        boolean obfuscate;
         String server = ex.getString("server").trim();
         if (server.contains(":")) {
             serverIP = server.split(":")[0];
@@ -101,13 +87,11 @@ public class SimpleVPNService extends VpnService {
             serverIP = server;
             serverPort = AppConst.DEFAULT_SERVER_PORT;
         }
-        dns = ex.getString("dns");
-        key = ex.getString("key");
-        bypassApps = ex.getString("bypass_apps");
-        obfuscate = ex.getBoolean("obfuscate", true);
+        String dns = ex.getString("dns");
+        String key = ex.getString("key");
+        String bypassApps = ex.getString("bypass_apps");
+        boolean obfuscate = ex.getBoolean("obfuscate", true);
         this.config = new Config(serverIP, serverPort, dns, key, bypassApps, obfuscate);
-        this.localIP = new LocalIP(AppConst.DEFAULT_LOCAL_ADDRESS, AppConst.DEFAULT_LOCAL_PREFIX_LENGTH);
-        this.cipherUtil = new CipherUtil(key);
         this.ipService = new IPService(config.getServerIP(), config.getServerPort(), config.getKey());
     }
 
@@ -126,31 +110,36 @@ public class SimpleVPNService extends VpnService {
     }
 
     public void startVPN() {
-        Log.i(AppConst.DEFAULT_TAG, "starting VPN");
         try {
-            if (wsThread != null && wsThread.isRunning()) {
-                wsThread.stopRunning();
-            }
-            if (monitorThread != null && monitorThread.isRunning()) {
-                monitorThread.stopRunning();
-            }
-            if (notifyThread != null && notifyThread.isRunning()) {
-                notifyThread.stopRunning();
-            }
-            wsThread = new WsThread(config, cipherUtil, this, ipService);
+            // stop threads
+            this.stopThreads();
+            wsThread = new WsThread(config, this, ipService);
+            wsThread.startRunning();
             wsThread.start();
             monitorThread = new MonitorThread(this, ipService);
+            monitorThread.startRunning();
             monitorThread.start();
             notifyThread = new NotifyThread(notificationManager, notificationBuilder, this);
+            notifyThread.startRunning();
             notifyThread.start();
-
+            Log.i(AppConst.DEFAULT_TAG, "VPN started");
         } catch (Exception e) {
             Log.e(AppConst.DEFAULT_TAG, "error on startVPN:" + e.toString());
         }
+
     }
 
     public void stopVPN() {
-        Log.i(AppConst.DEFAULT_TAG, "stopping VPN...");
+        // stop threads
+        this.stopThreads();
+        // reset data
+        this.resetData();
+        // stop vpn service
+        this.stopSelf();
+        Log.i(AppConst.DEFAULT_TAG, "VPN stopped");
+    }
+
+    private void stopThreads() {
         if (wsThread != null && wsThread.isRunning()) {
             wsThread.stopRunning();
             wsThread = null;
@@ -163,22 +152,14 @@ public class SimpleVPNService extends VpnService {
             notifyThread.stopRunning();
             notifyThread = null;
         }
-        // stop vpn service
-        this.reset();
-        this.stopSelf();
     }
 
-    public void reset() {
-        Log.i(AppConst.DEFAULT_TAG, "resetting data");
+    public void resetData() {
         // reset notification data
         AppConst.UPLOAD_BYTES.set(0);
         AppConst.DOWNLOAD_BYTES.set(0);
         AppConst.TOTAL_BYTES.set(0);
-        // reset connection status
-        SharedPreferences preferences = this.getApplicationContext().getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor preEditor = preferences.edit();
-        preEditor.putBoolean("connected", false);
-        preEditor.commit();
+        Log.i(AppConst.DEFAULT_TAG, "data reset");
     }
 
 }
