@@ -128,13 +128,13 @@ public class SimpleVPNService extends VpnService {
     public void startVPN() {
         Log.i(AppConst.DEFAULT_TAG, "starting VPN");
         try {
-            if (wsThread != null) {
+            if (wsThread != null && wsThread.isRunning()) {
                 wsThread.stopRunning();
             }
-            if (monitorThread != null) {
+            if (monitorThread != null && monitorThread.isRunning()) {
                 monitorThread.stopRunning();
             }
-            if (notifyThread != null) {
+            if (notifyThread != null && notifyThread.isRunning()) {
                 notifyThread.stopRunning();
             }
             wsThread = new WsThread(config, cipherUtil, this, ipService);
@@ -173,11 +173,12 @@ public class SimpleVPNService extends VpnService {
         // reset notification data
         AppConst.UPLOAD_BYTES.set(0);
         AppConst.DOWNLOAD_BYTES.set(0);
+        AppConst.TOTAL_BYTES.set(0);
         // reset connection status
         SharedPreferences preferences = this.getApplicationContext().getSharedPreferences(AppConst.APP_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor preEditor = preferences.edit();
         preEditor.putBoolean("connected", false);
-        preEditor.apply();
+        preEditor.commit();
     }
 
 }

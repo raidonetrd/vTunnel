@@ -52,6 +52,10 @@ public class MonitorThread extends Thread {
         this.RUNNING = false;
     }
 
+    public boolean isRunning() {
+        return this.RUNNING;
+    }
+
     private boolean isAirplaneModeOn(Context context) {
         return Settings.Global.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
     }

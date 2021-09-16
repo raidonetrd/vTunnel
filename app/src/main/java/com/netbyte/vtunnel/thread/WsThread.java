@@ -112,4 +112,8 @@ public class WsThread extends VPNThread {
         super.stopRunning();
     }
 
+    public boolean isRunning() {
+        return this.RUNNING;
+    }
+
 }
