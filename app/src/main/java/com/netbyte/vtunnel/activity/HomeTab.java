@@ -110,7 +110,7 @@ public class HomeTab extends Fragment {
         String server = preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS);
         String dns = preferences.getString("dns", AppConst.DEFAULT_DNS);
         String key = preferences.getString("key", AppConst.DEFAULT_KEY);
-        String bypassUrl = preferences.getString("bypassUrl", "");
+        String bypassApps = preferences.getString("bypass_apps", "");
         boolean obfuscate = preferences.getBoolean("obfuscate", false);
 
         Intent intent = new Intent(this.getActivity(), SimpleVPNService.class);
@@ -118,7 +118,7 @@ public class HomeTab extends Fragment {
         intent.putExtra("server", server);
         intent.putExtra("dns", dns);
         intent.putExtra("key", key);
-        intent.putExtra("bypassUrl", bypassUrl);
+        intent.putExtra("bypass_apps", bypassApps);
         intent.putExtra("obfuscate", obfuscate);
         getActivity().startService(intent);
     }

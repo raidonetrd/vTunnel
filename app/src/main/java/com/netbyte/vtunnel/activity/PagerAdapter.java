@@ -7,10 +7,10 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
 
-    private  int tabCount;
+    private int tabCount;
 
     public PagerAdapter(FragmentManager fm, int tabCount) {
-        super(fm,tabCount);
+        super(fm, tabCount);
         this.tabCount = tabCount;
     }
 
@@ -21,6 +21,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 return new HomeTab();
             case 1:
                 return new SettingsTab();
+            case 2:
+                return new BypassTab();
             default:
                 return null;
         }

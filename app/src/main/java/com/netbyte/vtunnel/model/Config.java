@@ -8,7 +8,7 @@ public class Config implements Serializable {
     private int serverPort;
     private String dns;
     private String key;
-    private String bypassUrl;
+    private String bypassApps;
     private boolean obfuscate;
 
     public Config() {
@@ -20,7 +20,7 @@ public class Config implements Serializable {
         this.serverPort = serverPort;
         this.dns = dns;
         this.key = key;
-        this.bypassUrl = bypassUrl;
+        this.bypassApps = bypassUrl;
         this.obfuscate = obfuscate;
     }
 
@@ -48,12 +48,12 @@ public class Config implements Serializable {
         this.dns = dns;
     }
 
-    public String getBypassUrl() {
-        return bypassUrl;
+    public String getBypassApps() {
+        return bypassApps;
     }
 
-    public void setBypassUrl(String bypassUrl) {
-        this.bypassUrl = bypassUrl;
+    public void setBypassApps(String bypassApps) {
+        this.bypassApps = bypassApps;
     }
 
     public String getKey() {
