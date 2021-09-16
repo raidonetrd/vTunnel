@@ -1,5 +1,6 @@
 package com.netbyte.vtunnel.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +23,8 @@ import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.AppConst;
 
 public class SettingsTab extends Fragment {
-    ToggleButton obfuscateBtn;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    Switch obfuscateSwitch;
     Button btnSave;
     EditText editServer, editDNS, editKey;
     SharedPreferences preferences;
@@ -52,7 +54,7 @@ public class SettingsTab extends Fragment {
         editServer = getView().findViewById(R.id.serverAddressEdit);
         editKey = getView().findViewById(R.id.keyEdit);
         editDNS = getView().findViewById(R.id.dnsEdit);
-        obfuscateBtn = getView().findViewById(R.id.obfuscateBtn);
+        obfuscateSwitch = getView().findViewById(R.id.obfuscateSwitch);
 
         preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
@@ -60,13 +62,13 @@ public class SettingsTab extends Fragment {
         editServer.setText(preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS));
         editDNS.setText(preferences.getString("dns", AppConst.DEFAULT_DNS));
         editKey.setText(preferences.getString("key", AppConst.DEFAULT_KEY));
-        obfuscateBtn.setChecked(preferences.getBoolean("obfuscate", false));
+        obfuscateSwitch.setChecked(preferences.getBoolean("obfuscate", false));
 
         btnSave.setOnClickListener(v -> {
             String server = editServer.getText().toString().trim();
             String dns = editDNS.getText().toString().trim();
             String key = editKey.getText().toString().trim();
-            boolean obfuscate = obfuscateBtn.isChecked();
+            boolean obfuscate = obfuscateSwitch.isChecked();
             preEditor.putString("server", server);
             preEditor.putString("dns", dns);
             preEditor.putString("key", key);
