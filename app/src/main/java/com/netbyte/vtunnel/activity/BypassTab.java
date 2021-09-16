@@ -94,6 +94,9 @@ public class BypassTab extends Fragment {
         PackageManager packageManager = this.getActivity().getPackageManager();
         List<PackageInfo> packageInfoList = packageManager.getInstalledPackages(0);
         for (PackageInfo info : packageInfoList) {
+            if (!isUserApp(info)) {
+                continue;
+            }
             ApplicationInfo applicationInfo = null;
             try {
                 applicationInfo = packageManager.getApplicationInfo(info.packageName, 0);
@@ -109,6 +112,18 @@ public class BypassTab extends Fragment {
         for (int i = 0; i < appList.size(); i++) {
             this.listView.setItemChecked(i, appList.get(i).isBypass());
         }
+    }
+
+    public boolean isSystemApp(PackageInfo pInfo) {
+        return ((pInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
+    }
+
+    public boolean isSystemUpdateApp(PackageInfo pInfo) {
+        return ((pInfo.applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0);
+    }
+
+    public boolean isUserApp(PackageInfo pInfo) {
+        return (!isSystemApp(pInfo) && !isSystemUpdateApp(pInfo));
     }
 
     public void onButtonPressed(Uri uri) {
