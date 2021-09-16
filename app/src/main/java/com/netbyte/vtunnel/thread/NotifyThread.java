@@ -61,4 +61,8 @@ public class NotifyThread extends Thread {
         this.RUNNING = false;
     }
 
+    public boolean isRunning() {
+        return this.RUNNING;
+    }
+
 }

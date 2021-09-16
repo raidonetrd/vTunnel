@@ -58,6 +58,10 @@ public class VPNThread extends Thread {
         this.RUNNING = false;
     }
 
+    public boolean isRunning() {
+        return this.RUNNING;
+    }
+
     private List<String> bypassApps() {
         Log.i(TAG, "bypassUrl:" + config.getBypassUrl());
         ArrayList<String> result = new ArrayList<>();
