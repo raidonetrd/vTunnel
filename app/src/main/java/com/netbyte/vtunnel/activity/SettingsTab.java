@@ -24,7 +24,7 @@ import com.netbyte.vtunnel.model.AppConst;
 public class SettingsTab extends Fragment {
     ToggleButton obfuscateBtn;
     Button btnSave;
-    EditText editServer, editDNS, editKey, editBypass;
+    EditText editServer, editDNS, editKey;
     SharedPreferences preferences;
     SharedPreferences.Editor preEditor;
     OnFragmentInteractionListener mListener;
@@ -51,7 +51,6 @@ public class SettingsTab extends Fragment {
         btnSave = getView().findViewById(R.id.saveButton);
         editServer = getView().findViewById(R.id.serverAddressEdit);
         editKey = getView().findViewById(R.id.keyEdit);
-        editBypass = getView().findViewById(R.id.bypassUrlEdit);
         editDNS = getView().findViewById(R.id.dnsEdit);
         obfuscateBtn = getView().findViewById(R.id.obfuscateBtn);
 
@@ -59,7 +58,6 @@ public class SettingsTab extends Fragment {
         preEditor = preferences.edit();
 
         editServer.setText(preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS));
-        editBypass.setText(preferences.getString("bypassUrl", ""));
         editDNS.setText(preferences.getString("dns", AppConst.DEFAULT_DNS));
         editKey.setText(preferences.getString("key", AppConst.DEFAULT_KEY));
         obfuscateBtn.setChecked(preferences.getBoolean("obfuscate", false));
@@ -68,12 +66,10 @@ public class SettingsTab extends Fragment {
             String server = editServer.getText().toString().trim();
             String dns = editDNS.getText().toString().trim();
             String key = editKey.getText().toString().trim();
-            String bypassUrl = editBypass.getText().toString().trim();
             boolean obfuscate = obfuscateBtn.isChecked();
             preEditor.putString("server", server);
             preEditor.putString("dns", dns);
             preEditor.putString("key", key);
-            preEditor.putString("bypassUrl", bypassUrl);
             preEditor.putBoolean("obfuscate", obfuscate);
             preEditor.apply();
             Toast.makeText(activity, "SAVED !", Toast.LENGTH_LONG).show();
