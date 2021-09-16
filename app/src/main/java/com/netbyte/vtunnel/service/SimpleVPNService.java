@@ -151,15 +151,15 @@ public class SimpleVPNService extends VpnService {
 
     public void stopVPN() {
         Log.i(AppConst.DEFAULT_TAG, "stopping VPN...");
-        if (wsThread != null) {
+        if (wsThread != null && wsThread.isRunning()) {
             wsThread.stopRunning();
             wsThread = null;
         }
-        if (monitorThread != null) {
+        if (monitorThread != null && monitorThread.isRunning()) {
             monitorThread.stopRunning();
             monitorThread = null;
         }
-        if (notifyThread != null) {
+        if (notifyThread != null && notifyThread.isRunning()) {
             notifyThread.stopRunning();
             notifyThread = null;
         }
