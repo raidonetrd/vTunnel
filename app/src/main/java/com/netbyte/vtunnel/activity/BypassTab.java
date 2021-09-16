@@ -8,19 +8,15 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -108,13 +104,12 @@ public class BypassTab extends Fragment {
             App app = new App(name, info.packageName, bypassApps.contains(info.packageName));
             appList.add(app);
         }
-        ArrayAdapter<App> arrayAdapter = new ArrayAdapter<App>(this.getActivity(), android.R.layout.simple_list_item_checked, appList);
+        ArrayAdapter<App> arrayAdapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_list_item_checked, appList);
         this.listView.setAdapter(arrayAdapter);
         for (int i = 0; i < appList.size(); i++) {
             this.listView.setItemChecked(i, appList.get(i).isBypass());
         }
     }
-
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
