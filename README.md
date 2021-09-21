@@ -22,8 +22,8 @@ A simple android VPN app.
 * Android version >= 8.0
 * Min SDK version 26
 
-# Server setup
-[install server](https://github.com/net-byte/vtun)
+# Server setup on linux
+[install vtun server with wss protocol](https://github.com/net-byte/vtun)
 
 
 # Download
