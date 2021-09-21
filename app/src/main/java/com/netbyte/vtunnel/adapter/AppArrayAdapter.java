@@ -1,4 +1,4 @@
-package com.netbyte.vtunnel.activity;
+package com.netbyte.vtunnel.adapter;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

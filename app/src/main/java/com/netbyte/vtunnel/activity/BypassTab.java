@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.netbyte.vtunnel.R;
+import com.netbyte.vtunnel.adapter.AppArrayAdapter;
 import com.netbyte.vtunnel.model.App;
 import com.netbyte.vtunnel.model.AppConst;
 
