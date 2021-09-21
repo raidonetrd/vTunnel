@@ -1,9 +1,13 @@
-package com.netbyte.vtunnel.activity;
+package com.netbyte.vtunnel.adapter;
 
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+
+import com.netbyte.vtunnel.activity.BypassTab;
+import com.netbyte.vtunnel.activity.HomeTab;
+import com.netbyte.vtunnel.activity.SettingsTab;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
 

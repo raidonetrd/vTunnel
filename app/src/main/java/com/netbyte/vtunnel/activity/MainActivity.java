@@ -8,6 +8,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.netbyte.vtunnel.R;
+import com.netbyte.vtunnel.adapter.PagerAdapter;
 
 public class MainActivity extends AppCompatActivity implements HomeTab.OnFragmentInteractionListener, SettingsTab.OnFragmentInteractionListener,BypassTab.OnFragmentInteractionListener {
 
