@@ -6,9 +6,9 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,17 +67,14 @@ public class BypassTab extends Fragment {
             app.setBypass(v.isChecked());
         });
         btnSave.setOnClickListener(v -> {
-            SparseBooleanArray sparseBooleanArray = listView.getCheckedItemPositions();
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < sparseBooleanArray.size(); i++) {
-                if (sparseBooleanArray.valueAt(i)) {
-                    App app = (App) listView.getItemAtPosition(i);
-                    if (app != null && app.isBypass()) {
-                        if (sb.length() == 0) {
-                            sb.append(app.getPackageName());
-                        } else {
-                            sb.append(",").append(app.getPackageName());
-                        }
+            for (int i = 0; i < listView.getAdapter().getCount(); i++) {
+                App app = (App) listView.getAdapter().getItem(i);
+                if (app != null && app.isBypass()) {
+                    if (sb.length() == 0) {
+                        sb.append(app.getPackageName());
+                    } else {
+                        sb.append(",").append(app.getPackageName());
                     }
                 }
             }
@@ -99,20 +96,20 @@ public class BypassTab extends Fragment {
                 continue;
             }
             ApplicationInfo applicationInfo = null;
+            Drawable icon = null;
             try {
                 applicationInfo = packageManager.getApplicationInfo(info.packageName, 0);
+                icon = applicationInfo.loadIcon(packageManager);
             } catch (final PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
             String name = (String) ((applicationInfo != null) ? packageManager.getApplicationLabel(applicationInfo) : "unknown");
-            App app = new App(name, info.packageName, bypassApps.contains(info.packageName));
+            App app = new App(icon, name, info.packageName, bypassApps.contains(info.packageName));
             appList.add(app);
         }
-        ArrayAdapter<App> arrayAdapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_list_item_checked, appList);
+        ArrayAdapter<App> arrayAdapter = new AppArrayAdapter(this.getActivity(), appList);
         this.listView.setAdapter(arrayAdapter);
-        for (int i = 0; i < appList.size(); i++) {
-            this.listView.setItemChecked(i, appList.get(i).isBypass());
-        }
+
     }
 
     public boolean isSystemApp(PackageInfo pInfo) {
