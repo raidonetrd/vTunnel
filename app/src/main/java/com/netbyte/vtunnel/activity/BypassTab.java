@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -59,14 +58,8 @@ public class BypassTab extends Fragment {
         assert activity != null;
         preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
-        listView = (ListView) getView().findViewById(R.id.listView);
+        listView = getView().findViewById(R.id.listView);
         btnSave = getView().findViewById(R.id.saveBypassBtn);
-        this.listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        this.listView.setOnItemClickListener((parent, view1, position, id) -> {
-            CheckedTextView v = (CheckedTextView) view1;
-            App app = (App) listView.getItemAtPosition(position);
-            app.setBypass(v.isChecked());
-        });
         btnSave.setOnClickListener(v -> {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < listView.getAdapter().getCount(); i++) {
