@@ -60,6 +60,7 @@ public class WsThread extends BaseThread {
             @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", config.getServerIP(), config.getServerPort());
             wsClient = new WsClient(new URI(uri), config);
             wsClient.setSocketFactory(SSLUtil.createEasySSLContext().getSocketFactory());
+            wsClient.addHeader("key",config.getKey());
             wsClient.connectBlocking();
             wsClient.setOutStream(out);
             while (RUNNING) {
