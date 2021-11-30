@@ -21,7 +21,7 @@
         android:fullBackupContent="true">
 
         <service
-            android:name="com.netbyte.vtunnel.service.SimpleVPNService"
+            android:name="com.netbyte.vtunnel.service.MyVPNService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_VPN_SERVICE">
