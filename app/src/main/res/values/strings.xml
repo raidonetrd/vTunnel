@@ -1,15 +1,5 @@
 <resources>
     <string name="app_name">vTunnel</string>
-    <string name="app_version">Version 1.4.0</string>
-    <string name="view_server">Server</string>
-    <string name="view_dns">DNS</string>
-    <string name="view_key">Key</string>
-    <string name="view_obfuscate">Obfuscate</string>
-    <string name="btn_connect">GO TO THE FREE WORLD</string>
+    <string name="app_version">version:1.4.1</string>
     <string name="btn_save">SAVE</string>
-    <string name="default_server">Server address</string>
-    <string name="default_key">Key</string>
-    <string name="default_dns">223.5.5.5</string>
-    <string name="default_toggle_on">ON</string>
-    <string name="default_toggle_off">OFF</string>
 </resources>

@@ -10,7 +10,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.adapter.PagerAdapter;
 
-public class MainActivity extends AppCompatActivity implements HomeTab.OnFragmentInteractionListener, SettingsTab.OnFragmentInteractionListener,BypassTab.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements HomeTab.OnFragmentInteractionListener, ConfigTab.OnFragmentInteractionListener, BypassTab.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,9 +18,9 @@ public class MainActivity extends AppCompatActivity implements HomeTab.OnFragmen
         setContentView(R.layout.activity_main);
 
         TabLayout tabLayout = findViewById(R.id.tablayout);
-        tabLayout.addTab(tabLayout.newTab().setText("VPN"));
-        tabLayout.addTab(tabLayout.newTab().setText("Server"));
-        tabLayout.addTab(tabLayout.newTab().setText("Bypass"));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_action_home));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_action_config));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_action_apps));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = findViewById(R.id.pager);

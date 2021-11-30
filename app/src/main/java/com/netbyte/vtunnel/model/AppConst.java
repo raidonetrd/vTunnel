@@ -1,7 +1,5 @@
 package com.netbyte.vtunnel.model;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 public class AppConst {
     public static final String APP_NAME = "vTunnel";
     public static final String APP_PACKAGE_NAME = "com.netbyte.vtunnel";
@@ -11,7 +9,7 @@ public class AppConst {
     public static final String DEFAULT_TAG = "vTunnel";
     public static final int BUFFER_SIZE = 1500;
     public static final int MTU = 1500;
-    public static final String DEFAULT_SERVER_ADDRESS = "demo.opensocks.org";
+    public static final String DEFAULT_SERVER_ADDRESS = "";
     public static final int DEFAULT_SERVER_PORT = 443;
     public static final String DEFAULT_LOCAL_ADDRESS = "172.16.0.100";
     public static final int DEFAULT_LOCAL_PREFIX_LENGTH = 24;
@@ -21,7 +19,4 @@ public class AppConst {
     public static final String BTN_ACTION_CONNECT = "connect";
     public static final String BTN_ACTION_DISCONNECT = "disconnect";
     public static String LOCAL_IP = "";
-    public static AtomicLong DOWNLOAD_BYTES = new AtomicLong(0);
-    public static AtomicLong UPLOAD_BYTES = new AtomicLong(0);
-    public static AtomicLong TOTAL_BYTES = new AtomicLong(0);
 }

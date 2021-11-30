@@ -1,4 +1,4 @@
-# vTunnel
+# vTunnel 
 
 A simple android VPN app.
 
@@ -7,16 +7,6 @@ A simple android VPN app.
 
 # Features
 * VPN over websocket
-
-# Screenshot
-<p>
-	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/assets/Screenshot_1.png" alt="vTunnel" width="450">
-	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/assets/Screenshot_2.png" alt="vTunnel" width="450">
-</p>
-<p>
-	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/assets/Screenshot_3.png" alt="vTunnel" width="450">
-	<img src="https://raw.githubusercontent.com/net-byte/vTunnel/main/assets/Screenshot_4.png" alt="vTunnel" width="450">
-</p>
 
 # Requirements
 * Android version >= 8.0

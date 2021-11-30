@@ -4,28 +4,30 @@ package com.netbyte.vtunnel.model;
 import java.io.Serializable;
 
 public class Config implements Serializable {
-    private String serverIP;
+
+    private String serverAddress;
     private int serverPort;
     private String dns;
     private String key;
-    private String bypassApps;
     private boolean obfuscate;
+    private String bypassApps;
 
-    public Config(String serverIP, int serverPort, String dns, String key, String bypassUrl, boolean obfuscate) {
-        this.serverIP = serverIP;
+    public Config(String serverAddress, int serverPort, String dns, String key, String bypassApps, boolean obfuscate) {
+        this.serverAddress = serverAddress;
         this.serverPort = serverPort;
         this.dns = dns;
         this.key = key;
-        this.bypassApps = bypassUrl;
+        this.bypassApps = bypassApps;
         this.obfuscate = obfuscate;
+
     }
 
-    public String getServerIP() {
-        return serverIP;
+    public String getServerAddress() {
+        return serverAddress;
     }
 
-    public void setServerIP(String serverIP) {
-        this.serverIP = serverIP;
+    public void setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
     }
 
     public int getServerPort() {
@@ -44,14 +46,6 @@ public class Config implements Serializable {
         this.dns = dns;
     }
 
-    public String getBypassApps() {
-        return bypassApps;
-    }
-
-    public void setBypassApps(String bypassApps) {
-        this.bypassApps = bypassApps;
-    }
-
     public String getKey() {
         return key;
     }
@@ -67,4 +61,13 @@ public class Config implements Serializable {
     public void setObfuscate(boolean obfuscate) {
         this.obfuscate = obfuscate;
     }
+
+    public String getBypassApps() {
+        return bypassApps;
+    }
+
+    public void setBypassApps(String bypassApps) {
+        this.bypassApps = bypassApps;
+    }
+
 }
