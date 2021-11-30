@@ -8,7 +8,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Stat;
-import com.netbyte.vtunnel.service.NeturboService;
+import com.netbyte.vtunnel.service.SimpleVPNService;
 import com.netbyte.vtunnel.utils.FormatUtil;
 
 import java.util.concurrent.TimeUnit;
@@ -19,7 +19,7 @@ public class NotifyThread extends BaseThread {
     private final NotificationManager notificationManager;
     private final NotificationCompat.Builder builder;
 
-    public NotifyThread(NotificationManager notificationManager, NotificationCompat.Builder builder, NeturboService vpnService) {
+    public NotifyThread(NotificationManager notificationManager, NotificationCompat.Builder builder, SimpleVPNService vpnService) {
         this.notificationManager = notificationManager;
         this.builder = builder;
         this.vpnService = vpnService;

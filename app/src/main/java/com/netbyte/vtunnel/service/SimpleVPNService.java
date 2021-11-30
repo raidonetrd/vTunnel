@@ -21,7 +21,7 @@ import com.netbyte.vtunnel.thread.NotifyThread;
 import com.netbyte.vtunnel.thread.WsThread;
 import com.netbyte.vtunnel.model.AppConst;
 
-public class NeturboService extends VpnService {
+public class SimpleVPNService extends VpnService {
     private Config config;
     private WsThread wsThread;
     private NotifyThread notifyThread;
@@ -31,7 +31,7 @@ public class NeturboService extends VpnService {
     private NotificationCompat.Builder notificationBuilder;
     private IPService ipService;
 
-    public NeturboService() {
+    public SimpleVPNService() {
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
