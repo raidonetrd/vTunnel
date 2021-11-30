@@ -29,7 +29,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Stat;
-import com.netbyte.vtunnel.service.SimpleVPNService;
+import com.netbyte.vtunnel.service.MyVPNService;
 import com.netbyte.vtunnel.utils.FormatUtil;
 
 public class HomeTab extends Fragment {
@@ -155,7 +155,7 @@ public class HomeTab extends Fragment {
         if (data != null) {
             isConnected = data.getBooleanExtra("isConnected", false);
         }
-        Intent intent = new Intent(this.getActivity(), SimpleVPNService.class);
+        Intent intent = new Intent(this.getActivity(), MyVPNService.class);
         intent.setAction(isConnected ? AppConst.BTN_ACTION_CONNECT : AppConst.BTN_ACTION_DISCONNECT);
         getActivity().startService(intent);
     }
