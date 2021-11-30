@@ -13,7 +13,7 @@ import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.model.LocalIP;
 import com.netbyte.vtunnel.model.Stat;
 import com.netbyte.vtunnel.service.IPService;
-import com.netbyte.vtunnel.service.NeturboService;
+import com.netbyte.vtunnel.service.SimpleVPNService;
 import com.netbyte.vtunnel.ws.WsClient;
 import com.netbyte.vtunnel.utils.SSLUtil;
 import com.netbyte.vtunnel.utils.CipherUtil;
@@ -31,7 +31,7 @@ public class WsThread extends BaseThread {
     private static final String TAG = "WsThread";
     private final Config config;
 
-    public WsThread(Config config, NeturboService vpnService, IPService ipService) {
+    public WsThread(Config config, SimpleVPNService vpnService, IPService ipService) {
         this.config = config;
         this.vpnService = vpnService;
         this.ipService = ipService;
