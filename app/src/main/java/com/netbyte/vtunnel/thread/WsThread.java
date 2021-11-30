@@ -11,8 +11,9 @@ import android.util.Log;
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.model.LocalIP;
+import com.netbyte.vtunnel.model.Stat;
 import com.netbyte.vtunnel.service.IPService;
-import com.netbyte.vtunnel.service.SimpleVPNService;
+import com.netbyte.vtunnel.service.NeturboService;
 import com.netbyte.vtunnel.ws.WsClient;
 import com.netbyte.vtunnel.utils.SSLUtil;
 import com.netbyte.vtunnel.utils.CipherUtil;
@@ -30,7 +31,7 @@ public class WsThread extends BaseThread {
     private static final String TAG = "WsThread";
     private final Config config;
 
-    public WsThread(Config config, SimpleVPNService vpnService, IPService ipService) {
+    public WsThread(Config config, NeturboService vpnService, IPService ipService) {
         this.config = config;
         this.vpnService = vpnService;
         this.ipService = ipService;
@@ -57,7 +58,7 @@ public class WsThread extends BaseThread {
             AppConst.LOCAL_IP = localIP.getLocalIP();
             in = new FileInputStream(tun.getFileDescriptor());
             out = new FileOutputStream(tun.getFileDescriptor());
-            @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", config.getServerIP(), config.getServerPort());
+            @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", config.getServerAddress(), config.getServerPort());
             wsClient = new WsClient(new URI(uri), config);
             wsClient.setSocketFactory(SSLUtil.createEasySSLContext().getSocketFactory());
             wsClient.addHeader("key",config.getKey());
@@ -74,7 +75,7 @@ public class WsThread extends BaseThread {
                                 data = CipherUtil.xor(data, config.getKey().getBytes(StandardCharsets.UTF_8));
                             }
                             wsClient.send(data);
-                            AppConst.UPLOAD_BYTES.addAndGet(ln);
+                            Stat.UPLOAD_BYTES.addAndGet(ln);
                         } else if (wsClient.isClosed()) {
                             Log.i(TAG, "ws client reconnecting...");
                             wsClient.reconnectBlocking();

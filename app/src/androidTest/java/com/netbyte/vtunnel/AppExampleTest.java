@@ -18,6 +18,6 @@ public class AppExampleTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.netbyte.vtun", appContext.getPackageName());
+        assertEquals("com.netbyte.neturbo", appContext.getPackageName());
     }
 }

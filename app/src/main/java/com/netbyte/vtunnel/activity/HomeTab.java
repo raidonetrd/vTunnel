@@ -10,9 +10,15 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.net.VpnService;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,17 +26,27 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.AppConst;
-import com.netbyte.vtunnel.service.SimpleVPNService;
-import com.netbyte.vtunnel.thread.WsThread;
-
+import com.netbyte.vtunnel.model.Stat;
+import com.netbyte.vtunnel.service.NeturboService;
+import com.netbyte.vtunnel.utils.FormatUtil;
 
 public class HomeTab extends Fragment {
-    SharedPreferences preferences;
-    SwitchMaterial switchMaterial;
+    private static volatile boolean isConnected;
     OnFragmentInteractionListener mListener;
+    ImageButton imageButton;
+    TextView statusTextView;
+    TextView runningTimeTextView;
+    Thread runningTimeThread;
+    Handler handler = new Handler(Looper.myLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 1) {
+                runningTimeTextView.setText(FormatUtil.formatTime(Stat.TOTAL_RUNNING_TIME.get()));
+            }
+        }
+    };
 
     public HomeTab() {
 
@@ -39,6 +55,21 @@ public class HomeTab extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        runningTimeThread = new Thread(() -> {
+            while (true) {
+                if (isConnected) {
+                    Message msg = new Message();
+                    msg.what = 1;
+                    handler.sendMessage(msg);
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                   break;
+                }
+            }
+        });
+        runningTimeThread.start();
     }
 
     @Override
@@ -51,23 +82,41 @@ public class HomeTab extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         FragmentActivity activity = this.getActivity();
         assert activity != null;
-        preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
-        switchMaterial = getView().findViewById(R.id.connButton);
-        switchMaterial.setChecked(WsThread.RUNNING);
-        switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            Intent intent = VpnService.prepare(this.getActivity());
-            if (intent != null) {
-                startActivityForResult(intent, 0);
-            } else {
-                Intent data = new Intent();
-                data.putExtra("isChecked", isChecked);
-                onActivityResult(0, RESULT_OK, data);
-            }
-            Toast.makeText(activity, isChecked ? "STARTED ！" : "STOPPED !", Toast.LENGTH_LONG).show();
-        });
-        {
+        statusTextView = getView().findViewById(R.id.textStatus);
+        statusTextView.setText(isConnected ? "Connected" : "Not Connected");
+        runningTimeTextView = getView().findViewById(R.id.textRunningTime);
+        runningTimeTextView.setVisibility(isConnected ? View.VISIBLE : View.GONE);
+        imageButton = getView().findViewById(R.id.connectBtn);
+        imageButton.setImageResource(isConnected ? R.drawable.power_stop : R.drawable.power_off);
+        imageButton.setOnClickListener(v -> clickHandler());
+    }
 
+    private void clickHandler() {
+        if (isConnected) {
+            isConnected = false;
+        } else {
+            isConnected = true;
         }
+        Activity activity = this.getActivity();
+        SharedPreferences preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
+        String server = preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS);
+        if (TextUtils.isEmpty(server)) {
+            Toast.makeText(activity, "Please select a server !", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Intent intent = VpnService.prepare(this.getActivity());
+        if (intent != null) {
+            startActivityForResult(intent, 0);
+        } else {
+            Intent data = new Intent();
+            data.putExtra("isConnected", isConnected);
+            onActivityResult(0, RESULT_OK, data);
+        }
+        imageButton.setImageResource(isConnected ? R.drawable.power_stop : R.drawable.power_off);
+        statusTextView.setText(isConnected ? "Connected" : "Not Connected");
+        runningTimeTextView.setText(isConnected ? FormatUtil.formatTime(Stat.TOTAL_RUNNING_TIME.get()) : "00:00:00");
+        runningTimeTextView.setVisibility(isConnected ? View.VISIBLE : View.GONE);
+        Toast.makeText(activity, isConnected ? "Started ！" : "Stopped !", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -84,6 +133,12 @@ public class HomeTab extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        try{
+            runningTimeThread.interrupt();
+            runningTimeThread = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public interface OnFragmentInteractionListener {
@@ -96,23 +151,12 @@ public class HomeTab extends Fragment {
         if (result != RESULT_OK) {
             return;
         }
-        boolean isChecked = true;
+        boolean isConnected = true;
         if (data != null) {
-            isChecked = data.getBooleanExtra("isChecked", false);
+            isConnected = data.getBooleanExtra("isConnected", false);
         }
-        String server = preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS);
-        String dns = preferences.getString("dns", AppConst.DEFAULT_DNS);
-        String key = preferences.getString("key", AppConst.DEFAULT_KEY);
-        String bypassApps = preferences.getString("bypass_apps", "");
-        boolean obfuscate = preferences.getBoolean("obfuscate", false);
-
-        Intent intent = new Intent(this.getActivity(), SimpleVPNService.class);
-        intent.setAction(isChecked ? AppConst.BTN_ACTION_CONNECT : AppConst.BTN_ACTION_DISCONNECT);
-        intent.putExtra("server", server);
-        intent.putExtra("dns", dns);
-        intent.putExtra("key", key);
-        intent.putExtra("bypass_apps", bypassApps);
-        intent.putExtra("obfuscate", obfuscate);
+        Intent intent = new Intent(this.getActivity(), NeturboService.class);
+        intent.setAction(isConnected ? AppConst.BTN_ACTION_CONNECT : AppConst.BTN_ACTION_DISCONNECT);
         getActivity().startService(intent);
     }
 }
