@@ -30,9 +30,9 @@
                 android:layout_width="55dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="Server"
                 android:textColor="@color/colorText"
-                android:textStyle="bold"
-                android:text="Server" />
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/editServer"
@@ -62,9 +62,9 @@
                 android:layout_width="55dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="Key"
                 android:textColor="@color/colorText"
-                android:textStyle="bold"
-                android:text="Key" />
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/editKey"
@@ -94,9 +94,9 @@
                 android:layout_width="55dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="DNS"
                 android:textColor="@color/colorText"
-                android:textStyle="bold"
-                android:text="DNS" />
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/editDNS"
@@ -129,17 +129,23 @@
                 android:layout_width="55dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="Obfs"
                 android:textColor="@color/colorText"
-                android:textStyle="bold"
-                android:text="Obfus" />
+                android:textStyle="bold" />
 
             <ToggleButton
                 android:id="@+id/toggleButton"
-                android:layout_width="295dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textOn="On"
-                android:textOff="Off"/>
+                android:textOff="Off"
+                android:textOn="On" />
+
+            <View
+                android:layout_width="175dp"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            </View>
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton

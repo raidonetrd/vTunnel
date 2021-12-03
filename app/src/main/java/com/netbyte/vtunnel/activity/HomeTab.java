@@ -38,12 +38,14 @@ public class HomeTab extends Fragment {
     ImageButton imageButton;
     TextView statusTextView;
     TextView runningTimeTextView;
+    TextView statTextView;
     Thread runningTimeThread;
     Handler handler = new Handler(Looper.myLooper()) {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
                 runningTimeTextView.setText(FormatUtil.formatTime(Stat.TOTAL_RUNNING_TIME.get()));
+                statTextView.setText(String.format("Traffic %s", FormatUtil.formatByte(Stat.TOTAL_BYTES.get())));
             }
         }
     };
@@ -65,7 +67,7 @@ public class HomeTab extends Fragment {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                   break;
+                    break;
                 }
             }
         });
@@ -86,6 +88,8 @@ public class HomeTab extends Fragment {
         statusTextView.setText(isConnected ? "Connected" : "Not Connected");
         runningTimeTextView = getView().findViewById(R.id.textRunningTime);
         runningTimeTextView.setVisibility(isConnected ? View.VISIBLE : View.GONE);
+        statTextView = getView().findViewById(R.id.textStat);
+        statTextView.setVisibility(isConnected ? View.VISIBLE : View.GONE);
         imageButton = getView().findViewById(R.id.connectBtn);
         imageButton.setImageResource(isConnected ? R.drawable.power_stop : R.drawable.power_off);
         imageButton.setOnClickListener(v -> clickHandler());
@@ -101,7 +105,7 @@ public class HomeTab extends Fragment {
         SharedPreferences preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         String server = preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS);
         if (TextUtils.isEmpty(server)) {
-            Toast.makeText(activity, "Please select a server !", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, "Please add a server !", Toast.LENGTH_LONG).show();
             return;
         }
         Intent intent = VpnService.prepare(this.getActivity());
@@ -116,6 +120,8 @@ public class HomeTab extends Fragment {
         statusTextView.setText(isConnected ? "Connected" : "Not Connected");
         runningTimeTextView.setText(isConnected ? FormatUtil.formatTime(Stat.TOTAL_RUNNING_TIME.get()) : "00:00:00");
         runningTimeTextView.setVisibility(isConnected ? View.VISIBLE : View.GONE);
+        statTextView.setText(isConnected ? String.format("Traffic %s", FormatUtil.formatByte(Stat.TOTAL_BYTES.get())) : "");
+        statTextView.setVisibility(isConnected ? View.VISIBLE : View.GONE);
         Toast.makeText(activity, isConnected ? "Started ！" : "Stopped !", Toast.LENGTH_LONG).show();
     }
 
@@ -133,10 +139,10 @@ public class HomeTab extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        try{
+        try {
             runningTimeThread.interrupt();
             runningTimeThread = null;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
