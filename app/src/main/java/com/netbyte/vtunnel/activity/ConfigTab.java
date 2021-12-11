@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.AppConst;
+import com.netbyte.vtunnel.utils.NetUtil;
 
 public class ConfigTab extends Fragment {
     ToggleButton toggleButton;
@@ -62,7 +63,15 @@ public class ConfigTab extends Fragment {
         toggleButton.setChecked(preferences.getBoolean("obfuscate", false));
         btnSave.setOnClickListener(v -> {
             String server = editServer.getText().toString().trim();
+            if (!NetUtil.checkServer(server)) {
+                Toast.makeText(activity, "server can't connect", Toast.LENGTH_LONG).show();
+                return;
+            }
             String dns = editDNS.getText().toString().trim();
+            if (!NetUtil.checkDNS(dns)) {
+                Toast.makeText(activity, "DNS is not reachable", Toast.LENGTH_LONG).show();
+                return;
+            }
             String key = editKey.getText().toString().trim();
             boolean obfuscate = toggleButton.isChecked();
             preEditor.putString("server", server);
