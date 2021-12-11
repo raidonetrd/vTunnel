@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">vTunnel</string>
-    <string name="app_version">version:1.4.2</string>
+    <string name="app_version">version:1.4.3</string>
     <string name="btn_save">SAVE</string>
 </resources>

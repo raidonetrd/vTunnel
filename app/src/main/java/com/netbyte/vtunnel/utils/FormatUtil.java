@@ -32,6 +32,9 @@ public class FormatUtil {
     }
 
     public static String formatTime(long second) {
+        if (second <= 0) {
+            return "00:00:00";
+        }
         long days = second / 86400;
         second = second % 86400;
         long hours = second / 3600;
