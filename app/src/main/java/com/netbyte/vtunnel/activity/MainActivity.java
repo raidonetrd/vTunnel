@@ -2,6 +2,7 @@ package com.netbyte.vtunnel.activity;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -15,6 +16,8 @@ public class MainActivity extends AppCompatActivity implements HomeTab.OnFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.activity_main);
 
         TabLayout tabLayout = findViewById(R.id.tablayout);
