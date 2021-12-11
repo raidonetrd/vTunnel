@@ -13,7 +13,7 @@
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="40dp"
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
@@ -27,10 +27,10 @@
 
             <TextView
                 android:id="@+id/ServerView"
-                android:layout_width="55dp"
+                android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Server"
+                android:text="@string/form_server"
                 android:textColor="@color/colorText"
                 android:textStyle="bold" />
 
@@ -46,7 +46,7 @@
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="40dp"
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
@@ -59,10 +59,10 @@
 
             <TextView
                 android:id="@+id/KeyView"
-                android:layout_width="55dp"
+                android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Key"
+                android:text="@string/form_key"
                 android:textColor="@color/colorText"
                 android:textStyle="bold" />
 
@@ -78,7 +78,7 @@
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="40dp"
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
@@ -91,10 +91,10 @@
 
             <TextView
                 android:id="@+id/DNSView"
-                android:layout_width="55dp"
+                android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="DNS"
+                android:text="@string/form_dns"
                 android:textColor="@color/colorText"
                 android:textStyle="bold" />
 
@@ -105,13 +105,13 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="223.5.5.5" />
+                android:text="@string/form_default_dns" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout4"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="40dp"
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
@@ -126,33 +126,28 @@
 
             <TextView
                 android:id="@+id/ObfuscationView"
-                android:layout_width="55dp"
+                android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Obfs"
+                android:text="@string/form_obfs"
                 android:textColor="@color/colorText"
                 android:textStyle="bold" />
 
             <ToggleButton
                 android:id="@+id/toggleButton"
-                android:layout_width="120dp"
+                android:layout_width="295dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textOff="Off"
-                android:textOn="On" />
+                android:textOff="@string/form_toggle_off"
+                android:textOn="@string/form_toggle_on" />
 
-            <View
-                android:layout_width="175dp"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-            </View>
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/saveConfigBtn"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="56dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="16dp"

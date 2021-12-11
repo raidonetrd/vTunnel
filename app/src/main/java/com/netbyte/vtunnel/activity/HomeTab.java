@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,15 +59,15 @@ public class HomeTab extends Fragment {
         super.onCreate(savedInstanceState);
         runningTimeThread = new Thread(() -> {
             while (true) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    break;
-                }
                 if (Global.IS_CONNECTED) {
                     Message msg = new Message();
                     msg.what = 1;
                     handler.sendMessage(msg);
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    break;
                 }
             }
         });
@@ -133,7 +132,7 @@ public class HomeTab extends Fragment {
         runningTimeTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         statTextView.setText(Global.IS_CONNECTED ? String.format("Traffic %s", FormatUtil.formatByte(Stat.TOTAL_BYTES.get())) : "");
         statTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
-        Toast.makeText(activity, Global.IS_CONNECTED ? "Started ！" : "Stopped !", Toast.LENGTH_LONG).show();
+        Toast.makeText(activity, Global.IS_CONNECTED ? "Started" : "Stopped", Toast.LENGTH_LONG).show();
     }
 
     @Override

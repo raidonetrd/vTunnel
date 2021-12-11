@@ -70,7 +70,7 @@ public class ConfigTab extends Fragment {
             preEditor.putString("key", key);
             preEditor.putBoolean("obfuscate", obfuscate);
             preEditor.apply();
-            Toast.makeText(activity, "SAVED !", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, "Saved", Toast.LENGTH_LONG).show();
         });
     }
 
