@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Config;
+import com.netbyte.vtunnel.model.Global;
 import com.netbyte.vtunnel.model.LocalIP;
 import com.netbyte.vtunnel.model.Stat;
 import com.netbyte.vtunnel.service.IPService;
@@ -55,7 +56,7 @@ public class WsThread extends BaseThread {
                 vpnService.stopVPN();
                 return;
             }
-            AppConst.LOCAL_IP = localIP.getLocalIP();
+            Global.LOCAL_IP = localIP.getLocalIP();
             in = new FileInputStream(tun.getFileDescriptor());
             out = new FileOutputStream(tun.getFileDescriptor());
             @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", config.getServerAddress(), config.getServerPort());
@@ -64,7 +65,7 @@ public class WsThread extends BaseThread {
             wsClient.addHeader("key",config.getKey());
             wsClient.connectBlocking();
             wsClient.setOutStream(out);
-            while (RUNNING) {
+            while (Global.RUNNING) {
                 try {
                     byte[] buf = new byte[AppConst.BUFFER_SIZE];
                     int ln = in.read(buf);

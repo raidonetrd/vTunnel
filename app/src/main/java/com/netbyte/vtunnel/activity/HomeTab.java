@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +29,12 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.AppConst;
+import com.netbyte.vtunnel.model.Global;
 import com.netbyte.vtunnel.model.Stat;
 import com.netbyte.vtunnel.service.MyVPNService;
 import com.netbyte.vtunnel.utils.FormatUtil;
 
 public class HomeTab extends Fragment {
-    private static volatile boolean isConnected;
     OnFragmentInteractionListener mListener;
     ImageButton imageButton;
     TextView statusTextView;
@@ -43,8 +44,8 @@ public class HomeTab extends Fragment {
     Handler handler = new Handler(Looper.myLooper()) {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == 1) {
-                runningTimeTextView.setText(FormatUtil.formatTime(Stat.TOTAL_RUNNING_TIME.get()));
+            if (msg.what == 1 && Global.START_TIME > 0) {
+                runningTimeTextView.setText(FormatUtil.formatTime((System.currentTimeMillis() - Global.START_TIME) / 1000));
                 statTextView.setText(String.format("Traffic %s", FormatUtil.formatByte(Stat.TOTAL_BYTES.get())));
             }
         }
@@ -59,15 +60,15 @@ public class HomeTab extends Fragment {
         super.onCreate(savedInstanceState);
         runningTimeThread = new Thread(() -> {
             while (true) {
-                if (isConnected) {
-                    Message msg = new Message();
-                    msg.what = 1;
-                    handler.sendMessage(msg);
-                }
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     break;
+                }
+                if (Global.IS_CONNECTED) {
+                    Message msg = new Message();
+                    msg.what = 1;
+                    handler.sendMessage(msg);
                 }
             }
         });
@@ -82,24 +83,34 @@ public class HomeTab extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.showView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.showView();
+    }
+
+    private void showView() {
         FragmentActivity activity = this.getActivity();
         assert activity != null;
         statusTextView = getView().findViewById(R.id.textStatus);
-        statusTextView.setText(isConnected ? "Connected" : "Not Connected");
+        statusTextView.setText(Global.IS_CONNECTED ? "Connected" : "Tap To Connect");
         runningTimeTextView = getView().findViewById(R.id.textRunningTime);
-        runningTimeTextView.setVisibility(isConnected ? View.VISIBLE : View.GONE);
+        runningTimeTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         statTextView = getView().findViewById(R.id.textStat);
-        statTextView.setVisibility(isConnected ? View.VISIBLE : View.GONE);
+        statTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         imageButton = getView().findViewById(R.id.connectBtn);
-        imageButton.setImageResource(isConnected ? R.drawable.power_stop : R.drawable.power_off);
+        imageButton.setImageResource(Global.IS_CONNECTED ? R.drawable.power_stop : R.drawable.power_off);
         imageButton.setOnClickListener(v -> clickHandler());
     }
 
     private void clickHandler() {
-        if (isConnected) {
-            isConnected = false;
+        if (Global.IS_CONNECTED) {
+            Global.IS_CONNECTED = false;
         } else {
-            isConnected = true;
+            Global.IS_CONNECTED = true;
         }
         Activity activity = this.getActivity();
         SharedPreferences preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
@@ -113,16 +124,16 @@ public class HomeTab extends Fragment {
             startActivityForResult(intent, 0);
         } else {
             Intent data = new Intent();
-            data.putExtra("isConnected", isConnected);
+            data.putExtra("isConnected", Global.IS_CONNECTED);
             onActivityResult(0, RESULT_OK, data);
         }
-        imageButton.setImageResource(isConnected ? R.drawable.power_stop : R.drawable.power_off);
-        statusTextView.setText(isConnected ? "Connected" : "Not Connected");
-        runningTimeTextView.setText(isConnected ? FormatUtil.formatTime(Stat.TOTAL_RUNNING_TIME.get()) : "00:00:00");
-        runningTimeTextView.setVisibility(isConnected ? View.VISIBLE : View.GONE);
-        statTextView.setText(isConnected ? String.format("Traffic %s", FormatUtil.formatByte(Stat.TOTAL_BYTES.get())) : "");
-        statTextView.setVisibility(isConnected ? View.VISIBLE : View.GONE);
-        Toast.makeText(activity, isConnected ? "Started ！" : "Stopped !", Toast.LENGTH_LONG).show();
+        imageButton.setImageResource(Global.IS_CONNECTED ? R.drawable.power_stop : R.drawable.power_off);
+        statusTextView.setText(Global.IS_CONNECTED ? "Connected" : "Tap To Connect");
+        runningTimeTextView.setText((Global.IS_CONNECTED && Global.START_TIME > 0) ? FormatUtil.formatTime((System.currentTimeMillis() - Global.START_TIME) / 1000) : "00:00:00");
+        runningTimeTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
+        statTextView.setText(Global.IS_CONNECTED ? String.format("Traffic %s", FormatUtil.formatByte(Stat.TOTAL_BYTES.get())) : "");
+        statTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
+        Toast.makeText(activity, Global.IS_CONNECTED ? "Started ！" : "Stopped !", Toast.LENGTH_LONG).show();
     }
 
     @Override

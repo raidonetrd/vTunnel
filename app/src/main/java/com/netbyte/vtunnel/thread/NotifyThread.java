@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.netbyte.vtunnel.model.AppConst;
+import com.netbyte.vtunnel.model.Global;
 import com.netbyte.vtunnel.model.Stat;
 import com.netbyte.vtunnel.service.MyVPNService;
 import com.netbyte.vtunnel.utils.FormatUtil;
@@ -29,19 +30,17 @@ public class NotifyThread extends BaseThread {
     public void run() {
         Log.i(TAG, "start");
         vpnService.startForeground(AppConst.NOTIFICATION_ID, builder.build());
-        long time = 0;
-        while (RUNNING) {
+        while (Global.RUNNING) {
             try {
                 TimeUnit.SECONDS.sleep(1);
-                Stat.TOTAL_RUNNING_TIME.set(++time);
-                if (TextUtils.isEmpty(AppConst.LOCAL_IP)) {
+                if (TextUtils.isEmpty(Global.LOCAL_IP)) {
                     String title = "VPN failed!!!";
                     builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle("").bigText(title));
                     break;
                 }
                 Stat.TOTAL_BYTES.addAndGet(Stat.DOWNLOAD_BYTES.get() + Stat.UPLOAD_BYTES.get());
                 String text = String.format("Network: ↓ %s ↑ %s", FormatUtil.formatByte(Stat.DOWNLOAD_BYTES.get()), FormatUtil.formatByte(Stat.UPLOAD_BYTES.get()));
-                String summary = String.format("IP: %s Total: %s", AppConst.LOCAL_IP, FormatUtil.formatByte(Stat.TOTAL_BYTES.get()));
+                String summary = String.format("IP: %s Total: %s", Global.LOCAL_IP, FormatUtil.formatByte(Stat.TOTAL_BYTES.get()));
                 builder.setStyle(new NotificationCompat.BigTextStyle().setSummaryText(summary).setBigContentTitle("").bigText(text));
                 notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
                 Stat.UPLOAD_BYTES.set(0);
@@ -61,7 +60,6 @@ public class NotifyThread extends BaseThread {
         Stat.UPLOAD_BYTES.set(0);
         Stat.DOWNLOAD_BYTES.set(0);
         Stat.TOTAL_BYTES.set(0);
-        Stat.TOTAL_RUNNING_TIME.set(0);
-        Log.i(AppConst.DEFAULT_TAG, "data reset");
+        Log.i(AppConst.DEFAULT_TAG, "reset data");
     }
 }

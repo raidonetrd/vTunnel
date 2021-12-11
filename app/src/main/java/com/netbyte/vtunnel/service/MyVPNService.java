@@ -16,6 +16,8 @@ import androidx.core.app.NotificationCompat;
 import com.netbyte.vtunnel.activity.MainActivity;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.Config;
+import com.netbyte.vtunnel.model.Global;
+import com.netbyte.vtunnel.thread.BaseThread;
 import com.netbyte.vtunnel.thread.MonitorThread;
 import com.netbyte.vtunnel.thread.NotifyThread;
 import com.netbyte.vtunnel.thread.WsThread;
@@ -23,9 +25,6 @@ import com.netbyte.vtunnel.model.AppConst;
 
 public class MyVPNService extends VpnService {
     private Config config;
-    private WsThread wsThread;
-    private NotifyThread notifyThread;
-    private MonitorThread monitorThread;
     private PendingIntent pendingIntent;
     private NotificationManager notificationManager;
     private NotificationCompat.Builder notificationBuilder;
@@ -114,15 +113,17 @@ public class MyVPNService extends VpnService {
 
     public void startVPN() {
         try {
-            // stop threads
-            this.stopThreads();
-            wsThread = new WsThread(config, this, ipService);
+            if (Global.RUNNING) {
+                Global.RUNNING = false;
+            }
+            Global.START_TIME = System.currentTimeMillis();
+            BaseThread wsThread = new WsThread(config, this, ipService);
             wsThread.startRunning();
             wsThread.start();
-            monitorThread = new MonitorThread(this, ipService);
+            BaseThread monitorThread = new MonitorThread(this, ipService);
             monitorThread.startRunning();
             monitorThread.start();
-            notifyThread = new NotifyThread(notificationManager, notificationBuilder, this);
+            BaseThread notifyThread = new NotifyThread(notificationManager, notificationBuilder, this);
             notifyThread.startRunning();
             notifyThread.start();
             Log.i(AppConst.DEFAULT_TAG, "VPN started");
@@ -133,26 +134,15 @@ public class MyVPNService extends VpnService {
     }
 
     public void stopVPN() {
-        // stop threads
-        this.stopThreads();
-        // stop vpn service
+        this.resetGlobalVar();
         this.stopSelf();
         Log.i(AppConst.DEFAULT_TAG, "VPN stopped");
     }
 
-    private void stopThreads() {
-        if (wsThread != null && wsThread.isRunning()) {
-            wsThread.stopRunning();
-            wsThread = null;
-        }
-        if (monitorThread != null && monitorThread.isRunning()) {
-            monitorThread.stopRunning();
-            monitorThread = null;
-        }
-        if (notifyThread != null && notifyThread.isRunning()) {
-            notifyThread.stopRunning();
-            notifyThread = null;
-        }
+    public void resetGlobalVar() {
+        Global.IS_CONNECTED = false;
+        Global.RUNNING = false;
+        Global.START_TIME = 0;
     }
 
 }

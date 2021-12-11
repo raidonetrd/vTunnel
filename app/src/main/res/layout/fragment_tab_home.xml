@@ -48,7 +48,7 @@
             android:layout_marginBottom="374dp"
             android:text="Not Connected"
             android:textColor="@color/colorText"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

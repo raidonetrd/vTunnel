@@ -4,7 +4,7 @@ import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.netbyte.vtunnel.model.AppConst;
+import com.netbyte.vtunnel.model.Global;
 import com.netbyte.vtunnel.service.IPService;
 import com.netbyte.vtunnel.service.MyVPNService;
 
@@ -22,7 +22,7 @@ public class MonitorThread extends BaseThread {
     public void run() {
         Log.i(TAG, "start");
         int checkCount = 0;
-        while (RUNNING) {
+        while (Global.RUNNING) {
             try {
                 TimeUnit.SECONDS.sleep(3);
                 if (isAirplaneModeOn(vpnService.getApplicationContext())) {
@@ -32,7 +32,7 @@ public class MonitorThread extends BaseThread {
                 }
                 checkCount++;
                 if (checkCount % 100 == 0) {
-                    ipService.keepAliveIp(AppConst.LOCAL_IP);
+                    ipService.keepAliveIp(Global.LOCAL_IP);
                 }
             } catch (InterruptedException e) {
                 Log.i(TAG, "error:" + e.getMessage());
@@ -40,7 +40,7 @@ public class MonitorThread extends BaseThread {
         }
         if (!isAirplaneModeOn(vpnService.getApplicationContext())) {
             // delete local ip
-            ipService.deleteIp(AppConst.LOCAL_IP);
+            ipService.deleteIp(Global.LOCAL_IP);
         }
         Log.i(TAG, "stop");
     }
