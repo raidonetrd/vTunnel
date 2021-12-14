@@ -62,7 +62,7 @@ public class WsThread extends BaseThread {
             @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", config.getServerAddress(), config.getServerPort());
             wsClient = new WsClient(new URI(uri), config);
             wsClient.setSocketFactory(SSLUtil.createEasySSLContext().getSocketFactory());
-            wsClient.addHeader("key",config.getKey());
+            wsClient.addHeader("key", config.getKey());
             wsClient.connectBlocking();
             wsClient.setOutStream(out);
             while (Global.RUNNING) {
@@ -78,11 +78,10 @@ public class WsThread extends BaseThread {
                             wsClient.send(data);
                             Stat.UPLOAD_BYTES.addAndGet(ln);
                         } else if (wsClient.isClosed()) {
-                            Log.i(TAG, "ws client reconnecting...");
+                            Log.i(TAG, "ws client is reconnecting...");
                             wsClient.reconnectBlocking();
-                            TimeUnit.SECONDS.sleep(1);
                         } else {
-                            TimeUnit.SECONDS.sleep(1);
+                            TimeUnit.MILLISECONDS.sleep(100);
                         }
                     }
                 } catch (Exception e) {
