@@ -64,7 +64,7 @@ public class ConfigTab extends Fragment {
         btnSave.setOnClickListener(v -> {
             String server = editServer.getText().toString().trim();
             if (!NetUtil.checkServer(server)) {
-                Toast.makeText(activity, "server can't connect", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Server can't connect", Toast.LENGTH_LONG).show();
                 return;
             }
             String dns = editDNS.getText().toString().trim();
