@@ -45,7 +45,7 @@ public class HomeTab extends Fragment {
         public void handleMessage(Message msg) {
             if (msg.what == 1 && Global.START_TIME > 0) {
                 runningTimeTextView.setText(FormatUtil.formatTime((System.currentTimeMillis() - Global.START_TIME) / 1000));
-                statTextView.setText(String.format("Traffic %s", FormatUtil.formatByte(Stat.TOTAL_BYTES.get())));
+                statTextView.setText(String.format("Total Traffic %s", FormatUtil.formatByte(Stat.TOTAL_BYTES.get())));
             }
         }
     };
@@ -130,7 +130,7 @@ public class HomeTab extends Fragment {
         statusTextView.setText(Global.IS_CONNECTED ? "Connected" : "Tap To Connect");
         runningTimeTextView.setText((Global.IS_CONNECTED && Global.START_TIME > 0) ? FormatUtil.formatTime((System.currentTimeMillis() - Global.START_TIME) / 1000) : "00:00:00");
         runningTimeTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
-        statTextView.setText(Global.IS_CONNECTED ? String.format("Traffic %s", FormatUtil.formatByte(Stat.TOTAL_BYTES.get())) : "");
+        statTextView.setText(Global.IS_CONNECTED ? String.format("Total Traffic %s", FormatUtil.formatByte(Stat.TOTAL_BYTES.get())) : "");
         statTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         Toast.makeText(activity, Global.IS_CONNECTED ? "Started" : "Stopped", Toast.LENGTH_LONG).show();
     }

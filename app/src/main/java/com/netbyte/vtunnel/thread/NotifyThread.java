@@ -39,7 +39,7 @@ public class NotifyThread extends BaseThread {
                     break;
                 }
                 Stat.TOTAL_BYTES.addAndGet(Stat.DOWNLOAD_BYTES.get() + Stat.UPLOAD_BYTES.get());
-                String text = String.format("Network: ↓ %s ↑ %s", FormatUtil.formatByte(Stat.DOWNLOAD_BYTES.get()), FormatUtil.formatByte(Stat.UPLOAD_BYTES.get()));
+                String text = String.format("Traffic: ↓ %s ↑ %s", FormatUtil.formatByte(Stat.DOWNLOAD_BYTES.get()), FormatUtil.formatByte(Stat.UPLOAD_BYTES.get()));
                 String summary = String.format("IP: %s Total: %s", Global.LOCAL_IP, FormatUtil.formatByte(Stat.TOTAL_BYTES.get()));
                 builder.setStyle(new NotificationCompat.BigTextStyle().setSummaryText(summary).setBigContentTitle("").bigText(text));
                 notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
