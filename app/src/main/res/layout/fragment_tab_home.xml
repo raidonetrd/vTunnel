@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_marginBottom="16dp"
-            android:text="Traffic 0 Byte"
+            android:text="Total Traffic 0 Byte"
             android:textColor="@color/colorPrimary"
             android:textSize="11sp"
             app:layout_constraintBottom_toTopOf="@+id/textVersion"
