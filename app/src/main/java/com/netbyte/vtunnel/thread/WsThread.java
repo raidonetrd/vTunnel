@@ -46,28 +46,32 @@ public class WsThread extends BaseThread {
         ParcelFileDescriptor tun = null;
         try {
             Log.i(TAG, "start");
+            // pick ip
             LocalIP localIP = ipService.pickIp();
             if (localIP == null) {
                 vpnService.stopVPN();
                 return;
             }
-            tun = createTunnel(config, localIP);
-            if (tun == null) {
-                vpnService.stopVPN();
-                return;
-            }
             Global.LOCAL_IP = localIP.getLocalIP();
-            in = new FileInputStream(tun.getFileDescriptor());
-            out = new FileOutputStream(tun.getFileDescriptor());
+            // create ws client
             @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", config.getServerAddress(), config.getServerPort());
             wsClient = new WsClient(new URI(uri), config);
             wsClient.setSocketFactory(SSLUtil.createEasySSLContext().getSocketFactory());
             wsClient.addHeader("key", config.getKey());
             wsClient.connectBlocking();
+            // create tun
+            tun = createTunnel(config, localIP);
+            if (tun == null) {
+                vpnService.stopVPN();
+                return;
+            }
+            in = new FileInputStream(tun.getFileDescriptor());
+            out = new FileOutputStream(tun.getFileDescriptor());
             wsClient.setOutStream(out);
+            // forward data
+            byte[] buf = new byte[AppConst.BUFFER_SIZE];
             while (Global.RUNNING) {
                 try {
-                    byte[] buf = new byte[AppConst.BUFFER_SIZE];
                     int ln = in.read(buf);
                     if (ln > 0) {
                         if (wsClient.isOpen()) {
