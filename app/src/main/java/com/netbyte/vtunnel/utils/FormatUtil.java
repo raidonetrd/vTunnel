@@ -5,6 +5,9 @@ import java.math.BigDecimal;
 public class FormatUtil {
 
     public static String formatByte(long size) {
+        if (size <= 0) {
+            return "";
+        }
         double kiloByte = Long.valueOf(size).doubleValue() / 1024;
         if (kiloByte < 1) {
             return size + " Byte";

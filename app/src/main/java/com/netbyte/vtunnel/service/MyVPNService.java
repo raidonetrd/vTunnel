@@ -20,8 +20,10 @@ import com.netbyte.vtunnel.model.Global;
 import com.netbyte.vtunnel.thread.BaseThread;
 import com.netbyte.vtunnel.thread.MonitorThread;
 import com.netbyte.vtunnel.thread.NotifyThread;
-import com.netbyte.vtunnel.thread.WsThread;
+import com.netbyte.vtunnel.thread.VPNThread;
 import com.netbyte.vtunnel.model.AppConst;
+
+import java.util.concurrent.TimeUnit;
 
 public class MyVPNService extends VpnService {
     private Config config;
@@ -115,22 +117,15 @@ public class MyVPNService extends VpnService {
         try {
             if (Global.RUNNING) {
                 Global.RUNNING = false;
+                TimeUnit.SECONDS.sleep(3);
             }
-            Global.START_TIME = System.currentTimeMillis();
-            BaseThread wsThread = new WsThread(config, this, ipService);
-            wsThread.startRunning();
-            wsThread.start();
-            BaseThread monitorThread = new MonitorThread(this, ipService);
-            monitorThread.startRunning();
-            monitorThread.start();
-            BaseThread notifyThread = new NotifyThread(notificationManager, notificationBuilder, this);
-            notifyThread.startRunning();
-            notifyThread.start();
+            VPNThread vpnThread = new VPNThread(config, this, ipService, notificationManager, notificationBuilder);
+            vpnThread.startRunning();
+            vpnThread.start();
             Log.i(AppConst.DEFAULT_TAG, "VPN started");
         } catch (Exception e) {
             Log.e(AppConst.DEFAULT_TAG, "error on startVPN:" + e.toString());
         }
-
     }
 
     public void stopVPN() {

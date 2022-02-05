@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -23,7 +24,7 @@ import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.utils.NetUtil;
 
 public class ConfigTab extends Fragment {
-    ToggleButton toggleButton;
+    Switch obfsSwitch;
     Button btnSave;
     EditText editServer, editDNS, editKey;
     SharedPreferences preferences;
@@ -52,7 +53,7 @@ public class ConfigTab extends Fragment {
         editServer = getView().findViewById(R.id.editServer);
         editKey = getView().findViewById(R.id.editKey);
         editDNS = getView().findViewById(R.id.editDNS);
-        toggleButton = getView().findViewById(R.id.toggleButton);
+        obfsSwitch = getView().findViewById(R.id.obfsSwitch);
         assert activity != null;
         preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
@@ -60,7 +61,7 @@ public class ConfigTab extends Fragment {
         editServer.setText(preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS));
         editDNS.setText(preferences.getString("dns", AppConst.DEFAULT_DNS));
         editKey.setText(preferences.getString("key", AppConst.DEFAULT_KEY));
-        toggleButton.setChecked(preferences.getBoolean("obfuscate", false));
+        obfsSwitch.setChecked(preferences.getBoolean("obfuscate", false));
         btnSave.setOnClickListener(v -> {
             String server = editServer.getText().toString().trim();
             if (!NetUtil.checkServer(server)) {
@@ -73,7 +74,7 @@ public class ConfigTab extends Fragment {
                 return;
             }
             String key = editKey.getText().toString().trim();
-            boolean obfuscate = toggleButton.isChecked();
+            boolean obfuscate = obfsSwitch.isChecked();
             preEditor.putString("server", server);
             preEditor.putString("dns", dns);
             preEditor.putString("key", key);
