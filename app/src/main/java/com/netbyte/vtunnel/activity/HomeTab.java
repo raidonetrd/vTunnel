@@ -47,7 +47,9 @@ public class HomeTab extends Fragment {
                 showView();
             } else if (msg.what == 1 && Global.START_TIME > 0) {
                 runningTimeTextView.setText(FormatUtil.formatTime((System.currentTimeMillis() - Global.START_TIME) / 1000));
-                statTextView.setText(FormatUtil.formatByte(Stat.TOTAL_BYTES.get()));
+                if (Stat.TOTAL_BYTES.get() > 0) {
+                    statTextView.setText(FormatUtil.formatByte(Stat.TOTAL_BYTES.get()));
+                }
             }
         }
     };
