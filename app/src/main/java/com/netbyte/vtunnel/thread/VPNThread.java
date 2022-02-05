@@ -1,12 +1,15 @@
 package com.netbyte.vtunnel.thread;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.content.pm.PackageManager;
 import android.net.VpnService;
 import android.os.ParcelFileDescriptor;
 import android.system.OsConstants;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
 
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Config;
@@ -28,18 +31,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-public class WsThread extends BaseThread {
-    private static final String TAG = "WsThread";
+public class VPNThread extends BaseThread {
+    private static final String TAG = "VPNThread";
     private final Config config;
 
-    public WsThread(Config config, MyVPNService vpnService, IPService ipService) {
+    public VPNThread(Config config, MyVPNService vpnService, IPService ipService, NotificationManager notificationManager, NotificationCompat.Builder notificationBuilder) {
         this.config = config;
         this.vpnService = vpnService;
         this.ipService = ipService;
+        this.notificationManager = notificationManager;
+        this.notificationBuilder = notificationBuilder;
     }
 
     @Override
     public void run() {
+        Global.START_TIME = System.currentTimeMillis();
         WsClient wsClient = null;
         FileInputStream in = null;
         FileOutputStream out = null;
@@ -68,6 +74,8 @@ public class WsThread extends BaseThread {
             in = new FileInputStream(tun.getFileDescriptor());
             out = new FileOutputStream(tun.getFileDescriptor());
             wsClient.setOutStream(out);
+            // start monitor and notify threads
+            startMonitorAndNotifyThreads();
             // forward data
             byte[] buf = new byte[AppConst.BUFFER_SIZE];
             while (Global.RUNNING) {
@@ -147,6 +155,15 @@ public class WsThread extends BaseThread {
         }
         Log.i(TAG, "bypass apps:" + appList);
         return builder.establish();
+    }
+
+    private void startMonitorAndNotifyThreads() {
+        MonitorThread monitorThread = new MonitorThread(vpnService, ipService);
+        monitorThread.startRunning();
+        monitorThread.start();
+        NotifyThread notifyThread = new NotifyThread(notificationManager, notificationBuilder, vpnService);
+        notifyThread.startRunning();
+        notifyThread.start();
     }
 
 }

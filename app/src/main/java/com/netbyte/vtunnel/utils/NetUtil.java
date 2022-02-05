@@ -26,7 +26,7 @@ public class NetUtil {
                 host = server;
             }
             socket = new Socket();
-            socket.connect(new InetSocketAddress(host, port), 3000);
+            socket.connect(new InetSocketAddress(host, port), 10000);
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,7 +49,7 @@ public class NetUtil {
         }
         boolean result = false;
         try {
-            result = InetAddress.getByName(dns).isReachable(3000);
+            result = InetAddress.getByName(dns).isReachable(10000);
         } catch (Exception e) {
             e.printStackTrace();
         }
