@@ -1,55 +1,57 @@
 package com.netbyte.vtunnel.activity;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.netbyte.vtunnel.R;
-import com.netbyte.vtunnel.adapter.PagerAdapter;
 
-public class MainActivity extends AppCompatActivity implements HomeTab.OnFragmentInteractionListener, ConfigTab.OnFragmentInteractionListener, BypassTab.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener, ConfigsFragment.OnFragmentInteractionListener, AppsFragment.OnFragmentInteractionListener {
+
+    BottomNavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.activity_main);
 
-        TabLayout tabLayout = findViewById(R.id.tablayout);
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_action_home));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_action_config));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_action_apps));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        navigationView = findViewById(R.id.navigation_menu);
+        navigationView.setOnNavigationItemSelectedListener(selectedListener);
 
-        final ViewPager viewPager = findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-
+        HomeFragment fragment = new HomeFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content, fragment, "");
+        fragmentTransaction.commit();
     }
+    @SuppressLint("NonConstantResourceId")
+    private final BottomNavigationView.OnNavigationItemSelectedListener selectedListener = menuItem -> {
+        switch (menuItem.getItemId()) {
+            case R.id.bottomNavigationHomeMenuId:
+                HomeFragment homeFragment = new HomeFragment();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.content, homeFragment, "");
+                fragmentTransaction.commit();
+                return true;
 
+            case R.id.bottomNavigationConfigsMenuId:
+                ConfigsFragment configFragment = new ConfigsFragment();
+                FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction1.replace(R.id.content, configFragment);
+                fragmentTransaction1.commit();
+                return true;
+
+            case R.id.bottomNavigationAppsMenuId:
+                AppsFragment appsFragment = new AppsFragment();
+                FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction2.replace(R.id.content, appsFragment, "");
+                fragmentTransaction2.commit();
+                return true;
+        }
+        return false;
+    };
     @Override
     public void onFragmentInteraction(Uri uri) {
 

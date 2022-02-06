@@ -33,7 +33,7 @@ import com.netbyte.vtunnel.model.Stat;
 import com.netbyte.vtunnel.service.MyVPNService;
 import com.netbyte.vtunnel.utils.FormatUtil;
 
-public class HomeTab extends Fragment {
+public class HomeFragment extends Fragment {
     OnFragmentInteractionListener mListener;
     ImageButton imageButton;
     TextView statusTextView;
@@ -54,7 +54,7 @@ public class HomeTab extends Fragment {
         }
     };
 
-    public HomeTab() {
+    public HomeFragment() {
 
     }
 
