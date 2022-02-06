@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.netbyte.vtunnel.activity.MainActivity">
+    tools:context=".activity.MainActivity">
 
-    <com.google.android.material.tabs.TabLayout
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tablayout"
-        android:background="@color/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:tabTextColor="#FFFFFF"
-        tools:ignore="MissingClass">
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/pager">
-    </androidx.viewpager.widget.ViewPager>
+        android:layout_gravity="bottom"
+        android:id="@+id/navigation_menu"
+        app:menu="@menu/bottom_navigation_menu" />
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.netbyte.vtunnel.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,7 +23,8 @@ import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.utils.NetUtil;
 
-public class ConfigTab extends Fragment {
+public class ConfigsFragment extends Fragment {
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch obfsSwitch;
     Button btnSave;
     EditText editServer, editDNS, editKey;
@@ -31,7 +32,7 @@ public class ConfigTab extends Fragment {
     SharedPreferences.Editor preEditor;
     OnFragmentInteractionListener mListener;
 
-    public ConfigTab() {
+    public ConfigsFragment() {
 
     }
 
@@ -42,7 +43,7 @@ public class ConfigTab extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_tab_config, container, false);
+        return inflater.inflate(R.layout.fragment_tab_configs, container, false);
     }
 
     @Override

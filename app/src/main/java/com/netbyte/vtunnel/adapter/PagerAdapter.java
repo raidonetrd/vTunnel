@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.netbyte.vtunnel.activity.BypassTab;
-import com.netbyte.vtunnel.activity.ConfigTab;
-import com.netbyte.vtunnel.activity.HomeTab;
+import com.netbyte.vtunnel.activity.AppsFragment;
+import com.netbyte.vtunnel.activity.ConfigsFragment;
+import com.netbyte.vtunnel.activity.HomeFragment;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
 
@@ -22,11 +22,11 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new HomeTab();
+                return new HomeFragment();
             case 1:
-                return new ConfigTab();
+                return new ConfigsFragment();
             case 2:
-                return new BypassTab();
+                return new AppsFragment();
             default:
                 return null;
         }
