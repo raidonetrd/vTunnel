@@ -5,11 +5,14 @@ import java.math.BigDecimal;
 public class FormatUtil {
 
     public static String formatByte(long size) {
-        double kiloByte = Long.valueOf(size).doubleValue() / 1024;
-        if (kiloByte < 1) {
+        if (size <= 1) {
             return size + " Byte";
         }
+        if (size < 1024) {
+            return size + " Bytes";
+        }
         BigDecimal result;
+        double kiloByte = Long.valueOf(size).doubleValue() / 1024;
         double megaByte = kiloByte / 1024;
         if (megaByte < 1) {
             result = new BigDecimal(Double.toString(kiloByte));
