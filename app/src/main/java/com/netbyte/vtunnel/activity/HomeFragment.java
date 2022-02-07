@@ -103,7 +103,7 @@ public class HomeFragment extends Fragment {
         FragmentActivity activity = this.getActivity();
         assert activity != null;
         statusTextView = getView().findViewById(R.id.textStatus);
-        statusTextView.setText(Global.IS_CONNECTED ? "Connected" : "Tap To Connect");
+        statusTextView.setText(Global.IS_CONNECTED ? "CONNECTED" : "Tap To Connect");
         runningTimeTextView = getView().findViewById(R.id.textRunningTime);
         runningTimeTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         statTextView = getView().findViewById(R.id.textStat);
@@ -135,7 +135,7 @@ public class HomeFragment extends Fragment {
             onActivityResult(0, RESULT_OK, data);
         }
         imageButton.setImageResource(Global.IS_CONNECTED ? R.drawable.power_stop : R.drawable.power_off);
-        statusTextView.setText(Global.IS_CONNECTED ? "Connected" : "Tap To Connect");
+        statusTextView.setText(Global.IS_CONNECTED ? "CONNECTED" : "Tap To Connect");
         runningTimeTextView.setText((Global.IS_CONNECTED && Global.START_TIME > 0) ? FormatUtil.formatTime((System.currentTimeMillis() - Global.START_TIME) / 1000) : "00:00:00");
         runningTimeTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         statTextView.setText(Global.IS_CONNECTED ? FormatUtil.formatByte(Stat.TOTAL_BYTES.get()) : "");

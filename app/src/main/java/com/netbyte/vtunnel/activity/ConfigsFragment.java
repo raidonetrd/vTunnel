@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,10 +23,8 @@ import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.utils.NetUtil;
 
 public class ConfigsFragment extends Fragment {
-    @SuppressLint("UseSwitchCompatOrMaterialCode")
-    Switch obfsSwitch;
     Button btnSave;
-    EditText editServer, editDNS, editKey;
+    EditText editServer, editDNS, editKey, editObfs;
     SharedPreferences preferences;
     SharedPreferences.Editor preEditor;
     OnFragmentInteractionListener mListener;
@@ -54,7 +51,7 @@ public class ConfigsFragment extends Fragment {
         editServer = getView().findViewById(R.id.editServer);
         editKey = getView().findViewById(R.id.editKey);
         editDNS = getView().findViewById(R.id.editDNS);
-        obfsSwitch = getView().findViewById(R.id.obfsSwitch);
+        editObfs = getView().findViewById(R.id.editObfs);
         assert activity != null;
         preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
@@ -62,7 +59,7 @@ public class ConfigsFragment extends Fragment {
         editServer.setText(preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS));
         editDNS.setText(preferences.getString("dns", AppConst.DEFAULT_DNS));
         editKey.setText(preferences.getString("key", AppConst.DEFAULT_KEY));
-        obfsSwitch.setChecked(preferences.getBoolean("obfuscate", false));
+        editObfs.setText(preferences.getBoolean("obfuscate", false) ? "true" : "false");
         btnSave.setOnClickListener(v -> {
             String server = editServer.getText().toString().trim();
             if (!NetUtil.checkServer(server)) {
@@ -75,11 +72,10 @@ public class ConfigsFragment extends Fragment {
                 return;
             }
             String key = editKey.getText().toString().trim();
-            boolean obfuscate = obfsSwitch.isChecked();
             preEditor.putString("server", server);
             preEditor.putString("dns", dns);
             preEditor.putString("key", key);
-            preEditor.putBoolean("obfuscate", obfuscate);
+            preEditor.putBoolean("obfuscate", "true".equalsIgnoreCase(editObfs.getText().toString().trim()));
             preEditor.apply();
             Toast.makeText(activity, "Saved", Toast.LENGTH_LONG).show();
         });
