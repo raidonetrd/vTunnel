@@ -4,7 +4,7 @@
     <string name="form_server">Server</string>
     <string name="form_key">Key</string>
     <string name="form_dns">DNS</string>
-    <string name="form_obfs">Obfs</string>
+    <string name="form_obfs">Obfuscation</string>
     <string name="form_switch_on">On</string>
     <string name="form_switch_off">Off</string>
     <string name="btn_save">SAVE</string>
@@ -12,6 +12,7 @@
     <string name="form_default_server">your.domain.org:443</string>
     <string name="form_default_key">123456</string>
     <string name="form_default_dns">223.5.5.5</string>
+    <string name="form_default_obfs">false</string>
     <string name="menu_home">Home</string>
     <string name="menu_configs">Configs</string>
     <string name="menu_apps">Apps</string>

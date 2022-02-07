@@ -11,11 +11,11 @@
 
         <LinearLayout
             android:id="@+id/linearLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:gravity="start|center_vertical"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
@@ -24,32 +24,30 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0">
 
-            <TextView
-                android:id="@+id/ServerView"
-                android:layout_width="48dp"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/form_server"
-                android:textColor="@color/colorText"
-                android:textStyle="bold" />
+                android:layout_marginBottom="12dp"
+                android:hint="@string/form_server"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/colorPrimaryDark">
 
-            <EditText
-                android:id="@+id/editServer"
-                android:layout_width="295dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:text="@string/form_default_server"
-                android:inputType="textPersonName" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editServer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/form_default_server" />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:layout_marginStart="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="2dp"
-            android:layout_marginEnd="2dp"
+            android:layout_marginEnd="8dp"
             android:gravity="start|center_vertical"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
@@ -57,32 +55,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-            <TextView
-                android:id="@+id/KeyView"
-                android:layout_width="48dp"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/form_key"
-                android:textColor="@color/colorText"
-                android:textStyle="bold" />
+                android:layout_marginBottom="12dp"
+                android:hint="@string/form_key"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/colorAccent">
 
-            <EditText
-                android:id="@+id/editKey"
-                android:layout_width="295dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:text="@string/form_default_key"
-                android:inputType="textPassword" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editKey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:text="@string/form_default_key" />
+
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout3"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:layout_marginStart="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="2dp"
-            android:layout_marginEnd="2dp"
+            android:layout_marginEnd="8dp"
             android:gravity="start|center_vertical"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
@@ -90,32 +88,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
-            <TextView
-                android:id="@+id/DNSView"
-                android:layout_width="48dp"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/form_dns"
-                android:textColor="@color/colorText"
-                android:textStyle="bold" />
+                android:layout_marginBottom="12dp"
+                android:hint="@string/form_dns"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/colorPrimaryDark">
 
-            <EditText
-                android:id="@+id/editDNS"
-                android:layout_width="295dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="@string/form_default_dns" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editDNS"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/form_default_dns" />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout4"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:layout_marginStart="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="2dp"
-            android:layout_marginEnd="2dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="start|center_vertical"
             android:orientation="horizontal"
@@ -125,29 +121,21 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
             tools:ignore="MissingConstraints">
 
-            <TextView
-                android:id="@+id/ObfuscationView"
-                android:layout_width="48dp"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/form_obfs"
-                android:textColor="@color/colorText"
-                android:textStyle="bold" />
+                android:layout_marginBottom="12dp"
+                android:hint="@string/form_obfs"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/colorPrimaryDark">
 
-            <Switch
-                android:id="@+id/obfsSwitch"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="false"
-                android:textOff="@string/form_switch_off"
-                android:textOn="@string/form_switch_on"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-            <View
-                android:layout_width="245dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editObfs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/form_default_obfs" />
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
@@ -155,10 +143,10 @@
             android:id="@+id/saveConfigBtn"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text="@string/btn_save"
             app:layout_constraintBottom_toBottomOf="parent"
