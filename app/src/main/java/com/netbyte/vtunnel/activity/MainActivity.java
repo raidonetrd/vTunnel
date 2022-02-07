@@ -3,6 +3,8 @@ package com.netbyte.vtunnel.activity;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -16,6 +18,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.activity_main);
 
         navigationView = findViewById(R.id.navigation_menu);
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
         fragmentTransaction.replace(R.id.content, fragment, "");
         fragmentTransaction.commit();
     }
+
     @SuppressLint("NonConstantResourceId")
     private final BottomNavigationView.OnNavigationItemSelectedListener selectedListener = menuItem -> {
         switch (menuItem.getItemId()) {
@@ -52,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
         }
         return false;
     };
+
     @Override
     public void onFragmentInteraction(Uri uri) {
 
