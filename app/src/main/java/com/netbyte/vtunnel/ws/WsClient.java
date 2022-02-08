@@ -8,6 +8,7 @@ import com.netbyte.vtunnel.model.Stat;
 import com.netbyte.vtunnel.utils.CipherUtil;
 
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.io.FileOutputStream;
@@ -18,11 +19,15 @@ import java.nio.charset.StandardCharsets;
 
 public class WsClient extends WebSocketClient {
     private static final String TAG = "WsClient";
-    private final Config config;
+    private Config config;
     private FileOutputStream out;
 
+    public WsClient(URI serverUri) {
+        super(serverUri, new Draft_6455(), null, 5000);
+    }
+
     public WsClient(URI serverUri, Config config) {
-        super(serverUri);
+        super(serverUri, new Draft_6455(), null, 5000);
         this.config = config;
     }
 
@@ -42,7 +47,7 @@ public class WsClient extends WebSocketClient {
 
     @Override
     public void onMessage(ByteBuffer byteBuffer) {
-        if (out == null || byteBuffer.remaining() == 0) {
+        if (out == null || config == null || byteBuffer.remaining() == 0) {
             return;
         }
         byte[] buf = new byte[byteBuffer.remaining()];
