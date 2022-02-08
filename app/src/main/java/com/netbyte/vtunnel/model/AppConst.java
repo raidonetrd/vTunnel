@@ -9,11 +9,11 @@ public class AppConst {
     public static final String DEFAULT_TAG = APP_NAME;
     public static final int BUFFER_SIZE = 1500;
     public static final int MTU = 1500;
-    public static final String DEFAULT_SERVER_ADDRESS = "";
+    public static final String DEFAULT_SERVER_ADDRESS = "foo.org";
     public static final int DEFAULT_SERVER_PORT = 443;
     public static final String DEFAULT_LOCAL_ADDRESS = "172.16.0.100";
     public static final int DEFAULT_LOCAL_PREFIX_LENGTH = 24;
-    public static final String DEFAULT_KEY = "";
+    public static final String DEFAULT_KEY = "123456";
     public static final String DEFAULT_DNS = "223.5.5.5";
     public static final String DEFAULT_ROUTE = "0.0.0.0";
     public static final String BTN_ACTION_CONNECT = "connect";

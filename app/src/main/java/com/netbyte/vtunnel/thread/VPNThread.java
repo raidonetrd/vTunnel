@@ -146,7 +146,7 @@ public class VPNThread extends BaseThread {
                 .setBlocking(true);
         // add apps to bypass
         ArrayList<String> appList = new ArrayList<>();
-        appList.add(AppConst.APP_PACKAGE_NAME);
+        appList.add(AppConst.APP_PACKAGE_NAME); // skip itself
         if (!TextUtils.isEmpty(config.getBypassApps())) {
             appList.addAll(Arrays.asList(config.getBypassApps().split(",")));
         }
@@ -159,10 +159,8 @@ public class VPNThread extends BaseThread {
 
     private void startMonitorAndNotifyThreads() {
         MonitorThread monitorThread = new MonitorThread(vpnService, ipService);
-        monitorThread.startRunning();
         monitorThread.start();
         NotifyThread notifyThread = new NotifyThread(notificationManager, notificationBuilder, vpnService);
-        notifyThread.startRunning();
         notifyThread.start();
     }
 
