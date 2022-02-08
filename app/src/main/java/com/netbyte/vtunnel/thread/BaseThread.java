@@ -13,9 +13,4 @@ public class BaseThread extends Thread {
     protected IPService ipService;
     protected NotificationManager notificationManager;
     protected NotificationCompat.Builder notificationBuilder;
-
-    public void startRunning() {
-        Global.RUNNING = true;
-    }
-
 }

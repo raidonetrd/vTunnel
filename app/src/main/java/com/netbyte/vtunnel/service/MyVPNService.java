@@ -17,9 +17,6 @@ import com.netbyte.vtunnel.activity.MainActivity;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.model.Global;
-import com.netbyte.vtunnel.thread.BaseThread;
-import com.netbyte.vtunnel.thread.MonitorThread;
-import com.netbyte.vtunnel.thread.NotifyThread;
 import com.netbyte.vtunnel.thread.VPNThread;
 import com.netbyte.vtunnel.model.AppConst;
 
@@ -116,11 +113,11 @@ public class MyVPNService extends VpnService {
     public void startVPN() {
         try {
             if (Global.RUNNING) {
-                Global.RUNNING = false;
+                stopVPN();
                 TimeUnit.SECONDS.sleep(3);
             }
+            Global.RUNNING = true;
             VPNThread vpnThread = new VPNThread(config, this, ipService, notificationManager, notificationBuilder);
-            vpnThread.startRunning();
             vpnThread.start();
             Log.i(AppConst.DEFAULT_TAG, "VPN started");
         } catch (Exception e) {
@@ -134,7 +131,7 @@ public class MyVPNService extends VpnService {
         Log.i(AppConst.DEFAULT_TAG, "VPN stopped");
     }
 
-    public void resetGlobalVar() {
+    private void resetGlobalVar() {
         Global.IS_CONNECTED = false;
         Global.RUNNING = false;
         Global.START_TIME = 0;

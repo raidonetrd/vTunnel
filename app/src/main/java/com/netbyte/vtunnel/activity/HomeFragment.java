@@ -120,6 +120,7 @@ public class HomeFragment extends Fragment {
             Global.IS_CONNECTED = true;
         }
         Activity activity = this.getActivity();
+        assert activity != null;
         SharedPreferences preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         String server = preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS);
         if (TextUtils.isEmpty(server)) {
