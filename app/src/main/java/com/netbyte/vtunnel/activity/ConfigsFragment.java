@@ -62,16 +62,16 @@ public class ConfigsFragment extends Fragment {
         editObfs.setText(preferences.getBoolean("obfuscate", false) ? "true" : "false");
         btnSave.setOnClickListener(v -> {
             String server = editServer.getText().toString().trim();
-            if (!NetUtil.checkServer(server)) {
-                Toast.makeText(activity, "Server can't connect", Toast.LENGTH_LONG).show();
+            String key = editKey.getText().toString().trim();
+            if (!NetUtil.checkServer(server, key)) {
+                Toast.makeText(activity, "Invalid server or key", Toast.LENGTH_LONG).show();
                 return;
             }
             String dns = editDNS.getText().toString().trim();
             if (!NetUtil.checkDNS(dns)) {
-                Toast.makeText(activity, "DNS is not reachable", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Invalid DNS", Toast.LENGTH_LONG).show();
                 return;
             }
-            String key = editKey.getText().toString().trim();
             preEditor.putString("server", server);
             preEditor.putString("dns", dns);
             preEditor.putString("key", key);

@@ -3,41 +3,33 @@ package com.netbyte.vtunnel.utils;
 
 import android.text.TextUtils;
 
-import java.io.IOException;
+import com.netbyte.vtunnel.ws.WsClient;
+
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
+import java.net.URI;
 
 public class NetUtil {
-    public static boolean checkServer(String server) {
-        if (TextUtils.isEmpty(server)) {
+    public static boolean checkServer(String server, String key) {
+        if (TextUtils.isEmpty(server) || TextUtils.isEmpty(key)) {
             return false;
         }
-        boolean result;
-        String host = "";
-        int port = 443;
-        Socket socket = null;
+        boolean result = false;
+        WsClient wsClient = null;
         try {
-            String[] serverAddress = server.split(":");
-            if (serverAddress.length > 1) {
-                host = serverAddress[0];
-                port = Integer.parseInt(serverAddress[1]);
-            } else {
-                host = server;
+            String uri = String.format("wss://%s/way-to-freedom", server);
+            wsClient = new WsClient(new URI(uri));
+            wsClient.setSocketFactory(SSLUtil.createEasySSLContext().getSocketFactory());
+            wsClient.addHeader("key", key);
+            wsClient.connectBlocking();
+            if (wsClient.isOpen()) {
+                result = true;
             }
-            socket = new Socket();
-            socket.connect(new InetSocketAddress(host, port), 10000);
-            result = true;
         } catch (Exception e) {
             e.printStackTrace();
             result = false;
         } finally {
-            if (socket != null && socket.isConnected()) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            if (wsClient != null && wsClient.isOpen()) {
+                wsClient.close();
             }
         }
         return result;
