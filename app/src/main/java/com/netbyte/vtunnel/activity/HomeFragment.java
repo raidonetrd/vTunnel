@@ -103,7 +103,7 @@ public class HomeFragment extends Fragment {
         FragmentActivity activity = this.getActivity();
         assert activity != null;
         statusTextView = getView().findViewById(R.id.textStatus);
-        statusTextView.setText(Global.IS_CONNECTED ? "CONNECTED" : "Tap To Connect");
+        statusTextView.setText(Global.IS_CONNECTED ? R.string.msg_vpn_connect_yes : R.string.msg_vpn_connect_no);
         runningTimeTextView = getView().findViewById(R.id.textRunningTime);
         runningTimeTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         statTextView = getView().findViewById(R.id.textStat);
@@ -124,7 +124,7 @@ public class HomeFragment extends Fragment {
         SharedPreferences preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         String server = preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS);
         if (TextUtils.isEmpty(server)) {
-            Toast.makeText(activity, "Please add a server !", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, R.string.msg_error_server_none, Toast.LENGTH_LONG).show();
             return;
         }
         Intent intent = VpnService.prepare(this.getActivity());
@@ -136,12 +136,12 @@ public class HomeFragment extends Fragment {
             onActivityResult(0, RESULT_OK, data);
         }
         imageButton.setImageResource(Global.IS_CONNECTED ? R.drawable.power_stop : R.drawable.power_off);
-        statusTextView.setText(Global.IS_CONNECTED ? "CONNECTED" : "Tap To Connect");
+        statusTextView.setText(Global.IS_CONNECTED ? R.string.msg_vpn_connect_yes : R.string.msg_vpn_connect_no);
         runningTimeTextView.setText((Global.IS_CONNECTED && Global.START_TIME > 0) ? FormatUtil.formatTime((System.currentTimeMillis() - Global.START_TIME) / 1000) : "00:00:00");
         runningTimeTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         statTextView.setText(Global.IS_CONNECTED ? FormatUtil.formatByte(Stat.TOTAL_BYTES.get()) : "");
         statTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
-        Toast.makeText(activity, Global.IS_CONNECTED ? "Started" : "Stopped", Toast.LENGTH_LONG).show();
+        Toast.makeText(activity, Global.IS_CONNECTED ? R.string.msg_vpn_start : R.string.msg_vpn_stop, Toast.LENGTH_LONG).show();
     }
 
     @Override
