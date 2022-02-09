@@ -63,12 +63,12 @@ public class ConfigsFragment extends Fragment {
             String server = editServer.getText().toString().trim();
             String key = editKey.getText().toString().trim();
             if (!NetUtil.checkServer(server, key)) {
-                Toast.makeText(activity, "Invalid server or key", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, R.string.msg_error_server, Toast.LENGTH_LONG).show();
                 return;
             }
             String dns = editDNS.getText().toString().trim();
             if (!NetUtil.checkDNS(dns)) {
-                Toast.makeText(activity, "Invalid DNS", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, R.string.msg_error_dns, Toast.LENGTH_LONG).show();
                 return;
             }
             preEditor.putString("server", server);
@@ -76,7 +76,7 @@ public class ConfigsFragment extends Fragment {
             preEditor.putString("key", key);
             preEditor.putBoolean("obfuscate", "true".equalsIgnoreCase(editObfs.getText().toString().trim()));
             preEditor.apply();
-            Toast.makeText(activity, "Saved", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, R.string.msg_success_save, Toast.LENGTH_LONG).show();
         });
     }
 

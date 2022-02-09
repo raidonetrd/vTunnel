@@ -74,7 +74,7 @@ public class AppsFragment extends Fragment {
             }
             preEditor.putString("bypass_apps", sb.toString());
             preEditor.commit();
-            Toast.makeText(activity, "Saved", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, R.string.msg_success_save, Toast.LENGTH_LONG).show();
         });
 
         this.initListViewData(this.preferences);
