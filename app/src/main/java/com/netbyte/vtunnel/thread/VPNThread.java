@@ -15,7 +15,7 @@ import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.model.Global;
 import com.netbyte.vtunnel.model.LocalIP;
-import com.netbyte.vtunnel.model.Stat;
+import com.netbyte.vtunnel.model.Stats;
 import com.netbyte.vtunnel.service.IPService;
 import com.netbyte.vtunnel.service.MyVPNService;
 import com.netbyte.vtunnel.ws.WsClient;
@@ -88,7 +88,7 @@ public class VPNThread extends BaseThread {
                                 data = CipherUtil.xor(data, config.getKey().getBytes(StandardCharsets.UTF_8));
                             }
                             wsClient.send(data);
-                            Stat.UPLOAD_BYTES.addAndGet(ln);
+                            Stats.UPLOAD_BYTES.addAndGet(ln);
                         } else if (wsClient.isClosed()) {
                             Log.i(TAG, "ws client is reconnecting...");
                             wsClient.reconnectBlocking();

@@ -8,7 +8,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Global;
-import com.netbyte.vtunnel.model.Stat;
+import com.netbyte.vtunnel.model.Stats;
 import com.netbyte.vtunnel.service.MyVPNService;
 import com.netbyte.vtunnel.utils.FormatUtil;
 
@@ -38,13 +38,13 @@ public class NotifyThread extends BaseThread {
                     builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle("").bigText(title));
                     break;
                 }
-                Stat.TOTAL_BYTES.addAndGet(Stat.DOWNLOAD_BYTES.get() + Stat.UPLOAD_BYTES.get());
-                String text = String.format("Traffic: ↓ %s ↑ %s", FormatUtil.formatByte(Stat.DOWNLOAD_BYTES.get()), FormatUtil.formatByte(Stat.UPLOAD_BYTES.get()));
-                String summary = String.format("IP: %s Total: %s", Global.LOCAL_IP, FormatUtil.formatByte(Stat.TOTAL_BYTES.get()));
+                Stats.TOTAL_BYTES.addAndGet(Stats.DOWNLOAD_BYTES.get() + Stats.UPLOAD_BYTES.get());
+                String text = String.format("Traffic: ↓ %s ↑ %s", FormatUtil.formatByte(Stats.DOWNLOAD_BYTES.get()), FormatUtil.formatByte(Stats.UPLOAD_BYTES.get()));
+                String summary = String.format("IP: %s Total: %s", Global.LOCAL_IP, FormatUtil.formatByte(Stats.TOTAL_BYTES.get()));
                 builder.setStyle(new NotificationCompat.BigTextStyle().setSummaryText(summary).setBigContentTitle("").bigText(text));
                 notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
-                Stat.UPLOAD_BYTES.set(0);
-                Stat.DOWNLOAD_BYTES.set(0);
+                Stats.UPLOAD_BYTES.set(0);
+                Stats.DOWNLOAD_BYTES.set(0);
             } catch (InterruptedException e) {
                 Log.i(TAG, "error:" + e.getMessage());
             }
@@ -57,9 +57,9 @@ public class NotifyThread extends BaseThread {
 
     public void resetData() {
         // reset notification data
-        Stat.UPLOAD_BYTES.set(0);
-        Stat.DOWNLOAD_BYTES.set(0);
-        Stat.TOTAL_BYTES.set(0);
+        Stats.UPLOAD_BYTES.set(0);
+        Stats.DOWNLOAD_BYTES.set(0);
+        Stats.TOTAL_BYTES.set(0);
         Log.i(AppConst.DEFAULT_TAG, "reset data");
     }
 }

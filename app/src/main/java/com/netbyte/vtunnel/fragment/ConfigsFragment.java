@@ -1,9 +1,8 @@
-package com.netbyte.vtunnel.activity;
+package com.netbyte.vtunnel.fragment;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,6 @@ public class ConfigsFragment extends Fragment {
     EditText editServer, editDNS, editKey, editObfs;
     SharedPreferences preferences;
     SharedPreferences.Editor preEditor;
-    OnFragmentInteractionListener mListener;
 
     public ConfigsFragment() {
 
@@ -46,12 +44,15 @@ public class ConfigsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FragmentActivity activity = this.getActivity();
-        btnSave = getView().findViewById(R.id.saveConfigBtn);
-        editServer = getView().findViewById(R.id.editServer);
-        editKey = getView().findViewById(R.id.editKey);
-        editDNS = getView().findViewById(R.id.editDNS);
-        editObfs = getView().findViewById(R.id.editObfs);
         assert activity != null;
+        View thisView = getView();
+        assert thisView != null;
+        btnSave = thisView.findViewById(R.id.saveConfigBtn);
+        editServer = thisView.findViewById(R.id.editServer);
+        editKey = thisView.findViewById(R.id.editKey);
+        editDNS = thisView.findViewById(R.id.editDNS);
+        editObfs = thisView.findViewById(R.id.editObfs);
+
         preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
 
@@ -83,20 +84,11 @@ public class ConfigsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
 }
