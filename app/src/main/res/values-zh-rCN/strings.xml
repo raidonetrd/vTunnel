@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">微加密</string>
-    <string name="app_version">版本:1.4.7</string>
+    <string name="app_version">版本:1.4.8</string>
     <string name="form_server">服务器地址</string>
     <string name="form_key">密钥</string>
     <string name="form_dns">DNS</string>

@@ -1,19 +1,19 @@
 package com.netbyte.vtunnel.activity;
 
 import android.annotation.SuppressLint;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.netbyte.vtunnel.R;
+import com.netbyte.vtunnel.fragment.AppsFragment;
+import com.netbyte.vtunnel.fragment.ConfigsFragment;
+import com.netbyte.vtunnel.fragment.HomeFragment;
 
-public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener, ConfigsFragment.OnFragmentInteractionListener, AppsFragment.OnFragmentInteractionListener {
-
-    BottomNavigationView navigationView;
+public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +22,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.activity_main);
 
-        navigationView = findViewById(R.id.navigation_menu);
-        navigationView.setOnNavigationItemSelectedListener(selectedListener);
+        NavigationBarView navigationView = findViewById(R.id.navigation_menu);
+        navigationView.setOnItemSelectedListener(selectedListener);
 
         HomeFragment fragment = new HomeFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
     }
 
     @SuppressLint("NonConstantResourceId")
-    private final BottomNavigationView.OnNavigationItemSelectedListener selectedListener = menuItem -> {
+    private final NavigationBarView.OnItemSelectedListener selectedListener = menuItem -> {
         switch (menuItem.getItemId()) {
             case R.id.bottomNavigationHomeMenuId:
                 HomeFragment homeFragment = new HomeFragment();
@@ -58,8 +58,4 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
         return false;
     };
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 }

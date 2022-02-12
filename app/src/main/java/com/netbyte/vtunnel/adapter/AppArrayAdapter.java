@@ -15,8 +15,8 @@ import com.netbyte.vtunnel.model.App;
 import java.util.List;
 
 public class AppArrayAdapter extends ArrayAdapter<App> {
-    private List<App> apps;
-    private Activity context;
+    private final List<App> apps;
+    private final Activity context;
 
     public AppArrayAdapter(Activity context, List<App> apps) {
         super(context, R.layout.bypass_item, apps);

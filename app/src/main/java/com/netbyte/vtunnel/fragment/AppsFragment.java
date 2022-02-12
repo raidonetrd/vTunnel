@@ -1,4 +1,4 @@
-package com.netbyte.vtunnel.activity;
+package com.netbyte.vtunnel.fragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +34,6 @@ public class AppsFragment extends Fragment {
     Button btnSave;
     SharedPreferences preferences;
     SharedPreferences.Editor preEditor;
-    OnFragmentInteractionListener mListener;
 
     public AppsFragment() {
 
@@ -58,8 +56,10 @@ public class AppsFragment extends Fragment {
         assert activity != null;
         preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
-        listView = getView().findViewById(R.id.listView);
-        btnSave = getView().findViewById(R.id.saveBypassBtn);
+        View thisView = getView();
+        assert thisView != null;
+        listView = thisView.findViewById(R.id.listView);
+        btnSave = thisView.findViewById(R.id.saveBypassBtn);
         btnSave.setOnClickListener(v -> {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < listView.getAdapter().getCount(); i++) {
@@ -83,7 +83,9 @@ public class AppsFragment extends Fragment {
     private void initListViewData(SharedPreferences preferences) {
         List<App> appList = new ArrayList<>();
         String bypassApps = preferences.getString("bypass_apps", "");
-        PackageManager packageManager = this.getActivity().getPackageManager();
+        FragmentActivity activity = this.getActivity();
+        assert activity != null;
+        PackageManager packageManager = activity.getPackageManager();
         List<PackageInfo> packageInfoList = packageManager.getInstalledPackages(0);
         for (PackageInfo info : packageInfoList) {
             if (!isUserApp(info) || AppConst.APP_PACKAGE_NAME.equals(info.packageName)) {
@@ -121,20 +123,11 @@ public class AppsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
 }
