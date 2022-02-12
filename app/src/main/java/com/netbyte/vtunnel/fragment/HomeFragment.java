@@ -39,8 +39,8 @@ public class HomeFragment extends Fragment {
     TextView statusTextView;
     TextView runningTimeTextView;
     TextView statTextView;
-    Thread runningTimeThread;
-    Handler handler = new Handler(Looper.myLooper()) {
+    Thread timerThread;
+    Handler timerThreadHandler = new Handler(Looper.myLooper()) {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
@@ -70,25 +70,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        runningTimeThread = new Thread(() -> {
-            while (true) {
-                if (Global.IS_CONNECTED) {
-                    Message msg = new Message();
-                    msg.what = 1;
-                    handler.sendMessage(msg);
-                } else {
-                    Message msg = new Message();
-                    msg.what = 0;
-                    handler.sendMessage(msg);
-                }
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
-        });
-        runningTimeThread.start();
+        this.startTimerThread();
     }
 
     @Override
@@ -106,6 +88,17 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         this.showView();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        this.stopTimerThread();
     }
 
     private void showView() {
@@ -174,17 +167,35 @@ public class HomeFragment extends Fragment {
         showResultView();
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    private void startTimerThread() {
+        timerThread = new Thread(() -> {
+            while (true) {
+                if (Global.IS_CONNECTED) {
+                    Message msg = new Message();
+                    msg.what = 1;
+                    timerThreadHandler.sendMessage(msg);
+                } else {
+                    Message msg = new Message();
+                    msg.what = 0;
+                    timerThreadHandler.sendMessage(msg);
+                }
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        });
+        timerThread.start();
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
+    private void stopTimerThread() {
+        if (timerThread == null) {
+            return;
+        }
         try {
-            runningTimeThread.interrupt();
-            runningTimeThread = null;
+            timerThread.interrupt();
+            timerThread = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
