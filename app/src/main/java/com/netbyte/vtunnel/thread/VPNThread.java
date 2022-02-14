@@ -83,19 +83,20 @@ public class VPNThread extends BaseThread {
             while (Global.RUNNING) {
                 try {
                     int ln = in.read(buf);
-                    if (ln > 0) {
-                        if (webSocket != null && webSocket.isOpen()) {
-                            byte[] data = Arrays.copyOfRange(buf, 0, ln);
-                            if (config.isObfuscate()) {
-                                data = CipherUtil.xor(data, config.getKey().getBytes(StandardCharsets.UTF_8));
-                            }
-                            webSocket.sendBinaryFrame(data);
-                            Stats.UPLOAD_BYTES.addAndGet(ln);
-                        } else {
-                            Log.i(TAG, "ws client is reconnecting...");
-                            webSocket = MyWebSocketClient.connectWebSocket(uri, config.getKey(), config, out);
-                            TimeUnit.MILLISECONDS.sleep(200);
+                    if (ln <= 0) {
+                        continue;
+                    }
+                    if (webSocket != null && webSocket.isOpen()) {
+                        byte[] data = Arrays.copyOfRange(buf, 0, ln);
+                        if (config.isObfuscate()) {
+                            data = CipherUtil.xor(data, config.getKey().getBytes(StandardCharsets.UTF_8));
                         }
+                        webSocket.sendBinaryFrame(data);
+                        Stats.UPLOAD_BYTES.addAndGet(ln);
+                    } else {
+                        Log.i(TAG, "ws client is reconnecting...");
+                        webSocket = MyWebSocketClient.connectWebSocket(uri, config.getKey(), config, out);
+                        TimeUnit.MILLISECONDS.sleep(200);
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "error on WsThread:" + e.toString());
