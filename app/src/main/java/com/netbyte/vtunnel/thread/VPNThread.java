@@ -18,7 +18,6 @@ import com.netbyte.vtunnel.model.LocalIP;
 import com.netbyte.vtunnel.model.Stats;
 import com.netbyte.vtunnel.service.IPService;
 import com.netbyte.vtunnel.service.MyVPNService;
-import com.netbyte.vtunnel.utils.SSLUtil;
 import com.netbyte.vtunnel.utils.CipherUtil;
 import com.netbyte.vtunnel.ws.MyWebSocketClient;
 
@@ -27,7 +26,6 @@ import org.asynchttpclient.ws.WebSocket;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
