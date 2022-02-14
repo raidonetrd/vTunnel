@@ -18,9 +18,11 @@ import com.netbyte.vtunnel.model.LocalIP;
 import com.netbyte.vtunnel.model.Stats;
 import com.netbyte.vtunnel.service.IPService;
 import com.netbyte.vtunnel.service.MyVPNService;
-import com.netbyte.vtunnel.ws.WsClient;
 import com.netbyte.vtunnel.utils.SSLUtil;
 import com.netbyte.vtunnel.utils.CipherUtil;
+import com.netbyte.vtunnel.ws.MyWebSocketClient;
+
+import org.asynchttpclient.ws.WebSocket;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -46,7 +48,7 @@ public class VPNThread extends BaseThread {
     @Override
     public void run() {
         Global.START_TIME = System.currentTimeMillis();
-        WsClient wsClient = null;
+        WebSocket webSocket = null;
         FileInputStream in = null;
         FileOutputStream out = null;
         ParcelFileDescriptor tun = null;
@@ -59,12 +61,6 @@ public class VPNThread extends BaseThread {
                 return;
             }
             Global.LOCAL_IP = localIP.getLocalIP();
-            // create ws client
-            @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", config.getServerAddress(), config.getServerPort());
-            wsClient = new WsClient(new URI(uri), config);
-            wsClient.setSocketFactory(SSLUtil.createEasySSLContext().getSocketFactory());
-            wsClient.addHeader("key", config.getKey());
-            wsClient.connectBlocking();
             // create tun
             tun = createTunnel(config, localIP);
             if (tun == null) {
@@ -73,7 +69,14 @@ public class VPNThread extends BaseThread {
             }
             in = new FileInputStream(tun.getFileDescriptor());
             out = new FileOutputStream(tun.getFileDescriptor());
-            wsClient.setOutStream(out);
+            // create ws client
+            @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", config.getServerAddress(), config.getServerPort());
+            webSocket = MyWebSocketClient.buildWebSocket(uri, config.getKey(), config, out);
+            if (webSocket == null || !webSocket.isOpen()) {
+                Log.i(TAG, "webSocket is not open");
+                vpnService.stopVPN();
+                return;
+            }
             // start monitor and notify threads
             startMonitorAndNotifyThreads();
             // forward data
@@ -82,18 +85,17 @@ public class VPNThread extends BaseThread {
                 try {
                     int ln = in.read(buf);
                     if (ln > 0) {
-                        if (wsClient.isOpen()) {
+                        if (webSocket != null && webSocket.isOpen()) {
                             byte[] data = Arrays.copyOfRange(buf, 0, ln);
                             if (config.isObfuscate()) {
                                 data = CipherUtil.xor(data, config.getKey().getBytes(StandardCharsets.UTF_8));
                             }
-                            wsClient.send(data);
+                            webSocket.sendBinaryFrame(data);
                             Stats.UPLOAD_BYTES.addAndGet(ln);
-                        } else if (wsClient.isClosed()) {
-                            Log.i(TAG, "ws client is reconnecting...");
-                            wsClient.reconnectBlocking();
                         } else {
-                            TimeUnit.MILLISECONDS.sleep(100);
+                            Log.i(TAG, "ws client is reconnecting...");
+                            webSocket = MyWebSocketClient.buildWebSocket(uri, config.getKey(), config, out);
+                            TimeUnit.SECONDS.sleep(3);
                         }
                     }
                 } catch (Exception e) {
@@ -104,8 +106,8 @@ public class VPNThread extends BaseThread {
         } catch (Exception e) {
             Log.e(TAG, "error on WsThread:" + e.toString());
         } finally {
-            if (wsClient != null) {
-                wsClient.close();
+            if (webSocket != null && webSocket.isOpen()) {
+                webSocket.sendCloseFrame();
             }
             if (in != null) {
                 try {
