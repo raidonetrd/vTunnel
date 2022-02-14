@@ -35,7 +35,7 @@ public class MyVPNService extends VpnService {
     @SuppressLint("UnspecifiedImmutableFlag")
     @Override
     public void onCreate() {
-        pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT);
+        pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_IMMUTABLE);
     }
 
     @Override
