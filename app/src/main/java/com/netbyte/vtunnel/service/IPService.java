@@ -6,9 +6,7 @@ import android.util.Log;
 
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.LocalIP;
-import com.netbyte.vtunnel.utils.HttpUtil;
-
-import java.io.IOException;
+import com.netbyte.vtunnel.ws.MyWebSocketClient;
 
 public class IPService {
     private static final String TAG = "IPService";
@@ -24,12 +22,7 @@ public class IPService {
 
     public LocalIP pickIp() {
         @SuppressLint("DefaultLocale") String api = String.format("https://%s:%d/register/pick/ip", serverIP, serverPort);
-        String resp = "";
-        try {
-            resp = HttpUtil.get(api, "key", key);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String resp = MyWebSocketClient.httpGet(api, key);
         Log.i(TAG, String.format("get api:%s resp:%s", api, resp));
         if (TextUtils.isEmpty(resp)) {
             return null;
@@ -43,23 +36,13 @@ public class IPService {
 
     public void keepAliveIp(String ip) {
         @SuppressLint("DefaultLocale") String api = String.format("https://%s:%d/register/keepalive/ip?ip=%s", serverIP, serverPort, ip);
-        String resp = "";
-        try {
-            resp = HttpUtil.get(api, "key", key);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String resp = MyWebSocketClient.httpGet(api, key);
         Log.i(TAG, String.format("get api:%s resp:%s", api, resp));
     }
 
     public void deleteIp(String ip) {
         @SuppressLint("DefaultLocale") String api = String.format("https://%s:%d/register/delete/ip?ip=%s", serverIP, serverPort, ip);
-        String resp = "";
-        try {
-            resp = HttpUtil.get(api, "key", key);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String resp = MyWebSocketClient.httpGet(api, key);
         Log.i(TAG, String.format("get api:%s resp:%s", api, resp));
     }
 }

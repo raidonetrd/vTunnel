@@ -16,7 +16,7 @@ public class NetUtil {
         WebSocket webSocket = null;
         try {
             String uri = String.format("wss://%s/way-to-freedom", server);
-            webSocket = MyWebSocketClient.buildWebSocket(uri,key);
+            webSocket = MyWebSocketClient.connectWebSocket(uri,key);
             if (webSocket!=null && webSocket.isOpen()) {
                 result = true;
             }

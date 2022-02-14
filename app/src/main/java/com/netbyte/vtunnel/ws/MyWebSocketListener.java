@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class MyWebSocketListener implements WebSocketListener {
-    private static final String TAG = "WsClient";
+    private static final String TAG = "MyWebSocketListener";
     private Config config;
     private FileOutputStream out;
 
