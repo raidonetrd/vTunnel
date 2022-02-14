@@ -34,6 +34,9 @@ import java.util.concurrent.TimeUnit;
 public class VPNThread extends BaseThread {
     private static final String TAG = "VPNThread";
     private final Config config;
+    private FileInputStream in = null;
+    private FileOutputStream out = null;
+    private ParcelFileDescriptor tun = null;
 
     public VPNThread(Config config, MyVPNService vpnService, IPService ipService, NotificationManager notificationManager, NotificationCompat.Builder notificationBuilder) {
         this.config = config;
@@ -47,9 +50,6 @@ public class VPNThread extends BaseThread {
     public void run() {
         Global.START_TIME = System.currentTimeMillis();
         WebSocket webSocket = null;
-        FileInputStream in = null;
-        FileOutputStream out = null;
-        ParcelFileDescriptor tun = null;
         try {
             Log.i(TAG, "start");
             // pick ip
@@ -69,10 +69,11 @@ public class VPNThread extends BaseThread {
             out = new FileOutputStream(tun.getFileDescriptor());
             // create ws client
             @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", config.getServerAddress(), config.getServerPort());
-            webSocket = MyWebSocketClient.buildWebSocket(uri, config.getKey(), config, out);
+            webSocket = MyWebSocketClient.connectWebSocket(uri, config.getKey(), config, out);
             if (webSocket == null || !webSocket.isOpen()) {
                 Log.i(TAG, "webSocket is not open");
                 vpnService.stopVPN();
+                closeTun();
                 return;
             }
             // start monitor and notify threads
@@ -92,8 +93,8 @@ public class VPNThread extends BaseThread {
                             Stats.UPLOAD_BYTES.addAndGet(ln);
                         } else {
                             Log.i(TAG, "ws client is reconnecting...");
-                            webSocket = MyWebSocketClient.buildWebSocket(uri, config.getKey(), config, out);
-                            TimeUnit.SECONDS.sleep(3);
+                            webSocket = MyWebSocketClient.connectWebSocket(uri, config.getKey(), config, out);
+                            TimeUnit.MILLISECONDS.sleep(200);
                         }
                     }
                 } catch (Exception e) {
@@ -107,27 +108,7 @@ public class VPNThread extends BaseThread {
             if (webSocket != null && webSocket.isOpen()) {
                 webSocket.sendCloseFrame();
             }
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (tun != null) {
-                try {
-                    tun.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            closeTun();
         }
     }
 
@@ -156,6 +137,31 @@ public class VPNThread extends BaseThread {
         Log.i(TAG, "bypass apps:" + appList);
         return builder.establish();
     }
+
+    private void closeTun() {
+        if (in != null) {
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (out != null) {
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (tun != null) {
+            try {
+                tun.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     private void startMonitorAndNotifyThreads() {
         MonitorThread monitorThread = new MonitorThread(vpnService, ipService);
