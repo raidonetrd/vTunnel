@@ -22,7 +22,7 @@ A simple android VPN app.
 
 # Deploy server  
 
-I recommend you to use caddy2 with automatic for reverse proxy vtun server.  
+I recommend you to use caddy2 with automatic https for reverse proxy vtun server.  
 1. config your Caddyfile:  
 ```
 your.domain {
@@ -33,10 +33,8 @@ your.domain {
 docker run -d -p 80:80 -p 443:443 --name caddy --restart=always --net=host -v /data/caddy/Caddyfile:/etc/
 caddy/Caddyfile -v /data/caddy/data:/data caddy
 
-
 3. deploy vtun server on docker  
 docker run  -d --privileged --restart=always --net=host --name vtun-server netbyte/vtun -S -l=:3001 -c=172.16.0.1/24 -k=123456 
-
 
 # Download
 [download](https://github.com/net-byte/vTunnel/releases)
