@@ -50,11 +50,11 @@ public class MyWebSocketListener implements WebSocketListener {
         if (config.isObfuscate()) {
             payload = CipherUtil.xor(payload, config.getKey().getBytes(StandardCharsets.UTF_8));
         }
-        Stats.DOWNLOAD_BYTES.addAndGet(payload.length);
         try {
             out.write(payload);
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
         }
+        Stats.DOWNLOAD_BYTES.addAndGet(payload.length);
     }
 }
