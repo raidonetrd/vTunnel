@@ -37,6 +37,7 @@ public class VPNThread extends BaseThread {
     private FileInputStream in = null;
     private FileOutputStream out = null;
     private ParcelFileDescriptor tun = null;
+    private WebSocket webSocket = null;
 
     public VPNThread(Config config, MyVPNService vpnService, IPService ipService, NotificationManager notificationManager, NotificationCompat.Builder notificationBuilder) {
         this.config = config;
@@ -49,7 +50,6 @@ public class VPNThread extends BaseThread {
     @Override
     public void run() {
         Global.START_TIME = System.currentTimeMillis();
-        WebSocket webSocket = null;
         try {
             Log.i(TAG, "start");
             // pick ip
@@ -76,8 +76,12 @@ public class VPNThread extends BaseThread {
                 closeTun();
                 return;
             }
-            // start monitor and notify threads
-            startMonitorAndNotifyThreads();
+            // start monitor threads
+            MonitorThread monitorThread = new MonitorThread(vpnService, ipService);
+            monitorThread.start();
+            // start notify threads
+            NotifyThread notifyThread = new NotifyThread(notificationManager, notificationBuilder, vpnService);
+            notifyThread.start();
             // forward data
             byte[] buf = new byte[AppConst.BUFFER_SIZE];
             while (Global.RUNNING) {
@@ -106,9 +110,6 @@ public class VPNThread extends BaseThread {
         } catch (Exception e) {
             Log.e(TAG, "error on WsThread:" + e.toString());
         } finally {
-            if (webSocket != null && webSocket.isOpen()) {
-                webSocket.sendCloseFrame();
-            }
             closeTun();
         }
     }
@@ -140,6 +141,9 @@ public class VPNThread extends BaseThread {
     }
 
     private void closeTun() {
+        if (webSocket != null && webSocket.isOpen()) {
+            webSocket.sendCloseFrame();
+        }
         if (in != null) {
             try {
                 in.close();
@@ -162,13 +166,4 @@ public class VPNThread extends BaseThread {
             }
         }
     }
-
-
-    private void startMonitorAndNotifyThreads() {
-        MonitorThread monitorThread = new MonitorThread(vpnService, ipService);
-        monitorThread.start();
-        NotifyThread notifyThread = new NotifyThread(notificationManager, notificationBuilder, vpnService);
-        notifyThread.start();
-    }
-
 }
