@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">微加密</string>
-    <string name="app_version">版本:1.4.9</string>
+    <string name="app_version">版本:1.5.0</string>
     <string name="form_server">服务器地址</string>
+    <string name="form_path">路径</string>
     <string name="form_key">密钥</string>
     <string name="form_dns">DNS</string>
     <string name="form_obfs">数据混淆</string>
@@ -10,6 +11,7 @@
     <string name="btn_save">保存</string>
     <string name="btn_bypass"> 绕过 VPN</string>
     <string name="form_default_server">your.domain.org:443</string>
+    <string name="form_default_path">/way-to-freedom</string>
     <string name="form_default_key">123456</string>
     <string name="form_default_dns">223.5.5.5</string>
     <string name="form_default_obfs">false</string>

@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">vTunnel</string>
-    <string name="app_version">version:1.4.9</string>
+    <string name="app_version">version:1.5.0</string>
     <string name="form_server">Server</string>
+    <string name="form_path">Path</string>
     <string name="form_key">Key</string>
     <string name="form_dns">DNS</string>
     <string name="form_obfs">Obfuscation</string>
@@ -10,6 +11,7 @@
     <string name="btn_save">SAVE</string>
     <string name="btn_bypass"> BYPASS VPN</string>
     <string name="form_default_server">your.domain.org:443</string>
+    <string name="form_default_path">/way-to-freedom</string>
     <string name="form_default_key">123456</string>
     <string name="form_default_dns">223.5.5.5</string>
     <string name="form_default_obfs">false</string>
@@ -17,7 +19,7 @@
     <string name="menu_configs">Configs</string>
     <string name="menu_apps">Apps</string>
     <string name="msg_success_save">Saved</string>
-    <string name="msg_error_server">Invalid server or key</string>
+    <string name="msg_error_server">Invalid server address or key</string>
     <string name="msg_error_server_none">Please add a server</string>
     <string name="msg_error_dns">Invalid DNS</string>
     <string name="msg_vpn_connect_no">Tap To Connect</string>

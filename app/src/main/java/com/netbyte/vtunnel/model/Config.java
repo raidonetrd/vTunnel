@@ -7,14 +7,16 @@ public class Config implements Serializable {
 
     private String serverAddress;
     private int serverPort;
+    private String path;
     private String dns;
     private String key;
     private boolean obfuscate;
     private String bypassApps;
 
-    public Config(String serverAddress, int serverPort, String dns, String key, String bypassApps, boolean obfuscate) {
+    public Config(String serverAddress, int serverPort, String path, String dns, String key, String bypassApps, boolean obfuscate) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
+        this.path = path;
         this.dns = dns;
         this.key = key;
         this.bypassApps = bypassApps;
@@ -36,6 +38,14 @@ public class Config implements Serializable {
 
     public void setServerPort(int serverPort) {
         this.serverPort = serverPort;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getDns() {

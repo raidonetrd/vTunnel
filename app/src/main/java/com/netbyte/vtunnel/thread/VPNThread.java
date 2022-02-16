@@ -68,7 +68,7 @@ public class VPNThread extends BaseThread {
             in = new FileInputStream(tun.getFileDescriptor());
             out = new FileOutputStream(tun.getFileDescriptor());
             // create ws client
-            @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d/way-to-freedom", config.getServerAddress(), config.getServerPort());
+            @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d%s", config.getServerAddress(), config.getServerPort(), config.getPath());
             webSocket = MyWebSocketClient.connectWebSocket(uri, config.getKey(), config, out);
             if (webSocket == null || !webSocket.isOpen()) {
                 Log.i(TAG, "webSocket is not open");
