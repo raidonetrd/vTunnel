@@ -79,6 +79,7 @@ public class MyVPNService extends VpnService {
     private void initConfig(Intent intent) {
         SharedPreferences preferences = this.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         String server = preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS);
+        String path = preferences.getString("path", AppConst.DEFAULT_PATH);
         String dns = preferences.getString("dns", AppConst.DEFAULT_DNS);
         String key = preferences.getString("key", AppConst.DEFAULT_KEY);
         String bypassApps = preferences.getString("bypass_apps", "");
@@ -92,7 +93,7 @@ public class MyVPNService extends VpnService {
             serverAddress = server;
             serverPort = AppConst.DEFAULT_SERVER_PORT;
         }
-        this.config = new Config(serverAddress, serverPort, dns, key, bypassApps, obfuscate);
+        this.config = new Config(serverAddress, serverPort, path, dns, key, bypassApps, obfuscate);
         this.ipService = new IPService(config.getServerAddress(), config.getServerPort(), config.getKey());
     }
 

@@ -14,6 +14,7 @@ public class AppConst {
     public static final String DEFAULT_LOCAL_ADDRESS = "172.16.0.100";
     public static final int DEFAULT_LOCAL_PREFIX_LENGTH = 24;
     public static final String DEFAULT_KEY = "123456";
+    public static final String DEFAULT_PATH = "/way-to-freedom";
     public static final String DEFAULT_DNS = "223.5.5.5";
     public static final String DEFAULT_ROUTE = "0.0.0.0";
     public static final String BTN_ACTION_CONNECT = "connect";

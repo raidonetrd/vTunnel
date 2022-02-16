@@ -60,17 +60,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:hint="@string/form_key"
-                app:endIconMode="password_toggle"
-                app:endIconTint="@color/colorAccent">
+                android:hint="@string/form_path"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/colorPrimaryDark">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editKey"
+                    android:id="@+id/editPath"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:text="@string/form_default_key" />
-
+                    android:text="@string/form_default_path" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
@@ -93,6 +91,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
+                android:hint="@string/form_key"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/colorAccent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editKey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:text="@string/form_default_key" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="start|center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
                 android:hint="@string/form_dns"
                 app:endIconMode="clear_text"
                 app:endIconTint="@color/colorPrimaryDark">
@@ -106,7 +137,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayout4"
+            android:id="@+id/linearLayout5"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_marginStart="8dp"
@@ -118,7 +149,7 @@
             app:layout_constraintBottom_toTopOf="@+id/saveConfigBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
             tools:ignore="MissingConstraints">
 
             <com.google.android.material.textfield.TextInputLayout
@@ -152,6 +183,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>
