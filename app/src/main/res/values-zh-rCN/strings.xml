@@ -10,8 +10,8 @@
     <string name="form_switch_off">关</string>
     <string name="btn_save">保存</string>
     <string name="btn_bypass"> 绕过 VPN</string>
-    <string name="form_default_server">your.domain.org:443</string>
-    <string name="form_default_path">/way-to-freedom</string>
+    <string name="form_default_server">vpn.your.domain:443</string>
+    <string name="form_default_path">/freedom</string>
     <string name="form_default_key">123456</string>
     <string name="form_default_dns">223.5.5.5</string>
     <string name="form_default_obfs">false</string>
