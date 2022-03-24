@@ -1,12 +1,9 @@
 # vTunnel 
 
-A simple android VPN app.
+A websocket protocol based android VPN app.
 
 ![image](https://img.shields.io/badge/License-MIT-orange)
 ![image](https://img.shields.io/badge/License-Anti--996-red)
-
-# Features
-* VPN over websocket
 
 # Requirements
 * Android version >= 8.0
