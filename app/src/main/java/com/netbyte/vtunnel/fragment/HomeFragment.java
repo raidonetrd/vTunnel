@@ -37,7 +37,6 @@ import java.util.concurrent.TimeUnit;
 public class HomeFragment extends Fragment {
     ImageButton imageButton;
     TextView statusTextView;
-    TextView runningTimeTextView;
     TextView statTextView;
     Thread timerThread;
     Handler timerThreadHandler = new Handler(Looper.myLooper()) {
@@ -46,7 +45,6 @@ public class HomeFragment extends Fragment {
             if (msg.what == 0) {
                 showView();
             } else if (msg.what == 1 && Global.START_TIME > 0) {
-                runningTimeTextView.setText(FormatUtil.formatTime((System.currentTimeMillis() - Global.START_TIME) / 1000));
                 if (Stats.TOTAL_BYTES.get() > 0) {
                     statTextView.setText(FormatUtil.formatByte(Stats.TOTAL_BYTES.get()));
                 }
@@ -108,8 +106,6 @@ public class HomeFragment extends Fragment {
         assert thisView != null;
         statusTextView = thisView.findViewById(R.id.textStatus);
         statusTextView.setText(Global.IS_CONNECTED ? R.string.msg_vpn_connect_yes : R.string.msg_vpn_connect_no);
-        runningTimeTextView = thisView.findViewById(R.id.textRunningTime);
-        runningTimeTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         statTextView = thisView.findViewById(R.id.textStat);
         statTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         imageButton = thisView.findViewById(R.id.connectBtn);
@@ -122,9 +118,15 @@ public class HomeFragment extends Fragment {
         assert activity != null;
         imageButton.setImageResource(Global.IS_CONNECTED ? R.drawable.power_stop : R.drawable.power_off);
         statusTextView.setText(Global.IS_CONNECTED ? R.string.msg_vpn_connect_yes : R.string.msg_vpn_connect_no);
-        runningTimeTextView.setText((Global.IS_CONNECTED && Global.START_TIME > 0) ? FormatUtil.formatTime((System.currentTimeMillis() - Global.START_TIME) / 1000) : "00:00:00");
-        runningTimeTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
-        statTextView.setText(Global.IS_CONNECTED ? FormatUtil.formatByte(Stats.TOTAL_BYTES.get()) : "");
+        if (Global.IS_CONNECTED) {
+            if (Stats.TOTAL_BYTES.get() > 0) {
+                statTextView.setText(FormatUtil.formatByte(Stats.TOTAL_BYTES.get()));
+            } else {
+                statTextView.setText(R.string.msg_vpn_connecting);
+            }
+        } else {
+            statTextView.setText("");
+        }
         statTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         Toast.makeText(activity, Global.IS_CONNECTED ? R.string.msg_vpn_start : R.string.msg_vpn_stop, Toast.LENGTH_LONG).show();
     }
