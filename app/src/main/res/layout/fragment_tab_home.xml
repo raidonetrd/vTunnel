@@ -29,11 +29,11 @@
             android:id="@+id/textStat"
             android:layout_width="180dp"
             android:layout_height="21dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="188dp"
             android:gravity="center"
             android:text="@string/msg_vpn_connecting"
             android:textColor="@color/colorPrimary"
-            android:textSize="14sp"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +43,7 @@
             android:id="@+id/textStatus"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_marginTop="88dp"
+            android:layout_marginTop="72dp"
             android:text="@string/msg_vpn_connect_no"
             android:textColor="@color/colorText"
             android:textSize="16sp"
@@ -63,7 +63,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textStatus"
+            app:layout_constraintVertical_bias="0.755"
             tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/textDataUsage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/msg_vpn_data_usage"
+            android:textColor="@color/colorPrimary"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toTopOf="@+id/textStat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textStatus"
+            app:layout_constraintVertical_bias="0.754" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>

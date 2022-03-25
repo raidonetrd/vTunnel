@@ -22,9 +22,10 @@
     <string name="msg_error_server">无效服务器地址或密钥</string>
     <string name="msg_error_server_none">请添加服务器配置</string>
     <string name="msg_error_dns">无效DNS</string>
-    <string name="msg_vpn_connect_no">点击打开</string>
-    <string name="msg_vpn_connect_yes">您的网络已被加密</string>
+    <string name="msg_vpn_connect_no">点击连接</string>
+    <string name="msg_vpn_connect_yes">网络已被加密</string>
     <string name="msg_vpn_start">已启动</string>
     <string name="msg_vpn_stop">已关闭</string>
     <string name="msg_vpn_connecting">连接中...</string>
+    <string name="msg_vpn_data_usage">使用流量</string>
 </resources>
