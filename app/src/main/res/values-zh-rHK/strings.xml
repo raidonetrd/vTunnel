@@ -22,9 +22,10 @@
     <string name="msg_error_server">無效服務器地址或密鑰</string>
     <string name="msg_error_server_none">請添加服務器配置</string>
     <string name="msg_error_dns">無效DNS</string>
-    <string name="msg_vpn_connect_no">點擊打開</string>
-    <string name="msg_vpn_connect_yes">您的網絡已被加密</string>
+    <string name="msg_vpn_connect_no">點擊連接</string>
+    <string name="msg_vpn_connect_yes">網絡已被加密</string>
     <string name="msg_vpn_start">已啟動</string>
     <string name="msg_vpn_stop">已關閉</string>
     <string name="msg_vpn_connecting">連接中...</string>
+    <string name="msg_vpn_data_usage">使用流量</string>
 </resources>

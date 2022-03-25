@@ -1,5 +1,6 @@
 package com.netbyte.vtunnel.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -38,8 +39,10 @@ public class HomeFragment extends Fragment {
     ImageButton imageButton;
     TextView statusTextView;
     TextView statTextView;
+    TextView dataUsageTextView;
     Thread timerThread;
     Handler timerThreadHandler = new Handler(Looper.myLooper()) {
+        @SuppressLint("SetTextI18n")
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
@@ -108,11 +111,14 @@ public class HomeFragment extends Fragment {
         statusTextView.setText(Global.IS_CONNECTED ? R.string.msg_vpn_connect_yes : R.string.msg_vpn_connect_no);
         statTextView = thisView.findViewById(R.id.textStat);
         statTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
+        dataUsageTextView = thisView.findViewById(R.id.textDataUsage);
+        dataUsageTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         imageButton = thisView.findViewById(R.id.connectBtn);
         imageButton.setImageResource(Global.IS_CONNECTED ? R.drawable.power_stop : R.drawable.power_off);
         imageButton.setOnClickListener(v -> clickHandler());
     }
 
+    @SuppressLint("SetTextI18n")
     private void showResultView() {
         Activity activity = getActivity();
         assert activity != null;
@@ -127,6 +133,7 @@ public class HomeFragment extends Fragment {
         } else {
             statTextView.setText("");
         }
+        dataUsageTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         statTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         Toast.makeText(activity, Global.IS_CONNECTED ? R.string.msg_vpn_start : R.string.msg_vpn_stop, Toast.LENGTH_LONG).show();
     }

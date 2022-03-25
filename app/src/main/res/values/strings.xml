@@ -22,9 +22,10 @@
     <string name="msg_error_server">Invalid server address or key</string>
     <string name="msg_error_server_none">Please add a server</string>
     <string name="msg_error_dns">Invalid DNS</string>
-    <string name="msg_vpn_connect_no">Tap To Turn On</string>
-    <string name="msg_vpn_connect_yes">Your network is encrypted</string>
+    <string name="msg_vpn_connect_no">Tap To Connect</string>
+    <string name="msg_vpn_connect_yes">NETWORK IS ENCRYPTED</string>
     <string name="msg_vpn_start">Started</string>
     <string name="msg_vpn_stop">Stopped</string>
     <string name="msg_vpn_connecting">Connecting...</string>
+    <string name="msg_vpn_data_usage">Data Usage</string>
 </resources>
