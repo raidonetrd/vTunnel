@@ -23,7 +23,7 @@
     <string name="msg_error_server_none">Please add a server</string>
     <string name="msg_error_dns">Invalid DNS</string>
     <string name="msg_vpn_connect_no">Tap To Connect</string>
-    <string name="msg_vpn_connect_yes">NETWORK IS ENCRYPTED</string>
+    <string name="msg_vpn_connect_yes">Network is encrypted</string>
     <string name="msg_vpn_start">Started</string>
     <string name="msg_vpn_stop">Stopped</string>
     <string name="msg_vpn_connecting">Connecting...</string>
