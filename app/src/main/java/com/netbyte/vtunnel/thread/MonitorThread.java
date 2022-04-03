@@ -5,15 +5,15 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.netbyte.vtunnel.model.Global;
-import com.netbyte.vtunnel.service.IPService;
-import com.netbyte.vtunnel.service.MyVPNService;
+import com.netbyte.vtunnel.service.IpService;
+import com.netbyte.vtunnel.service.MyVpnService;
 
 import java.util.concurrent.TimeUnit;
 
 public class MonitorThread extends BaseThread {
     private static final String TAG = "MonitorThread";
 
-    public MonitorThread(MyVPNService vpnService, IPService ipService) {
+    public MonitorThread(MyVpnService vpnService, IpService ipService) {
         this.vpnService = vpnService;
         this.ipService = ipService;
     }

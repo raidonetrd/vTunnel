@@ -30,7 +30,7 @@ import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Global;
 import com.netbyte.vtunnel.model.Stats;
-import com.netbyte.vtunnel.service.MyVPNService;
+import com.netbyte.vtunnel.service.MyVpnService;
 import com.netbyte.vtunnel.utils.FormatUtil;
 
 import java.util.concurrent.TimeUnit;
@@ -47,10 +47,8 @@ public class HomeFragment extends Fragment {
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
                 showView();
-            } else if (msg.what == 1 && Global.START_TIME > 0) {
-                if (Stats.TOTAL_BYTES.get() > 0) {
-                    statTextView.setText(FormatUtil.formatByte(Stats.TOTAL_BYTES.get()));
-                }
+            } else if (msg.what == 1 && Stats.TOTAL_BYTES.get() > 0) {
+                statTextView.setText(FormatUtil.formatByte(Stats.TOTAL_BYTES.get()));
             }
         }
     };
@@ -165,7 +163,7 @@ public class HomeFragment extends Fragment {
     private void startVPNService() {
         Activity activity = getActivity();
         assert activity != null;
-        Intent vpnIntent = new Intent(activity, MyVPNService.class);
+        Intent vpnIntent = new Intent(activity, MyVpnService.class);
         vpnIntent.setAction(Global.IS_CONNECTED ? AppConst.BTN_ACTION_CONNECT : AppConst.BTN_ACTION_DISCONNECT);
         activity.startService(vpnIntent);
         showResultView();

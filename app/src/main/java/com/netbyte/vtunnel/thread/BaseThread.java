@@ -4,13 +4,12 @@ import android.app.NotificationManager;
 
 import androidx.core.app.NotificationCompat;
 
-import com.netbyte.vtunnel.model.Global;
-import com.netbyte.vtunnel.service.IPService;
-import com.netbyte.vtunnel.service.MyVPNService;
+import com.netbyte.vtunnel.service.IpService;
+import com.netbyte.vtunnel.service.MyVpnService;
 
 public class BaseThread extends Thread {
-    protected MyVPNService vpnService;
-    protected IPService ipService;
+    protected MyVpnService vpnService;
+    protected IpService ipService;
     protected NotificationManager notificationManager;
     protected NotificationCompat.Builder notificationBuilder;
 }

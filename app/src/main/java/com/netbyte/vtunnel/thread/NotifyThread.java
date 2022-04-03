@@ -9,7 +9,7 @@ import androidx.core.app.NotificationCompat;
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Global;
 import com.netbyte.vtunnel.model.Stats;
-import com.netbyte.vtunnel.service.MyVPNService;
+import com.netbyte.vtunnel.service.MyVpnService;
 import com.netbyte.vtunnel.utils.FormatUtil;
 import com.netbyte.vtunnel.R;
 
@@ -21,7 +21,7 @@ public class NotifyThread extends BaseThread {
     private final NotificationManager notificationManager;
     private final NotificationCompat.Builder builder;
 
-    public NotifyThread(NotificationManager notificationManager, NotificationCompat.Builder builder, MyVPNService vpnService) {
+    public NotifyThread(NotificationManager notificationManager, NotificationCompat.Builder builder, MyVpnService vpnService) {
         this.notificationManager = notificationManager;
         this.builder = builder;
         this.vpnService = vpnService;
