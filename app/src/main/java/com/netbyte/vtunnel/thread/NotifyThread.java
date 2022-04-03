@@ -11,6 +11,7 @@ import com.netbyte.vtunnel.model.Global;
 import com.netbyte.vtunnel.model.Stats;
 import com.netbyte.vtunnel.service.MyVPNService;
 import com.netbyte.vtunnel.utils.FormatUtil;
+import com.netbyte.vtunnel.R;
 
 import java.util.concurrent.TimeUnit;
 
@@ -39,8 +40,8 @@ public class NotifyThread extends BaseThread {
                     break;
                 }
                 Stats.TOTAL_BYTES.addAndGet(Stats.DOWNLOAD_BYTES.get() + Stats.UPLOAD_BYTES.get());
-                String text = String.format("Network: ↓ %s ↑ %s", FormatUtil.formatByte(Stats.DOWNLOAD_BYTES.get()), FormatUtil.formatByte(Stats.UPLOAD_BYTES.get()));
-                String summary = String.format("IP: %s Total: %s", Global.LOCAL_IP, FormatUtil.formatByte(Stats.TOTAL_BYTES.get()));
+                String text = String.format("↓ %s ↑ %s", FormatUtil.formatByte(Stats.DOWNLOAD_BYTES.get()), FormatUtil.formatByte(Stats.UPLOAD_BYTES.get()));
+                String summary = String.format("%s: %s", vpnService.getResources().getString(R.string.msg_vpn_data_usage), FormatUtil.formatByte(Stats.TOTAL_BYTES.get()));
                 builder.setStyle(new NotificationCompat.BigTextStyle().setSummaryText(summary).setBigContentTitle("").bigText(text));
                 notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
                 Stats.UPLOAD_BYTES.set(0);
