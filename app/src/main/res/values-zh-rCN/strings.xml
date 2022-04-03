@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">微加密</string>
-    <string name="app_version">版本:1.5.1</string>
+    <string name="app_version">版本:1.5.2</string>
     <string name="form_server">服务器地址</string>
     <string name="form_path">路径</string>
     <string name="form_key">密钥</string>
@@ -26,6 +26,7 @@
     <string name="msg_vpn_connect_yes">网络已被加密</string>
     <string name="msg_vpn_start">已启动</string>
     <string name="msg_vpn_stop">已关闭</string>
-    <string name="msg_vpn_connecting">连接中...</string>
+    <string name="msg_vpn_connecting">连接中…</string>
+    <string name="msg_vpn_working">微加密正在运行中…</string>
     <string name="msg_vpn_data_usage">使用流量</string>
 </resources>
