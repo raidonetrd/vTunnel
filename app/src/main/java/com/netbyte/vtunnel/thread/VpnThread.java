@@ -14,10 +14,10 @@ import androidx.core.app.NotificationCompat;
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.model.Global;
-import com.netbyte.vtunnel.model.LocalIP;
+import com.netbyte.vtunnel.model.LocalIp;
 import com.netbyte.vtunnel.model.Stats;
-import com.netbyte.vtunnel.service.IPService;
-import com.netbyte.vtunnel.service.MyVPNService;
+import com.netbyte.vtunnel.service.IpService;
+import com.netbyte.vtunnel.service.MyVpnService;
 import com.netbyte.vtunnel.utils.CipherUtil;
 import com.netbyte.vtunnel.ws.MyWebSocketClient;
 
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-public class VPNThread extends BaseThread {
+public class VpnThread extends BaseThread {
     private static final String TAG = "VPNThread";
     private final Config config;
     private FileInputStream in = null;
@@ -39,7 +39,7 @@ public class VPNThread extends BaseThread {
     private ParcelFileDescriptor tun = null;
     private WebSocket webSocket = null;
 
-    public VPNThread(Config config, MyVPNService vpnService, IPService ipService, NotificationManager notificationManager, NotificationCompat.Builder notificationBuilder) {
+    public VpnThread(Config config, MyVpnService vpnService, IpService ipService, NotificationManager notificationManager, NotificationCompat.Builder notificationBuilder) {
         this.config = config;
         this.vpnService = vpnService;
         this.ipService = ipService;
@@ -49,16 +49,15 @@ public class VPNThread extends BaseThread {
 
     @Override
     public void run() {
-        Global.START_TIME = System.currentTimeMillis();
         try {
             Log.i(TAG, "start");
             // pick ip
-            LocalIP localIP = ipService.pickIp();
+            LocalIp localIP = ipService.pickIp();
             if (localIP == null) {
                 vpnService.stopVPN();
                 return;
             }
-            Global.LOCAL_IP = localIP.getLocalIP();
+            Global.LOCAL_IP = localIP.getLocalIp();
             // create tun
             tun = createTunnel(config, localIP);
             if (tun == null) {
@@ -114,13 +113,13 @@ public class VPNThread extends BaseThread {
         }
     }
 
-    private ParcelFileDescriptor createTunnel(Config config, LocalIP localIP) throws PackageManager.NameNotFoundException {
+    private ParcelFileDescriptor createTunnel(Config config, LocalIp localIP) throws PackageManager.NameNotFoundException {
         if (config == null || localIP == null) {
             return null;
         }
         VpnService.Builder builder = vpnService.new Builder();
         builder.setMtu(AppConst.MTU)
-                .addAddress(localIP.getLocalIP(), localIP.getLocalPrefixLength())
+                .addAddress(localIP.getLocalIp(), localIP.getLocalPrefixLength())
                 .addRoute(AppConst.DEFAULT_ROUTE, 0)
                 .addDnsServer(config.getDns())
                 .setSession(AppConst.APP_NAME)

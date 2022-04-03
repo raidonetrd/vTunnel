@@ -3,21 +3,21 @@ package com.netbyte.vtunnel.model;
 
 import java.io.Serializable;
 
-public class LocalIP implements Serializable {
-    private String localIP;
+public class LocalIp implements Serializable {
+    private String localIp;
     private int localPrefixLength;
 
-    public LocalIP(String localIP, int localPrefixLength) {
-        this.localIP = localIP;
+    public LocalIp(String localIp, int localPrefixLength) {
+        this.localIp = localIp;
         this.localPrefixLength = localPrefixLength;
     }
 
-    public String getLocalIP() {
-        return localIP;
+    public String getLocalIp() {
+        return localIp;
     }
 
-    public void setLocalIP(String localIP) {
-        this.localIP = localIP;
+    public void setLocalIp(String localIp) {
+        this.localIp = localIp;
     }
 
     public int getLocalPrefixLength() {

@@ -17,19 +17,19 @@ import com.netbyte.vtunnel.activity.MainActivity;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.model.Global;
-import com.netbyte.vtunnel.thread.VPNThread;
+import com.netbyte.vtunnel.thread.VpnThread;
 import com.netbyte.vtunnel.model.AppConst;
 
 import java.util.concurrent.TimeUnit;
 
-public class MyVPNService extends VpnService {
+public class MyVpnService extends VpnService {
     private Config config;
     private PendingIntent pendingIntent;
     private NotificationManager notificationManager;
     private NotificationCompat.Builder notificationBuilder;
-    private IPService ipService;
+    private IpService ipService;
 
-    public MyVPNService() {
+    public MyVpnService() {
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
@@ -94,7 +94,7 @@ public class MyVPNService extends VpnService {
             serverPort = AppConst.DEFAULT_SERVER_PORT;
         }
         this.config = new Config(serverAddress, serverPort, path, dns, key, bypassApps, obfuscate);
-        this.ipService = new IPService(config.getServerAddress(), config.getServerPort(), config.getKey());
+        this.ipService = new IpService(config.getServerAddress(), config.getServerPort(), config.getKey());
     }
 
     private void createNotification() {
@@ -118,7 +118,7 @@ public class MyVPNService extends VpnService {
                 TimeUnit.SECONDS.sleep(3);
             }
             Global.RUNNING = true;
-            VPNThread vpnThread = new VPNThread(config, this, ipService, notificationManager, notificationBuilder);
+            VpnThread vpnThread = new VpnThread(config, this, ipService, notificationManager, notificationBuilder);
             vpnThread.start();
             Log.i(AppConst.DEFAULT_TAG, "VPN started");
         } catch (Exception e) {
@@ -135,7 +135,6 @@ public class MyVPNService extends VpnService {
     private void resetGlobalVar() {
         Global.IS_CONNECTED = false;
         Global.RUNNING = false;
-        Global.START_TIME = 0;
     }
 
 }
