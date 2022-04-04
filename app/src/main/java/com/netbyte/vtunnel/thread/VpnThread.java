@@ -75,11 +75,8 @@ public class VpnThread extends BaseThread {
                 closeTun();
                 return;
             }
-            // start monitor threads
-            MonitorThread monitorThread = new MonitorThread(vpnService, ipService);
-            monitorThread.start();
             // start notify threads
-            NotifyThread notifyThread = new NotifyThread(notificationManager, notificationBuilder, vpnService);
+            NotifyThread notifyThread = new NotifyThread(notificationManager, notificationBuilder, vpnService, ipService);
             notifyThread.start();
             // forward data
             byte[] buf = new byte[AppConst.BUFFER_SIZE];

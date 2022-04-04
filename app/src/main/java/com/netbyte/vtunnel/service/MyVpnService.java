@@ -5,10 +5,14 @@ import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.VpnService;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -28,6 +32,18 @@ public class MyVpnService extends VpnService {
     private NotificationManager notificationManager;
     private NotificationCompat.Builder notificationBuilder;
     private IpService ipService;
+    private final IntentFilter filter = new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+    private final BroadcastReceiver airplaneModeOnReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(Intent.ACTION_AIRPLANE_MODE_CHANGED)) {
+                if (Settings.Global.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0) {
+                    stopVPN();
+                }
+            }
+        }
+    };
 
     public MyVpnService() {
     }
@@ -36,6 +52,7 @@ public class MyVpnService extends VpnService {
     @Override
     public void onCreate() {
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_IMMUTABLE);
+        registerReceiver(airplaneModeOnReceiver, filter);
     }
 
     @Override
@@ -69,6 +86,7 @@ public class MyVpnService extends VpnService {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        super.unregisterReceiver(airplaneModeOnReceiver);
     }
 
     @Override
