@@ -1,7 +1,6 @@
 package com.netbyte.vtunnel.thread;
 
 import android.app.NotificationManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -9,6 +8,7 @@ import androidx.core.app.NotificationCompat;
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.Global;
 import com.netbyte.vtunnel.model.Stats;
+import com.netbyte.vtunnel.service.IpService;
 import com.netbyte.vtunnel.service.MyVpnService;
 import com.netbyte.vtunnel.utils.FormatUtil;
 import com.netbyte.vtunnel.R;
@@ -21,24 +21,21 @@ public class NotifyThread extends BaseThread {
     private final NotificationManager notificationManager;
     private final NotificationCompat.Builder builder;
 
-    public NotifyThread(NotificationManager notificationManager, NotificationCompat.Builder builder, MyVpnService vpnService) {
+    public NotifyThread(NotificationManager notificationManager, NotificationCompat.Builder builder, MyVpnService vpnService, IpService ipService) {
         this.notificationManager = notificationManager;
         this.builder = builder;
         this.vpnService = vpnService;
+        this.ipService = ipService;
     }
 
     @Override
     public void run() {
         Log.i(TAG, "start");
         vpnService.startForeground(AppConst.NOTIFICATION_ID, builder.build());
+        int seconds = 0;
         while (Global.RUNNING) {
             try {
                 TimeUnit.SECONDS.sleep(1);
-                if (TextUtils.isEmpty(Global.LOCAL_IP)) {
-                    String title = "VPN failed!!!";
-                    builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle("").bigText(title));
-                    break;
-                }
                 Stats.TOTAL_BYTES.addAndGet(Stats.DOWNLOAD_BYTES.get() + Stats.UPLOAD_BYTES.get());
                 String text = String.format("↓ %s ↑ %s", FormatUtil.formatByte(Stats.DOWNLOAD_BYTES.get()), FormatUtil.formatByte(Stats.UPLOAD_BYTES.get()));
                 String summary = String.format("%s: %s", vpnService.getResources().getString(R.string.msg_vpn_data_usage), FormatUtil.formatByte(Stats.TOTAL_BYTES.get()));
@@ -46,6 +43,10 @@ public class NotifyThread extends BaseThread {
                 notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
                 Stats.UPLOAD_BYTES.set(0);
                 Stats.DOWNLOAD_BYTES.set(0);
+                seconds++;
+                if (seconds % 300 == 0) {
+                    ipService.keepAliveIp(Global.LOCAL_IP);
+                }
             } catch (InterruptedException e) {
                 Log.i(TAG, "error:" + e.getMessage());
             }
@@ -53,11 +54,11 @@ public class NotifyThread extends BaseThread {
         resetData();
         vpnService.stopForeground(true);
         notificationManager.cancel(AppConst.NOTIFICATION_ID);
+        ipService.deleteIp(Global.LOCAL_IP);
         Log.i(TAG, "stop");
     }
 
     public void resetData() {
-        // reset notification data
         Stats.UPLOAD_BYTES.set(0);
         Stats.DOWNLOAD_BYTES.set(0);
         Stats.TOTAL_BYTES.set(0);
