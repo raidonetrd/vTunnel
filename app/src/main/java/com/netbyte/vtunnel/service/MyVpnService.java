@@ -68,7 +68,7 @@ public class MyVpnService extends VpnService {
         switch (intent.getAction()) {
             case AppConst.BTN_ACTION_CONNECT:
                 // init config
-                initConfig(intent);
+                initConfig();
                 // create notification
                 createNotification();
                 // start VPN
@@ -94,7 +94,7 @@ public class MyVpnService extends VpnService {
         stopVPN();
     }
 
-    private void initConfig(Intent intent) {
+    private void initConfig() {
         SharedPreferences preferences = this.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         String server = preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS);
         String path = preferences.getString("path", AppConst.DEFAULT_PATH);
