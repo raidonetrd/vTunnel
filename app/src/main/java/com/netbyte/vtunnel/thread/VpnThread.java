@@ -54,14 +54,14 @@ public class VpnThread extends BaseThread {
             // pick ip
             LocalIp localIP = ipService.pickIp();
             if (localIP == null) {
-                vpnService.stopVPN();
+                vpnService.stopVpn();
                 return;
             }
             Global.LOCAL_IP = localIP.getLocalIp();
             // create tun
             tun = createTunnel(config, localIP);
             if (tun == null) {
-                vpnService.stopVPN();
+                vpnService.stopVpn();
                 return;
             }
             in = new FileInputStream(tun.getFileDescriptor());
@@ -71,7 +71,7 @@ public class VpnThread extends BaseThread {
             webSocket = MyWebSocketClient.connectWebSocket(uri, config.getKey(), config, out);
             if (webSocket == null || !webSocket.isOpen()) {
                 Log.i(TAG, "webSocket is not open");
-                vpnService.stopVPN();
+                vpnService.stopVpn();
                 closeTun();
                 return;
             }

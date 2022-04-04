@@ -39,7 +39,7 @@ public class MyVpnService extends VpnService {
             String action = intent.getAction();
             if (action.equals(Intent.ACTION_AIRPLANE_MODE_CHANGED)) {
                 if (Settings.Global.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0) {
-                    stopVPN();
+                    stopVpn();
                 }
             }
         }
@@ -72,11 +72,11 @@ public class MyVpnService extends VpnService {
                 // create notification
                 createNotification();
                 // start VPN
-                startVPN();
+                startVpn();
                 return START_STICKY;
             case AppConst.BTN_ACTION_DISCONNECT:
                 // stop VPN
-                stopVPN();
+                stopVpn();
                 return START_NOT_STICKY;
             default:
                 return START_NOT_STICKY;
@@ -91,7 +91,7 @@ public class MyVpnService extends VpnService {
 
     @Override
     public void onRevoke() {
-        stopVPN();
+        stopVpn();
     }
 
     private void initConfig() {
@@ -129,10 +129,10 @@ public class MyVpnService extends VpnService {
                 .setOnlyAlertOnce(true);
     }
 
-    public void startVPN() {
+    public void startVpn() {
         try {
             if (Global.RUNNING) {
-                stopVPN();
+                stopVpn();
                 TimeUnit.SECONDS.sleep(3);
             }
             Global.RUNNING = true;
@@ -144,7 +144,7 @@ public class MyVpnService extends VpnService {
         }
     }
 
-    public void stopVPN() {
+    public void stopVpn() {
         this.resetGlobalVar();
         this.stopSelf();
         Log.i(AppConst.DEFAULT_TAG, "VPN stopped");
