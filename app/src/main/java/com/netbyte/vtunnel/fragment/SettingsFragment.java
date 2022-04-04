@@ -20,13 +20,13 @@ import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.utils.NetUtil;
 
-public class ConfigsFragment extends Fragment {
+public class SettingsFragment extends Fragment {
     Button btnSave;
     EditText editServer, editPath, editDNS, editKey, editObfs;
     SharedPreferences preferences;
     SharedPreferences.Editor preEditor;
 
-    public ConfigsFragment() {
+    public SettingsFragment() {
 
     }
 
@@ -37,7 +37,7 @@ public class ConfigsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_tab_configs, container, false);
+        return inflater.inflate(R.layout.fragment_tab_settings, container, false);
     }
 
     @Override

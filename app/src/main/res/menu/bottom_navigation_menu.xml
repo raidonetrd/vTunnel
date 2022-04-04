@@ -7,7 +7,7 @@
         android:title="@string/menu_home" />
 
     <item
-        android:id="@+id/bottomNavigationConfigsMenuId"
+        android:id="@+id/bottomNavigationSettingsMenuId"
         android:icon="@drawable/ic_action_config"
         android:title="@string/menu_configs" />
 
