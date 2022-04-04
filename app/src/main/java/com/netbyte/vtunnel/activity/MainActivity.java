@@ -10,10 +10,10 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.navigation.NavigationBarView;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.fragment.AppsFragment;
-import com.netbyte.vtunnel.fragment.ConfigsFragment;
+import com.netbyte.vtunnel.fragment.SettingsFragment;
 import com.netbyte.vtunnel.fragment.HomeFragment;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +41,10 @@ public class MainActivity extends AppCompatActivity  {
                 fragmentTransaction.commit();
                 return true;
 
-            case R.id.bottomNavigationConfigsMenuId:
-                ConfigsFragment configFragment = new ConfigsFragment();
+            case R.id.bottomNavigationSettingsMenuId:
+                SettingsFragment settingsFragment = new SettingsFragment();
                 FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction1.replace(R.id.content, configFragment);
+                fragmentTransaction1.replace(R.id.content, settingsFragment);
                 fragmentTransaction1.commit();
                 return true;
 
