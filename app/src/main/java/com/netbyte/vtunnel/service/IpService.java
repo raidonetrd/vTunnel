@@ -13,15 +13,17 @@ public class IpService {
     private final String serverIp;
     private final int serverPort;
     private final String key;
+    private final boolean https;
 
-    public IpService(String serverIp, int serverPort, String key) {
+    public IpService(String serverIp, int serverPort, String key, boolean https) {
         this.serverIp = serverIp;
         this.serverPort = serverPort;
         this.key = key;
+        this.https = https;
     }
 
     public LocalIp pickIp() {
-        @SuppressLint("DefaultLocale") String api = String.format("https://%s:%d/register/pick/ip", serverIp, serverPort);
+        @SuppressLint("DefaultLocale") String api = String.format("%s://%s:%d/register/pick/ip", https ? "https" : "http", serverIp, serverPort);
         String resp = MyWebSocketClient.httpGet(api, key);
         Log.i(TAG, String.format("get api:%s resp:%s", api, resp));
         if (TextUtils.isEmpty(resp)) {
@@ -35,13 +37,13 @@ public class IpService {
     }
 
     public void keepAliveIp(String ip) {
-        @SuppressLint("DefaultLocale") String api = String.format("https://%s:%d/register/keepalive/ip?ip=%s", serverIp, serverPort, ip);
+        @SuppressLint("DefaultLocale") String api = String.format("%s://%s:%d/register/keepalive/ip?ip=%s", https ? "https" : "http", serverIp, serverPort, ip);
         String resp = MyWebSocketClient.httpGet(api, key);
         Log.i(TAG, String.format("get api:%s resp:%s", api, resp));
     }
 
     public void deleteIp(String ip) {
-        @SuppressLint("DefaultLocale") String api = String.format("https://%s:%d/register/delete/ip?ip=%s", serverIp, serverPort, ip);
+        @SuppressLint("DefaultLocale") String api = String.format("%s://%s:%d/register/delete/ip?ip=%s", https ? "https" : "http", serverIp, serverPort, ip);
         String resp = MyWebSocketClient.httpGet(api, key);
         Log.i(TAG, String.format("get api:%s resp:%s", api, resp));
     }

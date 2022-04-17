@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="8dp"
             android:gravity="start|center_vertical"
             android:orientation="horizontal"
@@ -139,9 +139,98 @@
         <LinearLayout
             android:id="@+id/linearLayout5"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginStart="8dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="25dp"
             android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="start|center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="20dp"
+                android:gravity="start|center"
+                android:text="@string/form_protocol"
+                android:textColor="@color/colorText"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout6"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="start|center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/protocolToggleGroup"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:checkedButton="@id/btnProtocolWss"
+                app:singleSelection="true">
+
+                <Button
+                    android:id="@+id/btnProtocolWs"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/form_protocol_ws" />
+
+                <Button
+                    android:id="@+id/btnProtocolWss"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/form_protocol_wss" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout7"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="start|center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="20dp"
+                android:gravity="start|center"
+                android:text="@string/form_obfs"
+                android:textColor="@color/colorText"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout8"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="1dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="start|center_vertical"
@@ -149,25 +238,31 @@
             app:layout_constraintBottom_toTopOf="@+id/saveConfigBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout7"
             tools:ignore="MissingConstraints">
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/obfsToggleGroup"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:hint="@string/form_obfs"
-                app:endIconMode="clear_text"
-                app:endIconTint="@color/colorPrimaryDark">
+                android:layout_height="50dp"
+                app:checkedButton="@id/btnObfsOff"
+                app:singleSelection="true">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editObfs"
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/btnObfsOff"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/form_default_obfs" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text="@string/form_switch_off" />
 
+                <Button
+                    android:id="@+id/btnObfsOn"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/form_switch_on" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -183,6 +278,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout8" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>
