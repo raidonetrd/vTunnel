@@ -67,7 +67,7 @@ public class VpnThread extends BaseThread {
             in = new FileInputStream(tun.getFileDescriptor());
             out = new FileOutputStream(tun.getFileDescriptor());
             // create ws client
-            @SuppressLint("DefaultLocale") String uri = String.format("wss://%s:%d%s", config.getServerAddress(), config.getServerPort(), config.getPath());
+            @SuppressLint("DefaultLocale") String uri = String.format("%s://%s:%d%s", config.isWss() ? "wss" : "ws", config.getServerAddress(), config.getServerPort(), config.getPath());
             webSocket = MyWebSocketClient.connectWebSocket(uri, config.getKey(), config, out);
             if (webSocket == null || !webSocket.isOpen()) {
                 Log.i(TAG, "webSocket is not open");
@@ -88,7 +88,7 @@ public class VpnThread extends BaseThread {
                     }
                     if (webSocket != null && webSocket.isOpen()) {
                         byte[] data = Arrays.copyOfRange(buf, 0, ln);
-                        if (config.isObfuscate()) {
+                        if (config.isObfs()) {
                             data = CipherUtil.xor(data, config.getKey().getBytes(StandardCharsets.UTF_8));
                         }
                         webSocket.sendBinaryFrame(data);

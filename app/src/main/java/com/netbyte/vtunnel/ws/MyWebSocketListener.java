@@ -47,7 +47,7 @@ public class MyWebSocketListener implements WebSocketListener {
         if (out == null || config == null || payload == null || payload.length == 0) {
             return;
         }
-        if (config.isObfuscate()) {
+        if (config.isObfs()) {
             payload = CipherUtil.xor(payload, config.getKey().getBytes(StandardCharsets.UTF_8));
         }
         try {

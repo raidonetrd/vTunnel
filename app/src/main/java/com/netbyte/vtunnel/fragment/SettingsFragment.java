@@ -16,13 +16,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.utils.NetUtil;
 
 public class SettingsFragment extends Fragment {
     Button btnSave;
-    EditText editServer, editPath, editDNS, editKey, editObfs;
+    EditText editServer, editPath, editDNS, editKey;
+    MaterialButtonToggleGroup obfsToggleGroup;
+    MaterialButtonToggleGroup protocolToggleGroup;
     SharedPreferences preferences;
     SharedPreferences.Editor preEditor;
 
@@ -52,7 +55,8 @@ public class SettingsFragment extends Fragment {
         editPath = thisView.findViewById(R.id.editPath);
         editKey = thisView.findViewById(R.id.editKey);
         editDNS = thisView.findViewById(R.id.editDNS);
-        editObfs = thisView.findViewById(R.id.editObfs);
+        obfsToggleGroup = thisView.findViewById(R.id.obfsToggleGroup);
+        protocolToggleGroup = thisView.findViewById(R.id.protocolToggleGroup);
 
         preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
@@ -61,7 +65,8 @@ public class SettingsFragment extends Fragment {
         editPath.setText(preferences.getString("path", AppConst.DEFAULT_PATH));
         editDNS.setText(preferences.getString("dns", AppConst.DEFAULT_DNS));
         editKey.setText(preferences.getString("key", AppConst.DEFAULT_KEY));
-        editObfs.setText(preferences.getBoolean("obfuscate", false) ? "true" : "false");
+        obfsToggleGroup.check(preferences.getBoolean("obfs", false) ? R.id.btnObfsOn : R.id.btnObfsOff);
+        protocolToggleGroup.check(preferences.getBoolean("wss", true) ? R.id.btnProtocolWss : R.id.btnProtocolWs);
         btnSave.setOnClickListener(v -> {
             String server = editServer.getText().toString().trim();
             String path = editPath.getText().toString().trim();
@@ -79,7 +84,8 @@ public class SettingsFragment extends Fragment {
             preEditor.putString("path", path);
             preEditor.putString("dns", dns);
             preEditor.putString("key", key);
-            preEditor.putBoolean("obfuscate", "true".equalsIgnoreCase(editObfs.getText().toString().trim()));
+            preEditor.putBoolean("obfs", obfsToggleGroup.getCheckedButtonId() == R.id.btnObfsOn);
+            preEditor.putBoolean("wss", protocolToggleGroup.getCheckedButtonId() == R.id.btnProtocolWss);
             preEditor.apply();
             Toast.makeText(activity, R.string.msg_success_save, Toast.LENGTH_LONG).show();
         });

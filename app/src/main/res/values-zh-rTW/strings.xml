@@ -5,6 +5,9 @@
     <string name="form_path">路徑</string>
     <string name="form_key">密鑰</string>
     <string name="form_dns">DNS</string>
+    <string name="form_protocol">網絡協議</string>
+    <string name="form_protocol_ws">ws</string>
+    <string name="form_protocol_wss">wss</string>
     <string name="form_obfs">數據混淆</string>
     <string name="form_switch_on">開</string>
     <string name="form_switch_off">關</string>

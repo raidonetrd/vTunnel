@@ -4,23 +4,24 @@ package com.netbyte.vtunnel.model;
 import java.io.Serializable;
 
 public class Config implements Serializable {
-
     private String serverAddress;
     private int serverPort;
     private String path;
     private String dns;
     private String key;
-    private boolean obfuscate;
+    private boolean obfs;
+    private boolean wss;
     private String bypassApps;
 
-    public Config(String serverAddress, int serverPort, String path, String dns, String key, String bypassApps, boolean obfuscate) {
+    public Config(String serverAddress, int serverPort, String path, String dns, String key, String bypassApps, boolean obfs, boolean wss) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
         this.path = path;
         this.dns = dns;
         this.key = key;
         this.bypassApps = bypassApps;
-        this.obfuscate = obfuscate;
+        this.obfs = obfs;
+        this.wss = wss;
 
     }
 
@@ -64,12 +65,20 @@ public class Config implements Serializable {
         this.key = key;
     }
 
-    public boolean isObfuscate() {
-        return obfuscate;
+    public boolean isObfs() {
+        return obfs;
     }
 
-    public void setObfuscate(boolean obfuscate) {
-        this.obfuscate = obfuscate;
+    public void setObfs(boolean obfs) {
+        this.obfs = obfs;
+    }
+
+    public boolean isWss() {
+        return wss;
+    }
+
+    public void setWss(boolean wss) {
+        this.wss = wss;
     }
 
     public String getBypassApps() {
@@ -80,4 +89,18 @@ public class Config implements Serializable {
         this.bypassApps = bypassApps;
     }
 
+
+    @Override
+    public String toString() {
+        return "Config{" +
+                "serverAddress='" + serverAddress + '\'' +
+                ", serverPort=" + serverPort +
+                ", path='" + path + '\'' +
+                ", dns='" + dns + '\'' +
+                ", key='" + key + '\'' +
+                ", obfs=" + obfs +
+                ", wss=" + wss +
+                ", bypassApps='" + bypassApps + '\'' +
+                '}';
+    }
 }

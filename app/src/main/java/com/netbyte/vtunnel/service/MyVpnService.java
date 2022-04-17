@@ -101,7 +101,8 @@ public class MyVpnService extends VpnService {
         String dns = preferences.getString("dns", AppConst.DEFAULT_DNS);
         String key = preferences.getString("key", AppConst.DEFAULT_KEY);
         String bypassApps = preferences.getString("bypass_apps", "");
-        boolean obfuscate = preferences.getBoolean("obfuscate", false);
+        boolean obfs = preferences.getBoolean("obfs", false);
+        boolean wss = preferences.getBoolean("wss", true);
         String serverAddress;
         int serverPort;
         if (server.contains(":")) {
@@ -111,8 +112,9 @@ public class MyVpnService extends VpnService {
             serverAddress = server;
             serverPort = AppConst.DEFAULT_SERVER_PORT;
         }
-        this.config = new Config(serverAddress, serverPort, path, dns, key, bypassApps, obfuscate);
-        this.ipService = new IpService(config.getServerAddress(), config.getServerPort(), config.getKey());
+        this.config = new Config(serverAddress, serverPort, path, dns, key, bypassApps, obfs, wss);
+        this.ipService = new IpService(config.getServerAddress(), config.getServerPort(), config.getKey(), wss);
+        Log.i(AppConst.DEFAULT_TAG, config.toString());
     }
 
     private void createNotification() {

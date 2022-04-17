@@ -5,7 +5,10 @@
     <string name="form_path">Path</string>
     <string name="form_key">Key</string>
     <string name="form_dns">DNS</string>
-    <string name="form_obfs">Obfuscation</string>
+    <string name="form_protocol">Protocol</string>
+    <string name="form_protocol_ws">ws</string>
+    <string name="form_protocol_wss">wss</string>
+    <string name="form_obfs">Obfs</string>
     <string name="form_switch_on">On</string>
     <string name="form_switch_off">Off</string>
     <string name="btn_save">SAVE</string>
