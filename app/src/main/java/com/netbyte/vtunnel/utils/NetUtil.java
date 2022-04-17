@@ -10,14 +10,14 @@ import org.asynchttpclient.ws.WebSocket;
 import java.net.InetAddress;
 
 public class NetUtil {
-    public static boolean checkServer(String server, String path, String key) {
+    public static boolean checkServer(String server, String path, String key, boolean wss) {
         if (TextUtils.isEmpty(server) || TextUtils.isEmpty(path) || TextUtils.isEmpty(key)) {
             return false;
         }
         boolean result = false;
         WebSocket webSocket = null;
         try {
-            String uri = String.format("wss://%s%s", server, path);
+            String uri = String.format("%s://%s%s", wss ? "wss" : "ws", server, path);
             webSocket = MyWebSocketClient.connectWebSocket(uri, key);
             if (webSocket != null && webSocket.isOpen()) {
                 result = true;

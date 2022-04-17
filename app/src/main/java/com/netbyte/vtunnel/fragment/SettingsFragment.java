@@ -71,7 +71,9 @@ public class SettingsFragment extends Fragment {
             String server = editServer.getText().toString().trim();
             String path = editPath.getText().toString().trim();
             String key = editKey.getText().toString().trim();
-            if (!NetUtil.checkServer(server, path, key)) {
+            boolean obfs = obfsToggleGroup.getCheckedButtonId() == R.id.btnObfsOn;
+            boolean wss = protocolToggleGroup.getCheckedButtonId() == R.id.btnProtocolWss;
+            if (!NetUtil.checkServer(server, path, key, wss)) {
                 Toast.makeText(activity, R.string.msg_error_server, Toast.LENGTH_LONG).show();
                 return;
             }
@@ -84,8 +86,8 @@ public class SettingsFragment extends Fragment {
             preEditor.putString("path", path);
             preEditor.putString("dns", dns);
             preEditor.putString("key", key);
-            preEditor.putBoolean("obfs", obfsToggleGroup.getCheckedButtonId() == R.id.btnObfsOn);
-            preEditor.putBoolean("wss", protocolToggleGroup.getCheckedButtonId() == R.id.btnProtocolWss);
+            preEditor.putBoolean("obfs", obfs);
+            preEditor.putBoolean("wss", wss);
             preEditor.apply();
             Toast.makeText(activity, R.string.msg_success_save, Toast.LENGTH_LONG).show();
         });
