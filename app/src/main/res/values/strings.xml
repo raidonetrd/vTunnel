@@ -30,6 +30,6 @@
     <string name="msg_vpn_start">Started</string>
     <string name="msg_vpn_stop">Stopped</string>
     <string name="msg_vpn_connecting">Connecting…</string>
-    <string name="msg_vpn_working">vTunnel is working…</string>
+    <string name="msg_vpn_working">Working…</string>
     <string name="msg_vpn_data_usage">Data Usage</string>
 </resources>

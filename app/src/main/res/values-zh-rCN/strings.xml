@@ -30,6 +30,6 @@
     <string name="msg_vpn_start">已启动</string>
     <string name="msg_vpn_stop">已关闭</string>
     <string name="msg_vpn_connecting">连接中…</string>
-    <string name="msg_vpn_working">微加密正在运行中…</string>
+    <string name="msg_vpn_working">运行中…</string>
     <string name="msg_vpn_data_usage">使用流量</string>
 </resources>
