@@ -6,7 +6,10 @@ import android.util.Log;
 
 import com.netbyte.vtunnel.model.AppConst;
 import com.netbyte.vtunnel.model.LocalIp;
+import com.netbyte.vtunnel.utils.Ipv6AddressUtil;
 import com.netbyte.vtunnel.ws.MyWebSocketClient;
+
+import java.net.UnknownHostException;
 
 public class IpService {
     private static final String TAG = "IPService";
@@ -34,6 +37,30 @@ public class IpService {
             return new LocalIp(ip[0], Integer.parseInt(ip[1]));
         }
         return new LocalIp(AppConst.DEFAULT_LOCAL_ADDRESS, AppConst.DEFAULT_LOCAL_PREFIX_LENGTH);
+    }
+
+    public LocalIp pickIpv6() {
+        @SuppressLint("DefaultLocale") String api = String.format("%s://%s:%d/register/prefix/ipv6", https ? "https" : "http", serverIp, serverPort);
+        String resp = MyWebSocketClient.httpGet(api, key);
+        Log.i(TAG, String.format("get api:%s resp:%s", api, resp));
+        if (TextUtils.isEmpty(resp)) {
+            return null;
+        }
+        String[] ip = resp.split("/");
+        if (ip.length == 2) {
+            String ipv6Net = ip[0];
+            int prefixLength = Integer.parseInt(ip[1]);
+            String randomIpv6Address = null;
+            try {
+                randomIpv6Address = Ipv6AddressUtil.randomString(ipv6Net, prefixLength);
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+            if (randomIpv6Address != null) {
+                return new LocalIp(randomIpv6Address, prefixLength);
+            }
+        }
+        return new LocalIp(AppConst.DEFAULT_LOCAL_V6_ADDRESS, AppConst.DEFAULT_LOCAL_V6_PREFIX_LENGTH);
     }
 
     public void keepAliveIp(String ip) {

@@ -58,8 +58,15 @@ public class VpnThread extends BaseThread {
                 return;
             }
             Global.LOCAL_IP = localIP.getLocalIp();
+            //pick ipv6
+            LocalIp localIPv6 = ipService.pickIpv6();
+            if (localIPv6 == null) {
+                vpnService.stopVpn();
+                return;
+            }
+            Global.LOCAL_IPv6 = localIPv6.getLocalIp();
             // create tun
-            tun = createTunnel(config, localIP);
+            tun = createTunnel(config, localIP, localIPv6);
             if (tun == null) {
                 vpnService.stopVpn();
                 return;
@@ -110,18 +117,21 @@ public class VpnThread extends BaseThread {
         }
     }
 
-    private ParcelFileDescriptor createTunnel(Config config, LocalIp localIP) throws PackageManager.NameNotFoundException {
-        if (config == null || localIP == null) {
+    private ParcelFileDescriptor createTunnel(Config config, LocalIp localIP, LocalIp localIPv6) throws PackageManager.NameNotFoundException {
+        if (config == null || localIP == null || localIPv6 == null) {
             return null;
         }
         VpnService.Builder builder = vpnService.new Builder();
         builder.setMtu(AppConst.MTU)
                 .addAddress(localIP.getLocalIp(), localIP.getLocalPrefixLength())
+                .addAddress(localIPv6.getLocalIp(), localIPv6.getLocalPrefixLength())
                 .addRoute(AppConst.DEFAULT_ROUTE, 0)
+                .addRoute(AppConst.DEFAULT_ROUTEv6, 0)
                 .addDnsServer(config.getDns())
                 .setSession(AppConst.APP_NAME)
                 .setConfigureIntent(null)
                 .allowFamily(OsConstants.AF_INET)
+                .allowFamily(OsConstants.AF_INET6)
                 .setBlocking(true);
         // add apps to bypass
         ArrayList<String> appList = new ArrayList<>();
