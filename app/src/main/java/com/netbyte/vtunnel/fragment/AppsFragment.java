@@ -8,12 +8,16 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,8 +36,22 @@ import java.util.List;
 public class AppsFragment extends Fragment {
     ListView listView;
     Button btnSave;
+    ProgressBar progressBar;
+
     SharedPreferences preferences;
     SharedPreferences.Editor preEditor;
+    ArrayAdapter<App> arrayAdapter;
+
+    private final int NOTIFY_ARRAY_ADAPTER_CAN_UPDATE = 1;
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            if (msg.what == NOTIFY_ARRAY_ADAPTER_CAN_UPDATE) {
+                arrayAdapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.GONE);
+            }
+        }
+    };
 
     public AppsFragment() {
 
@@ -60,6 +78,7 @@ public class AppsFragment extends Fragment {
         assert thisView != null;
         listView = thisView.findViewById(R.id.listView);
         btnSave = thisView.findViewById(R.id.saveBypassBtn);
+        progressBar = thisView.findViewById(R.id.loadingProgressBar);
         btnSave.setOnClickListener(v -> {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < listView.getAdapter().getCount(); i++) {
@@ -82,30 +101,33 @@ public class AppsFragment extends Fragment {
 
     private void initListViewData(SharedPreferences preferences) {
         List<App> appList = new ArrayList<>();
+        arrayAdapter = new AppArrayAdapter(this.getActivity(), appList);
+        this.listView.setAdapter(arrayAdapter);
         String bypassApps = preferences.getString("bypass_apps", "");
         FragmentActivity activity = this.getActivity();
         assert activity != null;
         PackageManager packageManager = activity.getPackageManager();
-        List<PackageInfo> packageInfoList = packageManager.getInstalledPackages(0);
-        for (PackageInfo info : packageInfoList) {
-            if (!isUserApp(info) || AppConst.APP_PACKAGE_NAME.equals(info.packageName)) {
-                continue;
+        progressBar.setVisibility(View.VISIBLE);
+        new Thread(() -> {
+            List<PackageInfo> packageInfoList = packageManager.getInstalledPackages(0);
+            for (PackageInfo info : packageInfoList) {
+                if (!isUserApp(info) || AppConst.APP_PACKAGE_NAME.equals(info.packageName)) {
+                    continue;
+                }
+                ApplicationInfo applicationInfo = null;
+                Drawable icon = null;
+                try {
+                    applicationInfo = packageManager.getApplicationInfo(info.packageName, 0);
+                    icon = applicationInfo.loadIcon(packageManager);
+                } catch (final PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                String name = (String) ((applicationInfo != null) ? packageManager.getApplicationLabel(applicationInfo) : "unknown");
+                App app = new App(icon, name, info.packageName, bypassApps.contains(info.packageName));
+                appList.add(app);
             }
-            ApplicationInfo applicationInfo = null;
-            Drawable icon = null;
-            try {
-                applicationInfo = packageManager.getApplicationInfo(info.packageName, 0);
-                icon = applicationInfo.loadIcon(packageManager);
-            } catch (final PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
-            String name = (String) ((applicationInfo != null) ? packageManager.getApplicationLabel(applicationInfo) : "unknown");
-            App app = new App(icon, name, info.packageName, bypassApps.contains(info.packageName));
-            appList.add(app);
-        }
-        ArrayAdapter<App> arrayAdapter = new AppArrayAdapter(this.getActivity(), appList);
-        this.listView.setAdapter(arrayAdapter);
-
+            mHandler.sendEmptyMessage(NOTIFY_ARRAY_ADAPTER_CAN_UPDATE);
+        }).start();
     }
 
     public boolean isSystemApp(PackageInfo pInfo) {
@@ -121,7 +143,7 @@ public class AppsFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
     }
 
