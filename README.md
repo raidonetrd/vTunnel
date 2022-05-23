@@ -4,6 +4,7 @@ A websocket protocol based android VPN app.
 
 ![image](https://img.shields.io/badge/License-MIT-orange)
 ![image](https://img.shields.io/badge/License-Anti--996-red)
+![image](https://img.shields.io/github/downloads/net-byte/vTunnel/total.svg)
 
 # Requirements
 * Android version >= 8.0
