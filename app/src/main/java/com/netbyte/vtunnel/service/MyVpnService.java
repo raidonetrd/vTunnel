@@ -125,7 +125,6 @@ public class MyVpnService extends VpnService {
         notificationBuilder = new NotificationCompat.Builder(this, channel.getId());
         notificationBuilder.setSmallIcon(R.drawable.ic_stat_name)
                 .setContentIntent(pendingIntent)
-                .setContentTitle(getString(R.string.msg_vpn_connect_yes))
                 .setPriority(NotificationCompat.PRIORITY_MIN)
                 .setOngoing(true)
                 .setShowWhen(false)
