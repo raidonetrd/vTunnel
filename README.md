@@ -1,6 +1,6 @@
 # vTunnel 
 
-A websocket protocol based android VPN app.
+A simple VPN app for Android.
 
 ![image](https://img.shields.io/badge/License-MIT-orange)
 ![image](https://img.shields.io/badge/License-Anti--996-red)
@@ -20,8 +20,8 @@ A websocket protocol based android VPN app.
 
 # Deploy server  
 
-I recommend you to use caddy2 with automatic https for reverse proxy vtun server.  
-1. config your Caddyfile:  
+Reverse proxy vtun server via caddy2.  
+1. config Caddyfile:  
 ```
 your.domain {
     reverse_proxy localhost:3001
