@@ -9,20 +9,19 @@ public class Config implements Serializable {
     private String path;
     private String dns;
     private String key;
-    private boolean obfs;
-    private boolean wss;
+    private String obfs;
+    private String proto;
     private String bypassApps;
 
-    public Config(String serverAddress, int serverPort, String path, String dns, String key, String bypassApps, boolean obfs, boolean wss) {
+    public Config(String serverAddress, int serverPort, String path, String dns, String key, String obfs, String proto, String bypassApps) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
         this.path = path;
         this.dns = dns;
         this.key = key;
-        this.bypassApps = bypassApps;
         this.obfs = obfs;
-        this.wss = wss;
-
+        this.proto = proto;
+        this.bypassApps = bypassApps;
     }
 
     public String getServerAddress() {
@@ -65,20 +64,20 @@ public class Config implements Serializable {
         this.key = key;
     }
 
-    public boolean isObfs() {
+    public String getObfs() {
         return obfs;
     }
 
-    public void setObfs(boolean obfs) {
+    public void setObfs(String obfs) {
         this.obfs = obfs;
     }
 
-    public boolean isWss() {
-        return wss;
+    public String getProto() {
+        return proto;
     }
 
-    public void setWss(boolean wss) {
-        this.wss = wss;
+    public void setProto(String proto) {
+        this.proto = proto;
     }
 
     public String getBypassApps() {
@@ -89,7 +88,6 @@ public class Config implements Serializable {
         this.bypassApps = bypassApps;
     }
 
-
     @Override
     public String toString() {
         return "Config{" +
@@ -98,8 +96,8 @@ public class Config implements Serializable {
                 ", path='" + path + '\'' +
                 ", dns='" + dns + '\'' +
                 ", key='" + key + '\'' +
-                ", obfs=" + obfs +
-                ", wss=" + wss +
+                ", obfs='" + obfs + '\'' +
+                ", proto='" + proto + '\'' +
                 ", bypassApps='" + bypassApps + '\'' +
                 '}';
     }

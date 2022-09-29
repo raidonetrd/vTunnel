@@ -12,6 +12,7 @@ import org.asynchttpclient.ws.WebSocketListener;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 public class MyWebSocketListener implements WebSocketListener {
     private static final String TAG = "MyWebSocketListener";
@@ -47,7 +48,7 @@ public class MyWebSocketListener implements WebSocketListener {
         if (out == null || config == null || payload == null || payload.length == 0) {
             return;
         }
-        if (config.isObfs()) {
+        if (Objects.equals(config.getProto(), "on")) {
             payload = CipherUtil.xor(payload, config.getKey().getBytes(StandardCharsets.UTF_8));
         }
         try {

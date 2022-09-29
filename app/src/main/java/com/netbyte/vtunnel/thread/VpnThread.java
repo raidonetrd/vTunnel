@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.content.pm.PackageManager;
 import android.net.VpnService;
+import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.system.OsConstants;
 import android.text.TextUtils;
@@ -11,7 +12,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import com.netbyte.vtunnel.model.AppConst;
+import com.netbyte.vtunnel.model.Const;
 import com.netbyte.vtunnel.model.Config;
 import com.netbyte.vtunnel.model.Global;
 import com.netbyte.vtunnel.model.LocalIp;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class VpnThread extends BaseThread {
@@ -74,7 +76,7 @@ public class VpnThread extends BaseThread {
             in = new FileInputStream(tun.getFileDescriptor());
             out = new FileOutputStream(tun.getFileDescriptor());
             // create ws client
-            @SuppressLint("DefaultLocale") String uri = String.format("%s://%s:%d%s", config.isWss() ? "wss" : "ws", config.getServerAddress(), config.getServerPort(), config.getPath());
+            @SuppressLint("DefaultLocale") String uri = String.format("%s://%s:%d%s", config.getProto(), config.getServerAddress(), config.getServerPort(), config.getPath());
             webSocket = MyWebSocketClient.connectWebSocket(uri, config.getKey(), config, out);
             if (webSocket == null || !webSocket.isOpen()) {
                 Log.i(TAG, "webSocket is not open");
@@ -86,7 +88,7 @@ public class VpnThread extends BaseThread {
             NotifyThread notifyThread = new NotifyThread(notificationManager, notificationBuilder, vpnService, ipService);
             notifyThread.start();
             // forward data
-            byte[] buf = new byte[AppConst.BUFFER_SIZE];
+            byte[] buf = new byte[Const.BUFFER_SIZE];
             while (Global.RUNNING) {
                 try {
                     int ln = in.read(buf);
@@ -95,7 +97,7 @@ public class VpnThread extends BaseThread {
                     }
                     if (webSocket != null && webSocket.isOpen()) {
                         byte[] data = Arrays.copyOfRange(buf, 0, ln);
-                        if (config.isObfs()) {
+                        if (Objects.equals(config.getObfs(), "on")) {
                             data = CipherUtil.xor(data, config.getKey().getBytes(StandardCharsets.UTF_8));
                         }
                         webSocket.sendBinaryFrame(data);
@@ -122,20 +124,23 @@ public class VpnThread extends BaseThread {
             return null;
         }
         VpnService.Builder builder = vpnService.new Builder();
-        builder.setMtu(AppConst.MTU)
+        builder.setMtu(Const.MTU)
                 .addAddress(localIP.getLocalIp(), localIP.getLocalPrefixLength())
                 .addAddress(localIPv6.getLocalIp(), localIPv6.getLocalPrefixLength())
-                .addRoute(AppConst.DEFAULT_ROUTE, 0)
-                .addRoute(AppConst.DEFAULT_ROUTEv6, 0)
+                .addRoute(Const.DEFAULT_ROUTE, 0)
+                .addRoute(Const.DEFAULT_ROUTEv6, 0)
                 .addDnsServer(config.getDns())
-                .setSession(AppConst.APP_NAME)
+                .setSession(Const.APP_NAME)
                 .setConfigureIntent(null)
                 .allowFamily(OsConstants.AF_INET)
                 .allowFamily(OsConstants.AF_INET6)
                 .setBlocking(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            builder.setMetered(false);
+        }
         // add apps to bypass
         ArrayList<String> appList = new ArrayList<>();
-        appList.add(AppConst.APP_PACKAGE_NAME); // skip itself
+        appList.add(Const.APP_PACKAGE_NAME); // skip itself
         if (!TextUtils.isEmpty(config.getBypassApps())) {
             appList.addAll(Arrays.asList(config.getBypassApps().split(",")));
         }

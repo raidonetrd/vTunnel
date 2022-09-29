@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.netbyte.vtunnel.model.AppConst;
+import com.netbyte.vtunnel.model.Const;
 import com.netbyte.vtunnel.model.LocalIp;
 import com.netbyte.vtunnel.utils.Ipv6AddressUtil;
 import com.netbyte.vtunnel.ws.MyWebSocketClient;
@@ -36,7 +36,7 @@ public class IpService {
         if (ip.length == 2) {
             return new LocalIp(ip[0], Integer.parseInt(ip[1]));
         }
-        return new LocalIp(AppConst.DEFAULT_LOCAL_ADDRESS, AppConst.DEFAULT_LOCAL_PREFIX_LENGTH);
+        return new LocalIp(Const.DEFAULT_LOCAL_ADDRESS, Const.DEFAULT_LOCAL_PREFIX_LENGTH);
     }
 
     public LocalIp pickIpv6() {
@@ -60,7 +60,7 @@ public class IpService {
                 return new LocalIp(randomIpv6Address, prefixLength);
             }
         }
-        return new LocalIp(AppConst.DEFAULT_LOCAL_V6_ADDRESS, AppConst.DEFAULT_LOCAL_V6_PREFIX_LENGTH);
+        return new LocalIp(Const.DEFAULT_LOCAL_V6_ADDRESS, Const.DEFAULT_LOCAL_V6_PREFIX_LENGTH);
     }
 
     public void keepAliveIp(String ip) {

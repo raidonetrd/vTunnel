@@ -1,7 +1,8 @@
 package com.netbyte.vtunnel.model;
 
-public class AppConst {
+public class Const {
     public static final String APP_NAME = "vTunnel";
+    public static final String APP_VERSION = "1.5.6";
     public static final String APP_PACKAGE_NAME = "com.netbyte.vtunnel";
     public static final String NOTIFICATION_CHANNEL_ID = APP_NAME;
     public static final String NOTIFICATION_CHANNEL_NAME = APP_NAME;

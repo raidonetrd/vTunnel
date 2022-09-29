@@ -5,7 +5,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import com.netbyte.vtunnel.model.AppConst;
+import com.netbyte.vtunnel.model.Const;
 import com.netbyte.vtunnel.model.Global;
 import com.netbyte.vtunnel.model.Stats;
 import com.netbyte.vtunnel.service.IpService;
@@ -31,7 +31,7 @@ public class NotifyThread extends BaseThread {
     @Override
     public void run() {
         Log.i(TAG, "start");
-        vpnService.startForeground(AppConst.NOTIFICATION_ID, builder.build());
+        vpnService.startForeground(Const.NOTIFICATION_ID, builder.build());
         int seconds = 0;
         while (Global.RUNNING) {
             try {
@@ -40,7 +40,7 @@ public class NotifyThread extends BaseThread {
                 String text = String.format("↓ %s ↑ %s", FormatUtil.formatByte(Stats.DOWNLOAD_BYTES.get()), FormatUtil.formatByte(Stats.UPLOAD_BYTES.get()));
                 String summary = String.format("%s: %s", vpnService.getResources().getString(R.string.msg_vpn_data_usage), FormatUtil.formatByte(Stats.TOTAL_BYTES.get()));
                 builder.setStyle(new NotificationCompat.BigTextStyle().setSummaryText(summary).setBigContentTitle("").bigText(text));
-                notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
+                notificationManager.notify(Const.NOTIFICATION_ID, builder.build());
                 Stats.UPLOAD_BYTES.set(0);
                 Stats.DOWNLOAD_BYTES.set(0);
                 seconds++;
@@ -53,7 +53,7 @@ public class NotifyThread extends BaseThread {
         }
         resetData();
         vpnService.stopForeground(true);
-        notificationManager.cancel(AppConst.NOTIFICATION_ID);
+        notificationManager.cancel(Const.NOTIFICATION_ID);
         ipService.deleteIp(Global.LOCAL_IP);
         Log.i(TAG, "stop");
     }
@@ -62,6 +62,6 @@ public class NotifyThread extends BaseThread {
         Stats.UPLOAD_BYTES.set(0);
         Stats.DOWNLOAD_BYTES.set(0);
         Stats.TOTAL_BYTES.set(0);
-        Log.i(AppConst.DEFAULT_TAG, "reset data");
+        Log.i(Const.DEFAULT_TAG, "reset data");
     }
 }

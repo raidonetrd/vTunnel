@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">微加密</string>
-    <string name="app_version">版本:1.5.5</string>
+    <string name="app_version">版本</string>
     <string name="form_server">服務器地址</string>
     <string name="form_path">路徑</string>
     <string name="form_key">密鑰</string>
@@ -13,6 +13,7 @@
     <string name="form_switch_off">關</string>
     <string name="btn_save">保存</string>
     <string name="btn_bypass"> 繞過 VPN</string>
+    <string name="btn_select_all">全選</string>
     <string name="form_default_server">vpn.your.domain:443</string>
     <string name="form_default_path">/freedom</string>
     <string name="form_default_key">123456</string>
@@ -26,10 +27,9 @@
     <string name="msg_error_server_none">請添加服務器配置</string>
     <string name="msg_error_dns">無效DNS</string>
     <string name="msg_vpn_connect_no">點擊連接</string>
-    <string name="msg_vpn_connect_yes">網絡已被加密</string>
+    <string name="msg_vpn_connect_yes">已連接</string>
     <string name="msg_vpn_start">已啟動</string>
     <string name="msg_vpn_stop">已關閉</string>
     <string name="msg_vpn_connecting">連接中…</string>
-    <string name="msg_vpn_working">運行中…</string>
     <string name="msg_vpn_data_usage">使用流量</string>
 </resources>

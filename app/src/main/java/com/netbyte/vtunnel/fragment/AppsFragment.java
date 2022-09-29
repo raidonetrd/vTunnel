@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -28,16 +29,17 @@ import androidx.fragment.app.FragmentActivity;
 import com.netbyte.vtunnel.R;
 import com.netbyte.vtunnel.adapter.AppArrayAdapter;
 import com.netbyte.vtunnel.model.App;
-import com.netbyte.vtunnel.model.AppConst;
+import com.netbyte.vtunnel.model.Const;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AppsFragment extends Fragment {
     ListView listView;
     Button btnSave;
     ProgressBar progressBar;
-
+    CheckBox checkAllApp;
     SharedPreferences preferences;
     SharedPreferences.Editor preEditor;
     ArrayAdapter<App> arrayAdapter;
@@ -72,10 +74,11 @@ public class AppsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         FragmentActivity activity = this.getActivity();
         assert activity != null;
-        preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
+        preferences = activity.getSharedPreferences(Const.APP_NAME, Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
         View thisView = getView();
         assert thisView != null;
+        checkAllApp = thisView.findViewById(R.id.checkAllApp);
         listView = thisView.findViewById(R.id.listView);
         btnSave = thisView.findViewById(R.id.saveBypassBtn);
         progressBar = thisView.findViewById(R.id.loadingProgressBar);
@@ -95,23 +98,32 @@ public class AppsFragment extends Fragment {
             preEditor.commit();
             Toast.makeText(activity, R.string.msg_success_save, Toast.LENGTH_LONG).show();
         });
+        checkAllApp.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    showListViewData(false, null, isChecked);
+                }
+        );
 
-        this.initListViewData(this.preferences);
+        this.showListViewData(true, this.preferences, false);
     }
 
-    private void initListViewData(SharedPreferences preferences) {
+    private void showListViewData(boolean init, SharedPreferences preferences, boolean checkAll) {
         List<App> appList = new ArrayList<>();
+        String bypassApps = "";
+        if (init && Objects.nonNull(preferences)) {
+            bypassApps = preferences.getString("bypass_apps", "");
+        }
         arrayAdapter = new AppArrayAdapter(this.getActivity(), appList);
         this.listView.setAdapter(arrayAdapter);
-        String bypassApps = preferences.getString("bypass_apps", "");
+
         FragmentActivity activity = this.getActivity();
         assert activity != null;
         PackageManager packageManager = activity.getPackageManager();
         progressBar.setVisibility(View.VISIBLE);
+        String finalBypassApps = bypassApps;
         new Thread(() -> {
             List<PackageInfo> packageInfoList = packageManager.getInstalledPackages(0);
             for (PackageInfo info : packageInfoList) {
-                if (!isUserApp(info) || AppConst.APP_PACKAGE_NAME.equals(info.packageName)) {
+                if (!isUserApp(info) || Const.APP_PACKAGE_NAME.equals(info.packageName)) {
                     continue;
                 }
                 ApplicationInfo applicationInfo = null;
@@ -123,7 +135,13 @@ public class AppsFragment extends Fragment {
                     e.printStackTrace();
                 }
                 String name = (String) ((applicationInfo != null) ? packageManager.getApplicationLabel(applicationInfo) : "unknown");
-                App app = new App(icon, name, info.packageName, bypassApps.contains(info.packageName));
+                boolean flag;
+                if (init) {
+                    flag = finalBypassApps.contains(info.packageName);
+                } else {
+                    flag = checkAll;
+                }
+                App app = new App(icon, name, info.packageName, flag);
                 appList.add(app);
             }
             mHandler.sendEmptyMessage(NOTIFY_ARRAY_ADAPTER_CAN_UPDATE);

@@ -27,7 +27,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.netbyte.vtunnel.R;
-import com.netbyte.vtunnel.model.AppConst;
+import com.netbyte.vtunnel.model.Const;
 import com.netbyte.vtunnel.model.Global;
 import com.netbyte.vtunnel.model.Stats;
 import com.netbyte.vtunnel.service.MyVpnService;
@@ -37,9 +37,7 @@ import java.util.concurrent.TimeUnit;
 
 public class HomeFragment extends Fragment {
     ImageButton imageButton;
-    TextView statusTextView;
-    TextView statTextView;
-    TextView dataUsageTextView;
+    TextView statusTextView, statTextView, versionTextView, dataUsageTextView;
     Thread timerThread;
     Handler timerThreadHandler = new Handler(Looper.myLooper()) {
         @SuppressLint("SetTextI18n")
@@ -100,6 +98,7 @@ public class HomeFragment extends Fragment {
         this.stopTimerThread();
     }
 
+    @SuppressLint("SetTextI18n")
     private void showView() {
         FragmentActivity activity = this.getActivity();
         assert activity != null;
@@ -111,6 +110,8 @@ public class HomeFragment extends Fragment {
         statTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
         dataUsageTextView = thisView.findViewById(R.id.textDataUsage);
         dataUsageTextView.setVisibility(Global.IS_CONNECTED ? View.VISIBLE : View.GONE);
+        versionTextView = thisView.findViewById(R.id.textVersion);
+        versionTextView.setText(getString(R.string.app_version) + ":" + Const.APP_VERSION);
         imageButton = thisView.findViewById(R.id.connectBtn);
         imageButton.setImageResource(Global.IS_CONNECTED ? R.drawable.power_stop : R.drawable.power_off);
         imageButton.setOnClickListener(v -> clickHandler());
@@ -144,18 +145,18 @@ public class HomeFragment extends Fragment {
         }
         Activity activity = this.getActivity();
         assert activity != null;
-        SharedPreferences preferences = activity.getSharedPreferences(AppConst.APP_NAME, Activity.MODE_PRIVATE);
-        String server = preferences.getString("server", AppConst.DEFAULT_SERVER_ADDRESS);
+        SharedPreferences preferences = activity.getSharedPreferences(Const.APP_NAME, Activity.MODE_PRIVATE);
+        String server = preferences.getString("server", Const.DEFAULT_SERVER_ADDRESS);
         if (TextUtils.isEmpty(server)) {
             Toast.makeText(activity, R.string.msg_error_server_none, Toast.LENGTH_LONG).show();
             return;
         }
         Intent intent = VpnService.prepare(this.getContext());
         if (intent != null) {
-            Log.w(AppConst.DEFAULT_TAG, "VPN requires the authorization from the user, requesting...");
+            Log.w(Const.DEFAULT_TAG, "VPN requires the authorization from the user, requesting...");
             vpnLauncher.launch(intent);
         } else {
-            Log.d(AppConst.DEFAULT_TAG, "VPN was already authorized");
+            Log.d(Const.DEFAULT_TAG, "VPN was already authorized");
             startVPNService();
         }
     }
@@ -164,7 +165,7 @@ public class HomeFragment extends Fragment {
         Activity activity = getActivity();
         assert activity != null;
         Intent vpnIntent = new Intent(activity, MyVpnService.class);
-        vpnIntent.setAction(Global.IS_CONNECTED ? AppConst.BTN_ACTION_CONNECT : AppConst.BTN_ACTION_DISCONNECT);
+        vpnIntent.setAction(Global.IS_CONNECTED ? Const.BTN_ACTION_CONNECT : Const.BTN_ACTION_DISCONNECT);
         activity.startService(vpnIntent);
         showResultView();
     }
