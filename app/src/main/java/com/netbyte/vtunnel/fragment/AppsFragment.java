@@ -73,7 +73,9 @@ public class AppsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FragmentActivity activity = this.getActivity();
-        assert activity != null;
+        if(Objects.isNull(activity)){
+            return;
+        }
         preferences = activity.getSharedPreferences(Const.APP_NAME, Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
         View thisView = getView();

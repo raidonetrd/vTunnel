@@ -33,6 +33,7 @@ import com.netbyte.vtunnel.model.Stats;
 import com.netbyte.vtunnel.service.MyVpnService;
 import com.netbyte.vtunnel.utils.FormatUtil;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class HomeFragment extends Fragment {
@@ -101,7 +102,9 @@ public class HomeFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void showView() {
         FragmentActivity activity = this.getActivity();
-        assert activity != null;
+        if (Objects.isNull(activity)) {
+            return;
+        }
         View thisView = getView();
         assert thisView != null;
         statusTextView = thisView.findViewById(R.id.textStatus);
@@ -119,8 +122,10 @@ public class HomeFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void showResultView() {
-        Activity activity = getActivity();
-        assert activity != null;
+        Activity activity = this.getActivity();
+        if (Objects.isNull(activity)) {
+            return;
+        }
         imageButton.setImageResource(Global.IS_CONNECTED ? R.drawable.power_stop : R.drawable.power_off);
         statusTextView.setText(Global.IS_CONNECTED ? R.string.msg_vpn_connect_yes : R.string.msg_vpn_connect_no);
         if (Global.IS_CONNECTED) {
@@ -163,7 +168,9 @@ public class HomeFragment extends Fragment {
 
     private void startVPNService() {
         Activity activity = getActivity();
-        assert activity != null;
+        if (Objects.isNull(activity)) {
+            return;
+        }
         Intent vpnIntent = new Intent(activity, MyVpnService.class);
         vpnIntent.setAction(Global.IS_CONNECTED ? Const.BTN_ACTION_CONNECT : Const.BTN_ACTION_DISCONNECT);
         activity.startService(vpnIntent);

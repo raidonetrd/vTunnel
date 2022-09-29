@@ -51,7 +51,9 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FragmentActivity activity = this.getActivity();
-        assert activity != null;
+        if (Objects.isNull(activity)) {
+            return;
+        }
         preferences = activity.getSharedPreferences(Const.APP_NAME, Activity.MODE_PRIVATE);
         preEditor = preferences.edit();
         View thisView = getView();
@@ -85,7 +87,7 @@ public class SettingsFragment extends Fragment {
             String key = editKey.getText().toString().trim();
             String obfs = editObfs.getText().toString().trim();
             String proto = editProtocol.getText().toString().trim();
-            if (!NetUtil.checkServer(server, path, key, Objects.equals(proto,"wss"))) {
+            if (!NetUtil.checkServer(server, path, key, Objects.equals(proto, "wss"))) {
                 Toast.makeText(activity, R.string.msg_error_server, Toast.LENGTH_LONG).show();
                 return;
             }
