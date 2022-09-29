@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">微加密</string>
+    <string name="app_name">vTunnel</string>
     <string name="app_version">版本</string>
     <string name="form_server">服务器地址</string>
     <string name="form_path">路径</string>
