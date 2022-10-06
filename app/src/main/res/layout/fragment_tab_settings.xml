@@ -37,6 +37,7 @@
                     android:id="@+id/editServer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textFilter"
                     android:text="@string/form_default_server" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -68,6 +69,7 @@
                     android:id="@+id/editPath"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textFilter"
                     android:text="@string/form_default_path" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -132,6 +134,7 @@
                     android:id="@+id/editDNS"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textFilter"
                     android:text="@string/form_default_dns" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>

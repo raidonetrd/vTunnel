@@ -7,9 +7,9 @@ import com.netbyte.vtunnel.ws.MyWebSocketClient;
 
 import org.asynchttpclient.ws.WebSocket;
 
-import java.net.InetAddress;
-
 public class NetUtil {
+    private final static String PATTERN_IPV4 = "^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$";
+
     public static boolean checkServer(String server, String path, String key, boolean wss) {
         if (TextUtils.isEmpty(server) || TextUtils.isEmpty(path) || TextUtils.isEmpty(key)) {
             return false;
@@ -24,7 +24,6 @@ public class NetUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            result = false;
         } finally {
             if (webSocket != null && webSocket.isOpen()) {
                 webSocket.sendCloseFrame();
@@ -37,13 +36,7 @@ public class NetUtil {
         if (TextUtils.isEmpty(dns)) {
             return false;
         }
-        boolean result = false;
-        try {
-            result = InetAddress.getByName(dns).isReachable(10000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
+        return dns.matches(PATTERN_IPV4);
     }
 
 }
