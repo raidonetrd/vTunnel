@@ -35,5 +35,7 @@ caddy/Caddyfile -v /data/caddy/data:/data caddy
 docker run  -d --privileged --restart=always --net=host --name vtun-server netbyte/vtun -S -l=:3001 -c=172.16.0.1/24 -k=123456 -p ws
 
 # Download
-[download](https://github.com/net-byte/vTunnel/releases)
+<p>
+<a href="https://play.google.com/store/apps/details?id=com.netbyte.vtunnel"><img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height="100"></a>
+</p>
 
