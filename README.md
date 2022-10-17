@@ -13,11 +13,6 @@ A simple VPN app for Android.
 * Android version >= 8.0
 * Min SDK version 26
 
-# Screenshot
-<p>
-	<img src="https://github.com/net-byte/vTunnel/raw/main/assets/screenshot.png" alt="screenshot" width="450">
-</p>
-
 # Server setup on linux
 [install vtun server with websocket protocol](https://github.com/net-byte/vtun)
 
