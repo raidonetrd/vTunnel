@@ -98,7 +98,7 @@ public class MyVpnService extends VpnService {
     private void initConfig() {
         SharedPreferences preferences = this.getSharedPreferences(Const.APP_NAME, Activity.MODE_PRIVATE);
         String server = preferences.getString("server", Const.DEFAULT_SERVER_ADDRESS);
-        String path = preferences.getString("path", Const.DEFAULT_PATH);
+        String path = Const.DEFAULT_PATH;
         String dns = preferences.getString("dns", Const.DEFAULT_DNS);
         String key = preferences.getString("key", Const.DEFAULT_KEY);
         String bypassApps = preferences.getString("bypass_apps", "");

@@ -28,7 +28,7 @@ import java.util.Objects;
 
 public class SettingsFragment extends Fragment {
     Button btnSave;
-    EditText editServer, editPath, editDNS, editKey;
+    EditText editServer, editDNS, editKey;
     AutoCompleteTextView editObfs, editProtocol;
     SharedPreferences preferences;
     SharedPreferences.Editor preEditor;
@@ -60,7 +60,6 @@ public class SettingsFragment extends Fragment {
         assert thisView != null;
         btnSave = thisView.findViewById(R.id.saveConfigBtn);
         editServer = thisView.findViewById(R.id.editServer);
-        editPath = thisView.findViewById(R.id.editPath);
         editKey = thisView.findViewById(R.id.editKey);
         editDNS = thisView.findViewById(R.id.editDNS);
         editProtocol = thisView.findViewById(R.id.editProtocol);
@@ -78,16 +77,14 @@ public class SettingsFragment extends Fragment {
         editObfs.setAdapter(obfsAdapter);
         editObfs.setText(preferences.getString("obfuscation", "off"), false);
         editServer.setText(preferences.getString("server", Const.DEFAULT_SERVER_ADDRESS));
-        editPath.setText(preferences.getString("path", Const.DEFAULT_PATH));
         editDNS.setText(preferences.getString("dns", Const.DEFAULT_DNS));
         editKey.setText(preferences.getString("key", Const.DEFAULT_KEY));
         btnSave.setOnClickListener(v -> {
             String server = editServer.getText().toString().trim();
-            String path = editPath.getText().toString().trim();
             String key = editKey.getText().toString().trim();
             String obfs = editObfs.getText().toString().trim();
             String proto = editProtocol.getText().toString().trim();
-            if (!NetUtil.checkServer(server, path, key, Objects.equals(proto, "wss"))) {
+            if (!NetUtil.checkServer(server, Const.DEFAULT_PATH, key, Objects.equals(proto, "wss"))) {
                 Toast.makeText(activity, R.string.msg_error_server, Toast.LENGTH_LONG).show();
                 return;
             }
@@ -97,7 +94,6 @@ public class SettingsFragment extends Fragment {
                 return;
             }
             preEditor.putString("server", server);
-            preEditor.putString("path", path);
             preEditor.putString("dns", dns);
             preEditor.putString("key", key);
             preEditor.putString("obfuscation", obfs);
